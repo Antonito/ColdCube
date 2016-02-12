@@ -36,9 +36,29 @@ typedef	struct		s_network
 ** Map
 */
 
+typedef	struct		s_cube
+{
+  unsigned int		r : 2;
+  unsigned int		g : 2;
+  unsigned int		b : 2;
+  unsigned int		a : 2;
+}			t_cube ;
+
+typedef struct		s_block
+{
+  s_cube		cube;
+  unsigned char		byte;
+}			t_block;
+
+typedef	struct		s_chunk
+{
+  t_block		block[16 * 16 * 16];
+}			t_chunk;
+
 typedef	struct		s_map
 {
-
+  t_chunk		chunks[256];
+  vector3		spawn[16];
 }			t_map;
 
 /*
