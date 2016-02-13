@@ -3,8 +3,10 @@
 
 # include <stdint.h>
 # include <pthread.h>
+# include <GL/gl.h>
+# include <GL/glext.h>
+# include <GL/glu.h>
 # include <arpa/inet.h>
-
 
 /*
 ** Network
@@ -31,6 +33,16 @@ typedef	struct		s_network
   t_tcpc       		tcp;
   t_udpc       		udp;
 }			t_network;
+
+/*
+** Objects
+*/
+
+typedef struct		s_objects
+{
+  struct s_objects	*next;
+  struct s_objects	*prev;
+}			t_objects;
 
 /*
 ** Map
@@ -108,12 +120,22 @@ typedef	struct		s_player
   t_player_local	local;
 }			t_player;
 
+/*
+** Game structure, containing basics infos (such as "is the game running ?")
+*/
+
+typedef struct		s_game
+{
+  bool			running;
+}			t_game;
+
 typedef	struct		s_data
 {
   t_player		players[10];
   t_map			map;
   t_objects		*obj;
   t_interface		interface;
+  t_game		game;
   char			sounds[];
 }			t_data;
 
