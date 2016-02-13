@@ -77,7 +77,6 @@ typedef	struct		s_map
 ** Weapons
 */
 
-
 typedef struct		s_weapon
 {
   int			id; /* Id de l'arme */

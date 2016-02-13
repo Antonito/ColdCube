@@ -1,6 +1,8 @@
 #ifndef	GAME_H_
 # define GAME_H_
 
+# include <iostream>
+# include <istream>
 # include <unistd.h>
 # include <stdio.h>
 # include <stdlib.h>
@@ -14,6 +16,6 @@
 # include <SDL/SDL.h>
 # include "common_structs.hpp"
 
-void	free_game(t_data *)
+void	free_game(t_data *);
 
 #endif	/* !GAME_H_ */

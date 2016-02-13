@@ -2,11 +2,12 @@ DEBUG=			yes
 
 GAME_PREFIX=		src/game/
 
-GAME_FILES=		main.cpp
+GAME_FILES=		main.cpp	\
+			free.cpp
 
 SERV_PREFIX=		src/server/
 
-SERV_FILES=
+SERV_FILES=		test.cpp
 
 ENGINE_PREFIX=		src/engine/
 
@@ -24,9 +25,9 @@ ENGINE=			$(addprefix $(ENGINE_PREFIX),$(ENGINE_FILES))
 
 TOOLS=			$(addprefix $(TOOLS_PREFIX),$(TOOLS_FILES))
 
-GAME+=			$(TOOLS)
+#GAME+=			$(TOOLS)
 
-GAME+=			$(ENGINE)
+#GAME+=			$(ENGINE)
 
 SERVER+=		$(TOOLS)
 
@@ -37,27 +38,34 @@ NAMESERV=		server_game
 HEAD=			-Iinclude
 
 ifeq ($(DEBUG), yes)
-	CFLAGS=		$(HEAD) -W -Wall -Wextra -ansi -pedantic -g -D DEBUG -O1
+	CXXFLAGS= $(HEAD) -W -Wall -Wextra -g -D DEBUG
+	CFLAGS= $(HEAD) -W -Wall -Wextra -g -D DEBUG
 else
-	CFLAGS=		$(HEAD) -W -Wall -Wextra -Werror -ansi -pedantic
+	CXXFLAGS= $(HEAD) -W -Wall -Wextra
+	CFLAGS= $(HEAD) -W -Wall -Wextra
 endif
 
-CC=			g++
+CC=			gcc
+
+CXX=			clang
 
 RM=			rm -f
 
-LIB=			-lpthread
+LIB=			-lpthread	\
+			-lSDL2		\
+			-lGL		\
+			-lGLEW
 
-OBJ=			$(GAME:.c=.o)
+OBJ=			$(GAME:.cpp=.o)
 
-OBJSERV=		$(SERVER:.c=.o)
+OBJSERV=		$(SERVER:.cpp=.o)
 
 $(NAMESERV):	$(NAME) $(OBJSERV)
 	@echo -n "[ "
 	@tput setaf 2; tput bold; echo -n "OK" ; tput sgr0
 	@echo -n " ] "
 	@echo "Compiled server"
-	@$(CC) $(OBJSERV) -o $(NAMESERV) $(LIB)
+	@$(CXX) $(OBJSERV) -o $(NAMESERV) $(LIB)
 
 $(NAME):	$(OBJ)
 ifeq ($(DEBUG), yes)
@@ -74,14 +82,14 @@ endif
 	@tput setaf 2; tput bold; echo -n "OK" ; tput sgr0
 	@echo -n " ] "
 	@echo "Compiled game"
-	@$(CC) $(OBJ) -o $(NAME) $(LIB)
+	@$(CXX) $(OBJ) -o $(NAME) $(LIB)
 
 %.o:	%.c
 	@echo -n "[ "
 	@tput setaf 2; tput bold; echo -n "OK" ; tput sgr0
 	@echo -n " ] "
 	@echo "Compiling" $<
-	@$(CC) -o $@ -c $< $(CFLAGS)
+	@$(CXX) $(CXXFLAGS) -c -o $@ $<
 
 all:	$(NAME) $(NAMESERV)
 

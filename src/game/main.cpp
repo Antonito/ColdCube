@@ -8,10 +8,13 @@ int		game(void)
 {
   t_data	*data;
 
-  if (!(data = malloc(sizeof(t_data))))
+  if (!(data = new t_data))
     {
-      printf("Malloc of t_data failed\n");
+      write(2, "Malloc of t_data failed\n", 24);
       return (1);
+    }
+  while (data->game.running)
+    {
     }
   free_game(data);
   return (0);
@@ -19,25 +22,27 @@ int		game(void)
 
 int	main(int ac, char **av, char **env)
 {
+  (void) ac;
+  (void) av;
   if (!*env)
     {
-      printf("Environment variable are missing\n");
+      write(2, "Environment variable are missing\n", 33);
 #ifdef DEBUG
-      printf("[INFOS] Game exited with status error 1\n");
+      write(2, "[INFOS] Game exited with status error 1\n", 40);
 #endif
       return (1);
     }
   // Lancement du thread TCP
   if (game() == 1) //Lancement de la partie graphique
     {
-      printf("An error occured.\n");
+      write(2, "An error occured.\n", 18);
 #ifdef DEBUG
-      printf("[INFOS] Game exited with status error 1\n");
+      write(2, "[INFOS] Game exited with status error 1\n", 40);
 #endif
       return (1);
     }
 #ifdef DEBUG
-  printf("[INFOS] Game exited correctly\n");
+  write(2, "[INFOS] Game exited correctly\n", 30);
 #endif
   return (0);
 }
