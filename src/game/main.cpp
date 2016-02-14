@@ -1,6 +1,7 @@
 #include "game.hpp"
+#include "main_menu.hpp"
 
-int	initSDL(void)
+int		initSDL(void)
 {
   if (SDL_Init(SDL_INIT_VIDEO) < 0)
     {
@@ -16,9 +17,45 @@ int	initSDL(void)
 ** Boucle (au debut sur le menu principal), jusqu'a ce qu'on quitte le jeu
 */
 
+int		game_loop(t_data *data, SDL_Event event)
+{
+  while (data->game.running)
+    {
+      main_menu(data);
+      SDL_WaitEvent(&event);
+      if (event.type == SDL_QUIT)
+	{
+	  data->game.running = false;
+	  break;
+	}
+      else if (event.type == SDL_KEYDOWN)
+	{
+	  if (1 && event.key.keysym.sym == SDLK_RETURN) // Mode menu
+	    {
+	      // if (mode_menu(data))
+	      // return (1);
+	      std::cout << "[INFOS] Displays the mode menu\n";
+	    }
+	  else if (1 && event.key.keysym.sym == SDLK_RETURN) // Option menu
+	    {
+	      // if (option_menu(data))
+	      // return (1);
+	      std::cout << "[INFOS] Displays the option menu\n";
+	    }
+	  else if (event.key.keysym.sym == SDLK_ESCAPE) //Quit, leaves game
+	    {
+	      data->game.running = false;
+	      break;
+	    }
+	}
+    }
+  return (0);
+}
+
 int		game(void)
 {
   t_data	*data;
+  SDL_Event	event;
 
   if (!(data = new t_data))
     {
@@ -31,20 +68,16 @@ int		game(void)
       return (1);
     }
   data->game.running = true;
-  while (data->game.running)
+  if (game_loop(data, event))
     {
-      //ShowMainMenu
-
-      //If Play -> start, connection menu
-      //else if -> Options, show options menu
-      //else if -> Quit, leaves game
+      return (1);
     }
   free_game(data);
   SDL_Quit();
   return (0);
 }
 
-int	main(int ac, char **av, char **env)
+int		main(int ac, char **av, char **env)
 {
   (void) ac;
   (void) av;

@@ -2,8 +2,9 @@ DEBUG=			yes
 
 GAME_PREFIX=		src/game/
 
-GAME_FILES=		main.cpp	\
-			free.cpp
+GAME_FILES=		main.cpp			\
+			free.cpp			\
+			/menus/main_menu.cpp
 
 SERV_PREFIX=		src/server/
 

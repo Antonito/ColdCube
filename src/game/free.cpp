@@ -3,5 +3,5 @@
 
 void	free_game(t_data *data)
 {
-  free(data);
+  delete data;
 }
