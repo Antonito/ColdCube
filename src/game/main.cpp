@@ -1,5 +1,17 @@
 #include "game.hpp"
 
+int	initSDL(void)
+{
+  if (SDL_Init(SDL_INIT_VIDEO) < 0)
+    {
+      fprintf(stderr, "SDL init error : %s\n", SDL_GetError());
+      return (1);
+    }
+  SDL_SetVideoMode(WIN_X, WIN_Y, 32, SDL_OPENGL);
+  SDL_WM_SetCaption(WIN_TITLE, NULL);
+  return (0);
+}
+
 /*
 ** Boucle (au debut sur le menu principal), jusqu'a ce qu'on quitte le jeu
 */
@@ -13,10 +25,22 @@ int		game(void)
       write(2, "Malloc of t_data failed\n", 24);
       return (1);
     }
+  if (initSDL())
+    {
+      free_game(data);
+      return (1);
+    }
+  data->game.running = true;
   while (data->game.running)
     {
+      //ShowMainMenu
+
+      //If Play -> start, connection menu
+      //else if -> Options, show options menu
+      //else if -> Quit, leaves game
     }
   free_game(data);
+  SDL_Quit();
   return (0);
 }
 

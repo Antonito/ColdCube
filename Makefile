@@ -51,7 +51,9 @@ CXX=			clang
 
 RM=			rm -f
 
-LIB=			-lpthread	\
+LIB=			-lstdc++	\
+			-lpthread	\
+			-lSDL		\
 			-lSDL2		\
 			-lGL		\
 			-lGLEW

@@ -1,6 +1,10 @@
 #ifndef	GAME_H_
 # define GAME_H_
 
+# define WIN_X		1920
+# define WIN_Y		1080
+# define WIN_TITLE	"TekdoomV2"
+
 # include <iostream>
 # include <istream>
 # include <unistd.h>

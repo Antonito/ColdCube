@@ -3,10 +3,15 @@
 
 # include <stdint.h>
 # include <pthread.h>
-# include <GL/gl.h>
-# include <GL/glext.h>
+# include <GL/glew.h>
 # include <GL/glu.h>
+# include <GL/glext.h>
+# include <GL/gl.h>
 # include <arpa/inet.h>
+
+# if win_
+#  include <windows.h>
+# endif
 
 /*
 ** Network
@@ -48,6 +53,13 @@ typedef struct		s_objects
 ** Map
 */
 
+typedef	struct		vec3
+{
+  double		x;
+  double		y;
+  double		z;
+}			vector3;
+
 typedef	struct		s_cube
 {
   unsigned int		r : 2;
@@ -70,7 +82,7 @@ typedef	struct		s_chunk
 typedef	struct		s_map
 {
   t_chunk		chunks[256];
-  vector3		spawn[16];
+  vector3      		spawn[16];
 }			t_map;
 
 /*
@@ -103,7 +115,7 @@ typedef	struct		s_interface
 
 typedef struct		s_player_local
 {
-  vector3		move;
+  vector3      		move;
 }			t_player_local;
 
 typedef	struct		s_player
