@@ -1,5 +1,6 @@
 #include "game.hpp"
 #include "main_menu.hpp"
+#include "option_menu.hpp"
 
 int		initSDL(t_data *data)
 {

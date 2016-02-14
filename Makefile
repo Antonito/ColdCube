@@ -4,7 +4,9 @@ GAME_PREFIX=		src/game/
 
 GAME_FILES=		main.cpp			\
 			free.cpp			\
-			/menus/main_menu.cpp
+			/menus/menu.cpp			\
+			/menus/main_menu.cpp		\
+			/menus/options_menu.cpp
 
 SERV_PREFIX=		src/server/
 
