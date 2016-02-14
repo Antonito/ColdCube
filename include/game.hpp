@@ -5,6 +5,10 @@
 # define WIN_Y		1080
 # define WIN_TITLE	"TekdoomV2"
 
+# ifdef _WIN32
+#  include <windows.h>
+# endif
+
 # include <iostream>
 # include <istream>
 # include <unistd.h>

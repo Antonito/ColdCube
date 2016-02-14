@@ -1,17 +1,18 @@
 #ifndef COMMON_STRUCTS_H_
 # define COMMON_STRUCTS_H_
 
+# if _WIN32
+#  include <windows.h>
+# endif
+
 # include <stdint.h>
 # include <pthread.h>
+# include <SDL/SDL.h>
 # include <GL/glew.h>
 # include <GL/glu.h>
 # include <GL/glext.h>
 # include <GL/gl.h>
 # include <arpa/inet.h>
-
-# if win_
-#  include <windows.h>
-# endif
 
 /*
 ** Network
@@ -138,6 +139,7 @@ typedef	struct		s_player
 typedef struct		s_game
 {
   bool			running;
+  SDL_Surface		*screen;
 }			t_game;
 
 typedef	struct		s_data

@@ -1,14 +1,14 @@
 #include "game.hpp"
 #include "main_menu.hpp"
 
-int		initSDL(void)
+int		initSDL(t_data *data)
 {
   if (SDL_Init(SDL_INIT_VIDEO) < 0)
     {
       fprintf(stderr, "SDL init error : %s\n", SDL_GetError());
       return (1);
     }
-  SDL_SetVideoMode(WIN_X, WIN_Y, 32, SDL_OPENGL);
+  data->game.screen = SDL_SetVideoMode(WIN_X, WIN_Y, 32, SDL_OPENGL);
   SDL_WM_SetCaption(WIN_TITLE, NULL);
   return (0);
 }
@@ -48,6 +48,8 @@ int		game_loop(t_data *data, SDL_Event event)
 	      break;
 	    }
 	}
+      glFlush();
+      SDL_GL_SwapBuffers();
     }
   return (0);
 }
@@ -62,7 +64,7 @@ int		game(void)
       write(2, "Malloc of t_data failed\n", 24);
       return (1);
     }
-  if (initSDL())
+  if (initSDL(data))
     {
       free_game(data);
       return (1);
