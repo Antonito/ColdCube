@@ -3,12 +3,12 @@
 
 # if _WIN32
 #  include <windows.h>
+#  include <GL/glew.h>
 # endif
 
 # include <stdint.h>
 # include <pthread.h>
 # include <SDL/SDL.h>
-# include <GL/glew.h>
 # include <GL/glu.h>
 # include <GL/glext.h>
 # include <GL/gl.h>

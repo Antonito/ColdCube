@@ -1,14 +1,17 @@
 #include "game.hpp"
 #include "main_menu.hpp"
 #include "option_menu.hpp"
+#include "class/menu.hpp"
+#include <GL/glut.h>
 
-int		initSDL(t_data *data)
+int		initSDL(int ac, char **av, t_data *data)
 {
   if (SDL_Init(SDL_INIT_VIDEO) < 0)
     {
       fprintf(stderr, "SDL init error : %s\n", SDL_GetError());
       return (1);
     }
+  glutInit(&ac, av);
   data->game.screen = SDL_SetVideoMode(WIN_X, WIN_Y, 32, SDL_OPENGL);
   SDL_WM_SetCaption(WIN_TITLE, NULL);
   return (0);
@@ -18,11 +21,11 @@ int		initSDL(t_data *data)
 ** Boucle (au debut sur le menu principal), jusqu'a ce qu'on quitte le jeu
 */
 
-int		game_loop(t_data *data, SDL_Event event)
+int		game_loop(t_data *data, SDL_Event event, Menu *mainMenu)
 {
   while (data->game.running)
     {
-      main_menu(data);
+      mainMenu->display();
       SDL_WaitEvent(&event);
       if (event.type == SDL_QUIT)
 	{
@@ -33,17 +36,21 @@ int		game_loop(t_data *data, SDL_Event event)
 	{
 	  if (1 && event.key.keysym.sym == SDLK_RETURN) // Mode menu
 	    {
+	      mainMenu->deleteAllButton();
 	      // if (mode_menu(data))
 	      // return (1);
-	      std::cout << "[INFOS] Displays the mode menu\n";
+	      std::clog << "[INFOS] Displays the mode menu\n";
+	      createMainMenu(mainMenu);
 	    }
 	  else if (1 && event.key.keysym.sym == SDLK_RETURN) // Option menu
 	    {
+	      mainMenu->deleteAllButton();
 	      // if (option_menu(data))
 	      // return (1);
-	      std::cout << "[INFOS] Displays the option menu\n";
+	      std::clog << "[INFOS] Displays the option menu\n";
+	      createMainMenu(mainMenu);
 	    }
-	  else if (event.key.keysym.sym == SDLK_ESCAPE) //Quit, leaves game
+	  else if (event.key.keysym.sym == SDLK_ESCAPE) //Quit
 	    {
 	      data->game.running = false;
 	      break;
@@ -55,26 +62,31 @@ int		game_loop(t_data *data, SDL_Event event)
   return (0);
 }
 
-int		game(void)
+int		game(int ac, char **av)
 {
   t_data	*data;
   SDL_Event	event;
+  Menu		mainMenu;
 
   if (!(data = new t_data))
     {
       write(2, "Malloc of t_data failed\n", 24);
       return (1);
     }
-  if (initSDL(data))
+  if (initSDL(ac, av, data))
     {
       free_game(data);
       return (1);
     }
   data->game.running = true;
-  if (game_loop(data, event))
+  createMainMenu(&mainMenu);
+  mainMenu.showAllButton();
+  if (game_loop(data, event, &mainMenu))
     {
+      mainMenu.deleteAllButton();
       return (1);
     }
+  mainMenu.deleteAllButton();
   free_game(data);
   SDL_Quit();
   return (0);
@@ -82,8 +94,6 @@ int		game(void)
 
 int		main(int ac, char **av, char **env)
 {
-  (void) ac;
-  (void) av;
   if (!*env)
     {
       write(2, "Environment variable are missing\n", 33);
@@ -93,7 +103,7 @@ int		main(int ac, char **av, char **env)
       return (1);
     }
   // Lancement du thread TCP
-  if (game() == 1) //Lancement de la partie graphique
+  if (game(ac, av) == 1) //Lancement de la partie graphique
     {
       write(2, "An error occured.\n", 18);
 #ifdef DEBUG

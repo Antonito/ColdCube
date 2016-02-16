@@ -18,7 +18,7 @@ ENGINE_FILES=
 
 TOOLS_PREFIX=		src/tools/
 
-TOOLS_FILES=
+TOOLS_FILES=		text.cpp
 
 GAME=			$(addprefix $(GAME_PREFIX),$(GAME_FILES))
 
@@ -28,7 +28,7 @@ ENGINE=			$(addprefix $(ENGINE_PREFIX),$(ENGINE_FILES))
 
 TOOLS=			$(addprefix $(TOOLS_PREFIX),$(TOOLS_FILES))
 
-#GAME+=			$(TOOLS)
+GAME+=			$(TOOLS)
 
 #GAME+=			$(ENGINE)
 
@@ -59,7 +59,9 @@ LIB=			-lstdc++	\
 			-lSDL		\
 			-lSDL2		\
 			-lGL		\
-			-lGLEW
+			-lGLEW		\
+			-lglut		\
+			-lX11
 
 OBJ=			$(GAME:.cpp=.o)
 

@@ -2,12 +2,13 @@
 # define MAIN_MENU_H
 
 # include "common_structs.hpp"
+# include "class/menu.hpp"
 
 
 /*
 ** Functions prototype
 */
 
-int	main_menu(t_data *);
+void	createMainMenu(Menu *);
 
 #endif
