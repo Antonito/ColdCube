@@ -1,13 +1,17 @@
 #ifndef SERVER_H_
 # define SERVER_H_
 
+# include <stdio.h>
+# include <stdlib.h>
+# include <unistd.h>
+# include <string.h>
+# include <pthread.h>
 # include <arpa/inet.h>
 # include <sys/types.h>
 # include <sys/socket.h>
 # include <sys/select.h>
 # include <netinet/in.h>
 # include <sys/time.h>
-# include "tekdoom.h"
 
 /*
 ** s_socket pour le server, il gere le tchate est la sync des clients
@@ -18,12 +22,12 @@ typedef struct	s_socket
 {
   int		main_sock;
   int		tmp_sock;
-  int		cli_sock[MAX_CLIENTS];
+  int		cli_sock[10];
   int		cli_nb;
   int		action;
   char		*port;
   char		**pseudo;
-  bool		status[8];
+  int		status[8];
   unsigned char	*seed;
   pthread_t	thread;
 }		t_socket;
@@ -50,19 +54,23 @@ typedef struct		s_udps
 }			t_udps;
 
 /* src/server/udp/server_udp_msg.c */
-void		send_to_all(t_udps *, char *);
+void		send_to_all(t_udps *);
 void		set_cli_buff(t_udps *, int);
 
 /* src/server/server_pseudo.c */
-void		init_zero_pseudo(char [][]);
-int		server_add_pseudo(char [][], char *);
-int		server_check_pseudo(char [][], char *);
-int		server_remve_pseudo_str(char [][], char *);
-int		get_pseudo_index(char [][], char *);
+void		init_zero_pseudo(t_udps *);
+int		server_add_pseudo(t_udps *, char *);
+int		server_check_pseudo(t_udps *, char *);
+int		server_remve_pseudo_str(t_udps *, char *);
+int		get_pseudo_index(t_udps *, char *);
 
 /* src/server/udp/main_udp_thread.c */
 void		*main_udp_thread(void *data);
 void		udp_thread(t_udps *);
-void		server_check_msg(t_udps *);
+void		server_check_msg_udp(t_udps *);
+
+/* src/server/main.c */
+int		main(int argc, char **argv);
+void		cmd_loop(void);
 
 #endif /* !SERVER_H_ */

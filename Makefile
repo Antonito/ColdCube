@@ -4,13 +4,16 @@ GAME_PREFIX=		src/game/
 
 GAME_FILES=		main.cpp			\
 			free.cpp			\
-			/menus/menu.cpp			\
-			/menus/main_menu.cpp		\
-			/menus/options_menu.cpp
+			menus/menu.cpp			\
+			menus/main_menu.cpp		\
+			menus/options_menu.cpp
 
 SERV_PREFIX=		src/server/
 
-SERV_FILES=		udp/main_udp_thread.c
+SERV_FILES=		udp/main_udp_thread.c		\
+			server_pseudo.c			\
+			udp/server_udp_msg.c		\
+			main.c				\
 
 ENGINE_PREFIX=		src/engine/
 
@@ -18,7 +21,7 @@ ENGINE_FILES=
 
 TOOLS_PREFIX=		src/tools/
 
-TOOLS_FILES=		text.cpp
+TOOLS_FILES=		
 
 GAME=			$(addprefix $(GAME_PREFIX),$(GAME_FILES))
 
@@ -28,7 +31,7 @@ ENGINE=			$(addprefix $(ENGINE_PREFIX),$(ENGINE_FILES))
 
 TOOLS=			$(addprefix $(TOOLS_PREFIX),$(TOOLS_FILES))
 
-GAME+=			$(TOOLS)
+#GAME+=			$(TOOLS)
 
 #GAME+=			$(ENGINE)
 
@@ -67,7 +70,7 @@ OBJ=			$(GAME:.cpp=.o)
 
 OBJSERV=		$(SERVER:.c=.o)
 
-$(NAMESERV):	$(NAME) $(OBJSERV)
+$(NAMESERV):	$(OBJSERV)
 	@echo -n "[ "
 	@tput setaf 2; tput bold; echo -n "OK" ; tput sgr0
 	@echo -n " ] "
@@ -98,7 +101,7 @@ endif
 	@echo "Compiling" $<
 	@$(CXX) $(CXXFLAGS) -c -o $@ $<
 
-all:	$(NAME) $(NAMESERV)
+all:	$(NAMESERV) #$(NAME)
 
 clean:
 	@echo -n "[ "

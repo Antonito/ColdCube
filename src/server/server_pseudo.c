@@ -1,6 +1,6 @@
-#include "server.h"
+#include "server.hpp"
 
-void		init_zero_pseudo(char pseudo[][])
+void		init_zero_pseudo(t_udps *udp)
 {
   int		i = -1, j = -1;
 
@@ -9,56 +9,56 @@ void		init_zero_pseudo(char pseudo[][])
       j = -1;
       while (++j < 21)
 	{
-	  pseudo[i][j] = 0;
+	  udp->pseudo[i][j] = 0;
 	}
     }
 }
 
-int		server_add_pseudo(char pseudo[][], char *str)
+int		server_add_pseudo(t_udps *udp, char *str)
 {
   if (server_check_pseudo(udp, str) == -1)
     return (-1);
-  strncpy(udp->pseudo[udp->nb_actual], str);
+  strncpy(udp->pseudo[udp->nb_actual], str, strlen(str));
   return (0);
 }
 
-int		server_check_pseudo(char pseudo[][], char *str)
+int		server_check_pseudo(t_udps *udp, char *str)
 {
   int		i;
 
   i = -1;
   while (++i < 10)
     {
-      if (strncmp(udp->str[i], str, 20) == 0)
+      if (strncmp(udp->pseudo[i], str, 20) == 0)
 	return (-1);
     }
   return (0);
 }
 
-/* do NOT forget to  decrement udp->nb_actual after this call */
-void		server_remove_pseudo_str(char pseudo[][], char *str)
+void		server_remove_pseudo_str(t_udps *udp, char *str)
 {
   int		i;
 
   i = -1;
-  while (strncmp(pseudo[++i], str, 20) != 0 && i < 10);
+  while (strncmp(udp->pseudo[++i], str, 20) != 0 && i < 10);
   if (i == 10)
     return ;
   while (i + 1 < 10)
     {
-      strncpy(pseudo[i], pseudo [i + 1], 20);
+      strncpy(udp->pseudo[i], udp->pseudo[i + 1], 20);
       ++i;
     }
+  udp->nb_actual += 1;
 }
 
-int		get_pseudo_index(char pseudo[][], char *str)
+int		get_pseudo_index(t_udps *udp, char *str)
 {
   int		i;
 
   i = -1;
   while (++i < 10)
     {
-      if (strncmp(pseudo[i], str, strlen(str)) == 0)
+      if (strncmp(udp->pseudo[i], str, strlen(str)) == 0)
 	return (i);
     }
   return (-1);
