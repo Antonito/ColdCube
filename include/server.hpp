@@ -35,17 +35,34 @@ typedef struct	s_socket
 typedef struct		s_udps
 {
   int			main_sock;
-  struct sockaddr_in	tmp_sock;
   int			my_addrl;
   int			cli_addrl;
   int			action;
-  struct sockaddr_in	cli_sock[MAX_CLIENTS];
-  char			**pseudo;
-  char			cli_buff[8][109];
+  int			nb_actual;
+  struct sockaddr_in	tmp_sock;
+  struct sockaddr_in	cli_sock[10];
+  char			pseudo[10][21];
+  char			cli_buff[8][200];
   char			buff[120];
   struct sockaddr_in	my_addr;
   fd_set		readfds;
   struct timeval	ms;
 }			t_udps;
+
+/* src/server/udp/server_udp_msg.c */
+void		send_to_all(t_udps *, char *);
+void		set_cli_buff(t_udps *, int);
+
+/* src/server/server_pseudo.c */
+void		init_zero_pseudo(char [][]);
+int		server_add_pseudo(char [][], char *);
+int		server_check_pseudo(char [][], char *);
+int		server_remve_pseudo_str(char [][], char *);
+int		get_pseudo_index(char [][], char *);
+
+/* src/server/udp/main_udp_thread.c */
+void		*main_udp_thread(void *data);
+void		udp_thread(t_udps *);
+void		server_check_msg(t_udps *);
 
 #endif /* !SERVER_H_ */

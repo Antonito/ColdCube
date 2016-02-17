@@ -10,7 +10,7 @@ GAME_FILES=		main.cpp			\
 
 SERV_PREFIX=		src/server/
 
-SERV_FILES=		test.cpp
+SERV_FILES=		udp/main_udp_thread.c
 
 ENGINE_PREFIX=		src/engine/
 
@@ -65,7 +65,7 @@ LIB=			-lstdc++	\
 
 OBJ=			$(GAME:.cpp=.o)
 
-OBJSERV=		$(SERVER:.cpp=.o)
+OBJSERV=		$(SERVER:.c=.o)
 
 $(NAMESERV):	$(NAME) $(OBJSERV)
 	@echo -n "[ "
