@@ -10,10 +10,13 @@ GAME_FILES=		main.cpp			\
 
 SERV_PREFIX=		src/server/
 
-SERV_FILES=		udp/main_udp_thread.c		\
-			server_pseudo.c			\
+SERV_FILES=		main.c				\
+			udp/server_pseudo.c		\
+			udp/main_udp_thread.c		\
 			udp/server_udp_msg.c		\
-			main.c				\
+			tcp/main_tcp_thread.c		\
+			tcp/server_tcp_functions.c	\
+			tcp/server_tcp_msg.c		\
 
 ENGINE_PREFIX=		src/engine/
 

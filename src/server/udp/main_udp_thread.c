@@ -52,18 +52,17 @@ void		udp_thread(t_udps *udp)
 	fprintf(stdout, "message incoming :)\n");
 	FD_CLR(udp->main_sock, &udp->readfds);
 	if ((len = recvfrom(udp->main_sock,
-			udp->buff, 120, 0,
+			udp->buff, 70, 0,
 			(struct sockaddr *)&udp->tmp_sock, (socklen_t *)&udp->cli_addrl)) > 0)
 	  {
 	    fprintf(stdout, "MSG\n");
 	    sendto(udp->main_sock, "HELLO\r\n", 6, 0, (struct sockaddr *)&udp->tmp_sock, udp->cli_addrl);
+	    server_check_msg_udp(udp);
 	  }
 	else
 	  {
 	    fprintf(stdout, "nop\n");
 	  }
-
-	/*server_check_msg_udp(udp);*/
       }
     }
   write(1, "CLOSED\n", 7);
@@ -89,7 +88,7 @@ void		server_check_msg_udp(t_udps *udp)
   else
     {
       /*handle UDP tranfser */
-      i = get_pseudo_index(udp, udp->buff); /* buff is the whole message, need a parse */    
+      i = get_pseudo_index(udp, udp->buff); /* strlen(buff) = len pseudo because the separator is \0 */    
       set_cli_buff(udp, i);
     }
 }
