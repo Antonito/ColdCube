@@ -4,7 +4,7 @@ void		*main_udp_thread(void *data)
 {
   t_udps	udp;
 
-  init_zero_pseudo(&udp);
+  udp_init_zero_pseudo(&udp);
   udp.nb_actual = 0;
   if ((udp.main_sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == -1)
     {
@@ -82,13 +82,13 @@ void		server_check_msg_udp(t_udps *udp)
 	}
   if (strncmp(udp->buff, "/add", 4) == 0)
     {
-      server_add_pseudo(udp, &udp->buff[5]);
+      udp_server_add_pseudo(udp, &udp->buff[5]);
       udp->cli_sock[udp->nb_actual] = udp->tmp_sock;
     }
   else
     {
       /*handle UDP tranfser */
-      i = get_pseudo_index(udp, udp->buff); /* strlen(buff) = len pseudo because the separator is \0 */    
+      i = udp_get_pseudo_index(udp, udp->buff); /* strlen(buff) = len pseudo because the separator is \0 */    
       set_cli_buff(udp, i);
     }
 }

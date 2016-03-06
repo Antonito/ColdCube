@@ -36,5 +36,27 @@ void		tcps_cli_add(t_tcps *tcp)
 	  break;
 	}
     }
+  tcps_sync_all(tcp);/* now, clients know each other */
 }
 
+void		tcps_check_received(t_tcps *tcp)
+{
+  if (tcp->buff[0] == '/')/* this is a sync message then */
+    {
+      if (tcp->buff[1] == 'a')/* we add new client pseudo here*/
+	{
+	  if (tcp_server_add_pseudo(tcp, &tcp->buff[3]) == -1)
+	    {
+	      fprintf(stdout, "client rejected\n");
+	      write(tcp->tmp_sock, "sorry bad pseudo or server full\n", 33);
+	    }
+	  else
+	    {
+	      fprintf(stdout, "pseudo: OK, client added\n");
+	      /*tcps_cli_add(tcp);*/
+	    }
+	}
+    }
+  else
+    tcps_send_to_all(tcp);
+}

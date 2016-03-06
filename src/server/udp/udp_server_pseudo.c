@@ -1,6 +1,6 @@
 #include "server.hpp"
 
-void		init_zero_pseudo(t_udps *udp)
+void		udp_init_zero_pseudo(t_udps *udp)
 {
   int		i = -1, j = -1;
 
@@ -14,15 +14,15 @@ void		init_zero_pseudo(t_udps *udp)
     }
 }
 
-int		server_add_pseudo(t_udps *udp, char *str)
+int		udp_server_add_pseudo(t_udps *udp, char *str)
 {
-  if (server_check_pseudo(udp, str) == -1)
+  if (udp_server_check_pseudo(udp, str) == -1)
     return (-1);
   strncpy(udp->pseudo[udp->nb_actual], str, strlen(str));
   return (0);
 }
 
-int		server_check_pseudo(t_udps *udp, char *str)
+int		udp_server_check_pseudo(t_udps *udp, char *str)
 {
   int		i;
 
@@ -35,7 +35,7 @@ int		server_check_pseudo(t_udps *udp, char *str)
   return (0);
 }
 
-void		server_remove_pseudo_str(t_udps *udp, char *str)
+void		udp_server_remove_pseudo_str(t_udps *udp, char *str)
 {
   int		i;
 
@@ -51,7 +51,7 @@ void		server_remove_pseudo_str(t_udps *udp, char *str)
   udp->nb_actual += 1;
 }
 
-int		get_pseudo_index(t_udps *udp, char *str)
+int		udp_get_pseudo_index(t_udps *udp, char *str)
 {
   int		i;
 

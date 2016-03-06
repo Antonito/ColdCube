@@ -1,6 +1,11 @@
 #ifndef SERVER_H_
 # define SERVER_H_
-
+# ifndef TCP_READ
+#  define TCP_READ (20 * 10 + 10 + 1)
+# endif /* !TCP_READ */
+# ifndef UDP_READ
+#  define UDP_READ (70)
+# endif /* !UDP_READ */
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
@@ -31,7 +36,7 @@ typedef struct		s_tcps
   int			max_fd;
   int			port;
   char			pseudo[10][21];
-  char			buff[70];
+  char			buff[TCP_READ + 1];
   struct sockaddr_in	my_addr;
   fd_set		readfds;
 }			t_tcps;
@@ -52,7 +57,7 @@ typedef struct		s_udps
   struct sockaddr_in	cli_sock[10];
   char			pseudo[10][21];
   char			cli_buff[8][200];
-  char			buff[70];
+  char			buff[UDP_READ + 1];
   struct sockaddr_in	my_addr;
   fd_set		readfds;
   struct timeval	ms;
@@ -62,12 +67,12 @@ typedef struct		s_udps
 void		udps_send_to_all(t_udps *);
 void		set_cli_buff(t_udps *, int);
 
-/* src/server/server_pseudo.c */
-void		init_zero_pseudo(t_udps *);
-int		server_add_pseudo(t_udps *, char *);
-int		server_check_pseudo(t_udps *, char *);
-int		server_remve_pseudo_str(t_udps *, char *);
-int		get_pseudo_index(t_udps *, char *);
+/* src/server/udp/udp_server_pseudo.c */
+void		udp_init_zero_pseudo(t_udps *);
+int		udp_server_add_pseudo(t_udps *, char *);
+int		udp_server_check_pseudo(t_udps *, char *);
+int		udp_server_remve_pseudo_str(t_udps *, char *);
+int		udp_get_pseudo_index(t_udps *, char *);
 
 /* src/server/udp/main_udp_thread.c */
 void		*main_udp_thread(void *);
@@ -87,8 +92,17 @@ void		server_check_msg_tcp(t_tcps *);
 void		init_tcps_cli(t_tcps *);
 void		set_max_fd(t_tcps *);
 void		tcps_cli_add(t_tcps *);
+void		tcps_check_received(t_tcps *);
 
 /* src/server/tcp/server_tcp_msg.c */
 void		tcps_send_to_all(t_tcps *);
+void		tcps_sync_all(t_tcps *);
+
+/* src/server/tcp/tcp_server_pseudo.c */
+void		tcp_init_zero_pseudo(t_tcps *);
+int		tcp_server_add_pseudo(t_tcps *, char *);
+int		tcp_server_check_pseudo(t_tcps *, char *);
+int		tcp_server_remve_pseudo_str(t_tcps *, char *);
+int		tcp_get_pseudo_index(t_tcps *, char *);
 
 #endif /* !SERVER_H_ */

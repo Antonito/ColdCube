@@ -1,0 +1,41 @@
+server_tcp_functions.c:    tcp->cli_sock[i] = 0;
+server_tcp_functions.c:      if (tcp->cli_sock[i] != 0)
+server_tcp_functions.c:	FD_SET(tcp->cli_sock[i], &tcp->readfds);
+server_tcp_functions.c:      if (tcp->cli_sock[i] > tcp->max_fd)
+server_tcp_functions.c:	tcp->max_fd = tcp->cli_sock[i];
+server_tcp_functions.c:      if (tcp->cli_sock[i] == 0)
+server_tcp_functions.c:	  tcp->cli_sock[i] = tcp->tmp_sock;
+server_tcp_functions.c:  if (tcp->buff[0] == '/')/* this is a sync message then */
+server_tcp_functions.c:      if (tcp->buff[1] == 'a')/* we add new client pseudo here*/
+server_tcp_functions.c:	  if (tcp_server_add_pseudo(tcp, &tcp->buff[3]) == -1)
+server_tcp_functions.c:	      write(tcp->tmp_sock, "sorry bad pseudo or server full\n", 33);
+main_tcp_thread.c:  while (tcp->run)
+main_tcp_thread.c:      FD_ZERO(&tcp->readfds);
+main_tcp_thread.c:      FD_SET(tcp->main_sock, &tcp->readfds);
+main_tcp_thread.c:      tcp->max_fd = tcp->main_sock;
+main_tcp_thread.c:      if ((tcp->action = select(tcp->max_fd + 1, &tcp->readfds, NULL, NULL, NULL)) == -1)
+main_tcp_thread.c:      if (FD_ISSET(tcp->main_sock, &tcp->readfds))
+main_tcp_thread.c:	  if ((tcp->tmp_sock = accept(tcp->main_sock,
+main_tcp_thread.c:				      (struct sockaddr *)&tcp->my_addr,
+main_tcp_thread.c:				      (socklen_t *)&tcp->my_addrl)) == -1)
+main_tcp_thread.c:	  tcp->nb_actual += 1;
+main_tcp_thread.c:  while (++i < tcp->nb_actual)
+main_tcp_thread.c:      if (FD_ISSET(tcp->cli_sock[i], &tcp->readfds))
+main_tcp_thread.c:	    if ((len = read(tcp->cli_sock[i], tcp->buff, TCP_READ)) == 0)
+main_tcp_thread.c:		close(tcp->cli_sock[i]);
+main_tcp_thread.c:		tcp->cli_sock[i] = 0; /* new client can connect */
+main_tcp_thread.c:		tcp->nb_actual -= 1;
+main_tcp_thread.c:		tcp->buff[len] = '\0';
+tcp_server_pseudo.c:	  tcp->pseudo[i][j] = 0;
+tcp_server_pseudo.c:  strncpy(tcp->pseudo[tcp->nb_actual], str, strlen(str));
+tcp_server_pseudo.c:      if (strncmp(tcp->pseudo[i], str, 20) == 0)
+tcp_server_pseudo.c:  while (strncmp(tcp->pseudo[++i], str, 20) != 0 && i < 10);
+tcp_server_pseudo.c:      strncpy(tcp->pseudo[i], tcp->pseudo[i + 1], 20);
+tcp_server_pseudo.c:  tcp->nb_actual += 1;
+tcp_server_pseudo.c:      if (strncmp(tcp->pseudo[i], str, strlen(str)) == 0)
+server_tcp_msg.c:      if (tcp->cli_sock[i] != 0)
+server_tcp_msg.c:	write(tcp->cli_sock[i], tcp->buff, strlen(tcp->buff));
+server_tcp_msg.c:  while (++i < tcp->nb_actual)
+server_tcp_msg.c:      strcat(buff, tcp->pseudo[i]);
+server_tcp_msg.c:  while (++i < tcp->nb_actual)
+server_tcp_msg.c:      write(tcp->cli_sock[i], buff, strlen(buff));

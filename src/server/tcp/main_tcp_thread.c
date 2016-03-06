@@ -17,7 +17,7 @@ void		*main_tcp_thread(void *data)
       return ((void *)0);
     }
   tcp.my_addr.sin_family = AF_INET;
-  tcp.my_addr.sin_addr.s_addr = INADDR_ANY; /* this is because we are the server not the client */
+  tcp.my_addr.sin_addr.s_addr = INADDR_ANY;
   tcp.port = (int)data;
   tcp.my_addr.sin_port = htons(tcp.port);
   if (bind(tcp.main_sock, (struct sockaddr *)&tcp.my_addr, sizeof(tcp.my_addr)) != 0)
@@ -62,7 +62,7 @@ void		tcp_thread(t_tcps *tcp)
 	    }
 	  fprintf(stderr, "new client connected\n");
 	  tcp->nb_actual += 1;
-	  tcps_cli_add(tcp);
+	  tcps_cli_add(tcp);/*we add client later now, for pseudo verification */
 	}
       server_check_msg_tcp(tcp);
     }
@@ -74,11 +74,11 @@ void		server_check_msg_tcp(t_tcps *tcp)
   int		len;
 
   i = -1;
-  while (++i < 10)
+  while (++i < tcp->nb_actual)
     {
       if (FD_ISSET(tcp->cli_sock[i], &tcp->readfds))
 	  {
-	    if ((len = read(tcp->cli_sock[i], tcp->buff, 68)) == 0)
+	    if ((len = read(tcp->cli_sock[i], tcp->buff, TCP_READ)) == 0)
 	      {
 		fprintf(stdout, "client disconnected\n");
 		close(tcp->cli_sock[i]);
@@ -88,8 +88,9 @@ void		server_check_msg_tcp(t_tcps *tcp)
 	    else
 	      {
 		/*we got a MSG here */
+		fprintf(stdout, "we got a massage here\n");
 		tcp->buff[len] = '\0';
-		tcps_send_to_all(tcp);
+		tcps_check_received(tcp);
 	      }
 	  }
     }
