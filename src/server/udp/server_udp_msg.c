@@ -13,5 +13,5 @@ void		udps_send_to_all(t_udps *udp)
 
 void		set_cli_buff(t_udps *udp, int index)
 {
-  memcpy(udp->cli_buff[index], udp->buff, 70); /* same here, it depends on the UDP MSG size */
+  memcpy(udp->cli_buff[index], udp->buff, 70);
 }

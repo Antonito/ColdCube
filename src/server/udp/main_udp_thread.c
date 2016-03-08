@@ -32,10 +32,15 @@ void		udp_thread(t_udps *udp)
 
   udp->action = 1;
   udp->cli_addrl = sizeof(udp->tmp_sock);
+  udp->ms.tv_sec = 0;
+  udp->ms.tv_usec = 0;
   while (udp->action)
   {
-    udp->ms.tv_sec = 0;
-    udp->ms.tv_usec = 1500;
+    if (udp->ms.tv_usec == 0)
+      {
+	udp->ms.tv_sec = 0;
+	udp->ms.tv_usec = 1500;
+      }
     FD_ZERO(&udp->readfds);
     FD_SET(udp->main_sock, &udp->readfds);
     go = select(udp->main_sock + 1, &udp->readfds, NULL, NULL, &udp->ms);
@@ -43,20 +48,21 @@ void		udp_thread(t_udps *udp)
       {
 	fprintf(stderr, "error select :(\n");
       }
-    else if (go == 0)
+    else if (go == 0 && udp->nb_actual > 0)
       {
+	fprintf(stdout, "we sending all\n");
+	udps_send_to_all(udp);
 	continue;
       }
     if (FD_ISSET(udp->main_sock, &udp->readfds))
       {
-	fprintf(stdout, "message incoming :)\n");
+	/*fprintf(stdout, "message incoming :)\n");*/
 	FD_CLR(udp->main_sock, &udp->readfds);
 	if ((len = recvfrom(udp->main_sock,
 			udp->buff, 70, 0,
 			(struct sockaddr *)&udp->tmp_sock, (socklen_t *)&udp->cli_addrl)) > 0)
 	  {
-	    fprintf(stdout, "MSG\n");
-	    sendto(udp->main_sock, "HELLO\r\n", 6, 0, (struct sockaddr *)&udp->tmp_sock, udp->cli_addrl);
+	    /*fprintf(stdout, "MSG\n");*/
 	    server_check_msg_udp(udp);
 	  }
 	else
@@ -71,24 +77,21 @@ void		udp_thread(t_udps *udp)
 void		server_check_msg_udp(t_udps *udp)
 {
   int		i;
-  int		len;
 
-  if ((len = recvfrom(udp->main_sock,
-			udp->buff, 120, 0,
-			(struct sockaddr *)&udp->tmp_sock, (socklen_t *)&udp->cli_addrl)) == -1)
-	{
-	  fprintf(stderr, "To catch, a client disconnect/left\n");
-	  /*server_remove_pseudo  + udp->n_actual -= 1*/
-	}
   if (strncmp(udp->buff, "/add", 4) == 0)
     {
-      udp_server_add_pseudo(udp, &udp->buff[5]);
-      udp->cli_sock[udp->nb_actual] = udp->tmp_sock;
+      if (udp_server_add_pseudo(udp, &udp->buff[5]) == -1)
+	return ;
+      if ((i = udp_get_pseudo_index(udp, &udp->buff[5])) == -1)
+	return ;
+      udp->cli_sock[i] = udp->tmp_sock;
+      udp->nb_actual += 1;
+      sendto(udp->main_sock, "HELLO\r\n", 6, 0, (struct sockaddr *)&udp->tmp_sock, udp->cli_addrl);
     }
   else
     {
       /*handle UDP tranfser */
-      i = udp_get_pseudo_index(udp, udp->buff); /* strlen(buff) = len pseudo because the separator is \0 */    
+      i = udp_get_pseudo_index(udp, udp->buff);
       set_cli_buff(udp, i);
     }
 }

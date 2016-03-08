@@ -62,7 +62,7 @@ void		tcp_thread(t_tcps *tcp)
 	    }
 	  fprintf(stderr, "new client connected\n");
 	  tcp->nb_actual += 1;
-	  tcps_cli_add(tcp);/*we add client later now, for pseudo verification */
+	  tcps_cli_add(tcp);
 	}
       server_check_msg_tcp(tcp);
     }
@@ -82,8 +82,8 @@ void		server_check_msg_tcp(t_tcps *tcp)
 	      {
 		fprintf(stdout, "client disconnected\n");
 		close(tcp->cli_sock[i]);
-		tcp->cli_sock[i] = 0; /* new client can connect */
-		tcp->nb_actual -= 1;
+		tcps_remove_sock(tcp, i);
+		tcp_server_remove_pseudo_str(tcp, tcp->pseudo[i]);
 	      }
 	    else
 	      {

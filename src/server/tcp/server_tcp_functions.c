@@ -60,3 +60,14 @@ void		tcps_check_received(t_tcps *tcp)
   else
     tcps_send_to_all(tcp);
 }
+
+void		tcps_remove_sock(t_tcps *tcp, int index)
+{
+  tcp->nb_actual -= 1;
+  while (index + 1 < 10)
+    {
+      tcp->cli_sock[index] = tcp->cli_sock[index + 1];
+      if (tcp->cli_sock[index + 1] == 0)
+	break;
+    }
+}

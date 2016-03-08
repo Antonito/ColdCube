@@ -71,7 +71,7 @@ void		set_cli_buff(t_udps *, int);
 void		udp_init_zero_pseudo(t_udps *);
 int		udp_server_add_pseudo(t_udps *, char *);
 int		udp_server_check_pseudo(t_udps *, char *);
-int		udp_server_remve_pseudo_str(t_udps *, char *);
+void		udp_server_remove_pseudo_str(t_udps *, char *);
 int		udp_get_pseudo_index(t_udps *, char *);
 
 /* src/server/udp/main_udp_thread.c */
@@ -93,6 +93,7 @@ void		init_tcps_cli(t_tcps *);
 void		set_max_fd(t_tcps *);
 void		tcps_cli_add(t_tcps *);
 void		tcps_check_received(t_tcps *);
+void		tcps_remove_sock(t_tcps *, int);
 
 /* src/server/tcp/server_tcp_msg.c */
 void		tcps_send_to_all(t_tcps *);
@@ -102,7 +103,7 @@ void		tcps_sync_all(t_tcps *);
 void		tcp_init_zero_pseudo(t_tcps *);
 int		tcp_server_add_pseudo(t_tcps *, char *);
 int		tcp_server_check_pseudo(t_tcps *, char *);
-int		tcp_server_remve_pseudo_str(t_tcps *, char *);
+void		tcp_server_remove_pseudo_str(t_tcps *, char *);
 int		tcp_get_pseudo_index(t_tcps *, char *);
 
 #endif /* !SERVER_H_ */
