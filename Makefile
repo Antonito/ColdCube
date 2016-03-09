@@ -63,11 +63,6 @@ RM=			rm -f
 
 LIB=			-lstdc++	\
 			-lpthread	\
-			-lSDL		\
-			-lSDL2		\
-			-lGLEW		\
-			-lglut		\
-			-lX11
 
 OBJ=			$(GAME:.cpp=.o)
 
