@@ -5,7 +5,7 @@
 ** Login   <troncy_l@epitech.net>
 ** 
 ** Started on  Mon Mar 07 16:48:42 2016 Lucas Troncy
-** Last update Fri Mar 11 11:17:57 2016 Lucas Troncy
+** Last update Fri Mar 11 11:28:08 2016 Lucas Troncy
 */
 
 #include <stdlib.h>
@@ -50,8 +50,8 @@ void		*udp_thread(void *data)
   while (run)
     {
       recvfrom(sock, buff, 70, 0, (struct sockaddr *)&tserv, (socklen_t *)&len);
-      write(1, buff, 70);
-      write(1, "A\n", 2);
+      /*write(1, buff, 70);
+      write(1, "A\n", 2);*/
     }
 }
 
@@ -62,6 +62,7 @@ int		main(int argc, char **argv)
   char		*buff;
   int		i;
   char		buff2[71];
+  int		d;
   pthread_t	tudp;
 
   if (argc < 2)
@@ -85,6 +86,7 @@ int		main(int argc, char **argv)
       return (1);
     }
   pthread_create(&tudp, NULL, udp_thread, (void *)&sock);
+  d = 0;
   while (42)
     {
       if (sendto(sock, buff, 70, 0, (struct sockaddr *)&server, lenght) < 1)
@@ -92,6 +94,8 @@ int		main(int argc, char **argv)
 	  fprintf(stderr, "msg failed\n");
 	  return (1);
 	}
+      ++d;
+      printf("\r msg sent : %d", d);
     }
   return (0);
 }
