@@ -13,5 +13,10 @@ void		udps_send_to_all(t_udps *udp)
 
 void		set_cli_buff(t_udps *udp, int index)
 {
-  memcpy(udp->cli_buff[index], udp->buff, 70);
+  int		i;
+
+  i = -1;
+  write(1, udp->buff, 70);
+  while (++i < 70)
+    udp->cli_buff[index][i] = udp->buff[i];
 }

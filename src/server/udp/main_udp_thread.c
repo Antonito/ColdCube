@@ -50,7 +50,7 @@ void		udp_thread(t_udps *udp)
       }
     else if (go == 0 && udp->nb_actual > 0)
       {
-	fprintf(stdout, "we sending all\n");
+	/*fprintf(stdout, "we sending all\n");*/
 	udps_send_to_all(udp);
 	continue;
       }
@@ -86,7 +86,7 @@ void		server_check_msg_udp(t_udps *udp)
 	return ;
       udp->cli_sock[i] = udp->tmp_sock;
       udp->nb_actual += 1;
-      sendto(udp->main_sock, "HELLO\r\n", 6, 0, (struct sockaddr *)&udp->tmp_sock, udp->cli_addrl);
+      /*sendto(udp->main_sock, "HELLO\r\n", 6, 0, (struct sockaddr *)&udp->tmp_sock, udp->cli_addrl);*/
     }
   else
     {
