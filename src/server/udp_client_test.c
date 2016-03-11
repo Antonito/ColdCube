@@ -5,7 +5,7 @@
 ** Login   <troncy_l@epitech.net>
 ** 
 ** Started on  Mon Mar 07 16:48:42 2016 Lucas Troncy
-** Last update Fri Mar 11 10:59:59 2016 Lucas Troncy
+** Last update Fri Mar 11 11:17:57 2016 Lucas Troncy
 */
 
 #include <stdlib.h>
@@ -33,6 +33,8 @@ char		*prepare_buffer(char *str)
     {
       str[i] = 50;
     }
+  str[0] = 0;
+  str[1] = 0;
   str[70] = 0;
   return (str);
 }
