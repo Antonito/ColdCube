@@ -93,7 +93,7 @@ void		server_check_msg_udp(t_udps *udp)
       /*handle UDP tranfser */
       /*i = udp_get_pseudo_index(udp, udp->buff);*/
       /*i = atoi(udp->buff);*/
-      i = 0;
+      i = udp->buff[0];
       set_cli_buff(udp, i);
     }
 }
