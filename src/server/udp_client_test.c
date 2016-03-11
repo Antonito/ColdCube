@@ -5,7 +5,7 @@
 ** Login   <troncy_l@epitech.net>
 ** 
 ** Started on  Mon Mar 07 16:48:42 2016 Lucas Troncy
-** Last update Fri Mar 11 11:33:51 2016 Lucas Troncy
+** Last update Fri Mar 11 11:43:23 2016 Lucas Troncy
 */
 
 #include <stdlib.h>
@@ -33,7 +33,7 @@ char		*prepare_buffer(char *str)
     {
       str[i] = 50;
     }
-  str[0] = 1;
+  str[0] = 3;
   str[1] = 0;
   str[70] = 0;
   return (str);
@@ -80,7 +80,7 @@ int		main(int argc, char **argv)
   server.sin_addr.s_addr = inet_addr(argv[1]);
   lenght = sizeof(server);
   buff = prepare_buffer(buff);
-  if (sendto(sock, "/add toto", 9, 0, (struct sockaddr *)&server, lenght) < 1)
+  if (sendto(sock, "/add gogo", 9, 0, (struct sockaddr *)&server, lenght) < 1)
     {
       fprintf(stderr, "msg failed\n");
       return (1);
