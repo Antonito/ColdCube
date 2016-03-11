@@ -15,7 +15,6 @@ void		*tcp_thread(void *data)
   int		tsock = *((int *) data);
 
   printf("socked WHILE is %d\n", tsock);
-  exit(0);
   while (run)
     {
       len = read(tsock, buff, 199);
