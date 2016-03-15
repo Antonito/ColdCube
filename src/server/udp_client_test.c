@@ -5,7 +5,7 @@
 ** Login   <troncy_l@epitech.net>
 ** 
 ** Started on  Mon Mar 07 16:48:42 2016 Lucas Troncy
-** Last update Fri Mar 11 11:43:23 2016 Lucas Troncy
+** Last update Fri Mar 11 12:37:13 2016 Lucas Troncy
 */
 
 #include <stdlib.h>
@@ -44,14 +44,17 @@ void		*udp_thread(void *data)
   char		buff[70];
   struct sockaddr_in tserv;
   int		len;
+  int		d;
 
   tserv = *((struct sockaddr_in *)data);
   len = sizeof(tserv);
+  d = 0;
   while (run)
     {
       recvfrom(sock, buff, 70, 0, (struct sockaddr *)&tserv, (socklen_t *)&len);
-      /*write(1, buff, 70);
-      write(1, "A\n", 2);*/
+      ++d;
+      printf("\rmsg recv : %d", d);
+      fflush(stdout);
     }
 }
 
@@ -62,7 +65,6 @@ int		main(int argc, char **argv)
   char		*buff;
   int		i;
   char		buff2[71];
-  int		d;
   pthread_t	tudp;
 
   if (argc < 2)
@@ -80,13 +82,12 @@ int		main(int argc, char **argv)
   server.sin_addr.s_addr = inet_addr(argv[1]);
   lenght = sizeof(server);
   buff = prepare_buffer(buff);
-  if (sendto(sock, "/add gogo", 9, 0, (struct sockaddr *)&server, lenght) < 1)
+  if (sendto(sock, "/add titt", 9, 0, (struct sockaddr *)&server, lenght) < 1)
     {
       fprintf(stderr, "msg failed\n");
       return (1);
     }
   pthread_create(&tudp, NULL, udp_thread, (void *)&sock);
-  d = 0;
   while (42)
     {
       if (sendto(sock, buff, 70, 0, (struct sockaddr *)&server, lenght) < 1)
@@ -94,8 +95,6 @@ int		main(int argc, char **argv)
 	  fprintf(stderr, "msg failed\n");
 	  return (1);
 	}
-      ++d;
-      printf("\r msg sent : %d", d);
     }
   return (0);
 }
