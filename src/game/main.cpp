@@ -37,6 +37,7 @@ int	game_loop(t_data *data, SDL_Event event, Menu *mainMenu)
 	  if (1 && event.key.keysym.sym == SDLK_RETURN) // Mode menu
 	    {
 	      mainMenu->deleteAllButton();
+	      engineMain();
 	      // if (mode_menu(data))
 	      // return (1);
 	      std::clog << "[INFOS] Displays the mode menu\n";
