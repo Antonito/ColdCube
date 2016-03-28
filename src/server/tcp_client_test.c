@@ -21,6 +21,7 @@ void		*tcp_thread(void *data)
       buff[len] = 0;
       fprintf(stdout, "%s\n", buff);
     }
+  return (NULL);
 }
 
 int		main(int argc, char **argv)

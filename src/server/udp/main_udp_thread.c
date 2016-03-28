@@ -3,17 +3,19 @@
 void		*main_udp_thread(void *data)
 {
   t_udps	udp;
+  int		port;
 
   udp_init_zero_pseudo(&udp);
   udp.nb_actual = 0;
+  port = *(int *)data;
   if ((udp.main_sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == -1)
     {
       fprintf(stderr, "Cannot create socket\n");
       return ((void *)0);
     }
   udp.my_addr.sin_family = AF_INET;
-  printf("The port used = %d\n", (int)data);
-  udp.my_addr.sin_port = htons((int)data);
+  printf("The port used = %d\n", port);
+  udp.my_addr.sin_port = htons(port);
   udp.my_addr.sin_addr.s_addr = htonl(INADDR_ANY);
   udp.my_addrl = sizeof(udp.my_addr);
   if (bind(udp.main_sock, (struct sockaddr *)&udp.my_addr, udp.my_addrl) == -1)

@@ -4,6 +4,7 @@ int		main(int argc, char **argv)
 {
   /*pthread_t	tcpt;*/
   pthread_t	tudp;
+  int		tmp;
 
   if (argc < 2)
     {
@@ -15,7 +16,8 @@ int		main(int argc, char **argv)
       fprintf(stderr, "error creating the tcp thread :(\n");
       return (1);
     }*/
-  if (pthread_create(&tudp, NULL, main_udp_thread, (void *)atoi(argv[1])) != 0)
+  tmp = atoi(argv[1]);
+  if (pthread_create(&tudp, NULL, main_udp_thread, (void *)&tmp) != 0)
     {
       fprintf(stderr, "error creating the udp thread :(\n");
       return (1);
