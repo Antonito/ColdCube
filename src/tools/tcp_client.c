@@ -12,10 +12,10 @@ void		*tcp_thread(void *data)
   int		len;
   t_data	*_data = (t_data *) data;
 
-  while (_data->net->tcp->run)
+  while (_data->net.tcp.run)
     {
-      len = read(_data->net->tcp->sock, _data->net->tcp->buff, 199);
-      _data->net->tcp->buff[len] = 0;
+      len = read(_data->net.tcp.sock, _data->net.tcp.buff, 199);
+      _data->net.tcp.buff[len] = 0;
     }
   return (NULL);
 }
@@ -25,28 +25,28 @@ int		clientLaunchTcpc(t_data *data)
   int		len;
   char		tmp[30];
 
-  if ((data->net->tcp->sock = socket(AF_INET, SOCK_STREAM, 0)) == -1)
+  if ((data->net.tcp.sock = socket(AF_INET, SOCK_STREAM, 0)) == -1)
     {
       fprintf(stderr, "socket creation failed\n");
       return (-1);
     }
-  data->net->tcp->to_serv.sin_addr.s_addr = inet_addr(argv[1]);
-  data->net->tcp->to_serv.sin_family = AF_INET;
-  data->net->tcp->to_serv.sin_port = htons(data->net->port);
-  if (connect(data->net->tcp->sock, (struct sockaddr *)&data->net->tcp->to_serv,
-	      sizeof(data->net->tcp->to_serv)) < 0)
+  data->net.tcp.to_serv.sin_addr.s_addr = inet_addr(data->net.ip);
+  data->net.tcp.to_serv.sin_family = AF_INET;
+  data->net.tcp.to_serv.sin_port = htons(data->net.port);
+  if (connect(data->net.tcp.sock, (struct sockaddr *)&data->net.tcp.to_serv,
+	      sizeof(data->net.tcp.to_serv)) < 0)
     {
       fprintf(stderr, "cannot connect\n");
       return (-1);
     }
-  snprintf(tmp, 24, "/a %s", data->net->pseudo);
-  if (write(data->net->tcp->sock, tmp, strlen(tmp)) != strlen(tmp))
+  snprintf(tmp, 24, "/a %s", data->net.pseudo);
+  if (write(data->net.tcp.sock, tmp, strlen(tmp)) != strlen(tmp))
     {
       fprintf(stderr, "error sending pseudo\n");
       return (-1);
     }
-  write(data->net->tcp->sock, tmp, 24);
-  data->net->playerIndexTcp = atoi(tmp);
-  pthread_create(&data->net->tcp->thread, NULL, tcp_thread, (void *)data);
+  write(data->net.tcp.sock, tmp, 24);
+  data->net.playerIndexTcp = atoi(tmp);
+  pthread_create(&data->net.tcp.thread, NULL, tcp_thread, (void *)data);
   return (0);
 }
