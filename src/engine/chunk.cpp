@@ -1,4 +1,4 @@
-#include "chunk.hpp"
+#include "engine/chunk.hpp"
 #include <string.h>
 
 #include <fstream>

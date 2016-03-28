@@ -4,7 +4,7 @@
 #include "class/menu.hpp"
 #include <GL/glut.h>
 
-int		initSDL(int ac, char **av, t_data *data)
+int	initSDL(int ac, char **av, t_data *data)
 {
   if (SDL_Init(SDL_INIT_VIDEO) < 0)
     {
@@ -21,7 +21,7 @@ int		initSDL(int ac, char **av, t_data *data)
 ** Boucle (au debut sur le menu principal), jusqu'a ce qu'on quitte le jeu
 */
 
-int		game_loop(t_data *data, SDL_Event event, Menu *mainMenu)
+int	game_loop(t_data *data, SDL_Event event, Menu *mainMenu)
 {
   while (data->game.running)
     {
@@ -92,7 +92,7 @@ int		game(int ac, char **av)
   return (0);
 }
 
-int		main(int ac, char **av, char **env)
+int	main(int ac, char **av, char **env)
 {
   if (!*env)
     {

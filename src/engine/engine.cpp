@@ -1,11 +1,11 @@
 #include <GL/glew.h>
-#include "display.hpp"
-#include "shader.hpp"
-#include "mesh.hpp"
-#include "texture.hpp"
-#include "transform.hpp"
-#include "camera.hpp"
-#include "map.hpp"
+#include "engine/display.hpp"
+#include "engine/shader.hpp"
+#include "engine/mesh.hpp"
+#include "engine/texture.hpp"
+#include "engine/transform.hpp"
+#include "engine/camera.hpp"
+#include "engine/map.hpp"
 #include <ctime>
 
 #define WIDTH 1280
@@ -15,12 +15,11 @@
 
 using namespace glm;
 
+Mesh	SetPlanes(int, vec3);
 
-Mesh SetPlanes(int, vec3);
-
-int	main()
+int	engineMain()
 {
-Display display(WIDTH, HEIGHT, "The display title");
+  Display display(WIDTH, HEIGHT, "The display title");
 
   Shader	shader("shaders/test1");
 
@@ -33,7 +32,7 @@ Display display(WIDTH, HEIGHT, "The display title");
   //   {2, 0, 0, 0,  5, 7, 4, 400.0,
   //    30, 40, 5, 10};
 
-while (!display.IsClosed())
+  while (!display.IsClosed())
     {
       fps++;
       if (t != time(NULL))

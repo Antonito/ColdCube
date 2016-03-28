@@ -1,8 +1,8 @@
 #include <boost/lexical_cast.hpp>
 #include <iostream>
 #include <string>
-#include "map.hpp"
-#include "camera.hpp"
+#include "engine/map.hpp"
+#include "engine/camera.hpp"
 #include <glm/gtc/type_ptr.hpp>
 
 extern Camera g_Camera;

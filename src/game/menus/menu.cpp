@@ -169,7 +169,7 @@ void		Menu::deleteAllButton(void)
   delete tmp;
 }
 
-void	Menu::display(void)
+void		Menu::display(void)
 {
   t_button	*tmp;
 

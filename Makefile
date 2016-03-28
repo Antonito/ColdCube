@@ -4,9 +4,9 @@ GAME_PREFIX=		src/game/
 
 GAME_FILES=		main.cpp			\
 			free.cpp			\
-			/menus/menu.cpp			\
-			/menus/main_menu.cpp		\
-			/menus/options_menu.cpp
+			menus/menu.cpp			\
+			menus/main_menu.cpp		\
+			menus/options_menu.cpp
 
 SERV_PREFIX=		src/server/
 
@@ -14,7 +14,16 @@ SERV_FILES=		test.cpp
 
 ENGINE_PREFIX=		src/engine/
 
-ENGINE_FILES=
+ENGINE_FILES=		chunk.cpp			\
+			display.cpp			\
+			load_shader.cpp			\
+			map.cpp				\
+			mesh.cpp			\
+			shader.cpp			\
+			texture.cpp			\
+			engine.cpp
+
+ENGINE_C_FILES=		cload_chunk.c
 
 TOOLS_PREFIX=		src/tools/
 
@@ -26,26 +35,32 @@ SERVER=			$(addprefix $(SERV_PREFIX),$(SERV_FILES))
 
 ENGINE=			$(addprefix $(ENGINE_PREFIX),$(ENGINE_FILES))
 
+ENGINE_C=		$(addprefix $(ENGINE_PREFIX),$(ENGINE_C_FILES))
+
 TOOLS=			$(addprefix $(TOOLS_PREFIX),$(TOOLS_FILES))
 
 GAME+=			$(TOOLS)
 
-#GAME+=			$(ENGINE)
+GAME+=			$(ENGINE)
 
-SERVER+=		$(TOOLS)
+#SERVER+=		$(TOOLS)
 
-NAME=			game
+NAME=			coldcube
 
 NAMESERV=		server_game
 
 HEAD=			-Iinclude
 
+CXXFLAGS= $(HEAD) -W -Wall -Wextra
+
+CFLAGS= $(HEAD) -W -Wall -Wextra
+
 ifeq ($(DEBUG), yes)
-	CXXFLAGS= $(HEAD) -W -Wall -Wextra -g -D DEBUG
-	CFLAGS= $(HEAD) -W -Wall -Wextra -g -D DEBUG
-else
-	CXXFLAGS= $(HEAD) -W -Wall -Wextra
-	CFLAGS= $(HEAD) -W -Wall -Wextra
+
+CXXFLAGS+= -g -D DEBUG
+
+CFLAGS+= -g -D DEBUG
+
 endif
 
 CC=			gcc
@@ -59,20 +74,23 @@ LIB=			-lstdc++	\
 			-lSDL		\
 			-lSDL2		\
 			-lGL		\
+			-lm		\
 			-lGLEW		\
 			-lglut		\
 			-lX11
 
 OBJ=			$(GAME:.cpp=.o)
 
-OBJSERV=		$(SERVER:.cpp=.o)
+OBJ+=			$(ENGINE_C:.c=.o)
+
+OBJSERV=		$(SERVER:.c=.o)
 
 $(NAMESERV):	$(NAME) $(OBJSERV)
 	@echo -n "[ "
-	@tput setaf 2; tput bold; echo -n "OK" ; tput sgr0
+	@echo -n -e "\e[1m\e[92mOK\e[0m"
 	@echo -n " ] "
 	@echo "Compiled server"
-	@$(CXX) $(OBJSERV) -o $(NAMESERV) $(LIB)
+	@$(CC) $(OBJSERV) -o $(NAMESERV) $(LIB)
 
 $(NAME):	$(OBJ)
 ifeq ($(DEBUG), yes)
@@ -86,14 +104,21 @@ ifeq ($(DEBUG), yes)
 	@tput sgr0
 endif
 	@echo -n "[ "
-	@tput setaf 2; tput bold; echo -n "OK" ; tput sgr0
+	@echo -n -e "\e[1m\e[92mOK\e[0m"
 	@echo -n " ] "
 	@echo "Compiled game"
 	@$(CXX) $(OBJ) -o $(NAME) $(LIB)
 
 %.o:	%.c
 	@echo -n "[ "
-	@tput setaf 2; tput bold; echo -n "OK" ; tput sgr0
+	@echo -n -e "\e[1m\e[92mOK\e[0m"
+	@echo -n " ] "
+	@echo "Compiling" $<
+	@$(CC) $(CFLAGS) -c -o $@ $<
+
+%.o:	%.cpp
+	@echo -n "[ "
+	@echo -n -e "\e[1m\e[92mOK\e[0m"
 	@echo -n " ] "
 	@echo "Compiling" $<
 	@$(CXX) $(CXXFLAGS) -c -o $@ $<
@@ -102,7 +127,7 @@ all:	$(NAME) $(NAMESERV)
 
 clean:
 	@echo -n "[ "
-	@tput setaf 2; tput bold; echo -n "OK"; tput sgr0
+	@echo -n -e "\e[1m\e[92mOK\e[0m"
 	@echo -n " ] "
 	@echo "Removing OBJ files ..."
 	@$(RM) $(OBJ)
@@ -110,7 +135,7 @@ clean:
 
 fclean:	clean
 	@echo -n "[ "
-	@tput setaf 2; tput bold; echo -n "OK" ; tput sgr0
+	@echo -n -e "\e[1m\e[92mOK\e[0m"
 	@echo -n " ] "
 	@echo "Deleting binaries ..."
 	@$(RM) $(NAME)

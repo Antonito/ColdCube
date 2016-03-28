@@ -1,6 +1,6 @@
 #include <GL/glew.h>
 #include <GL/glut.h>
-#include "display.hpp"
+#include "engine/display.hpp"
 #include <iostream>
 #include <SDL2/SDL.h>
 

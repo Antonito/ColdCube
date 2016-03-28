@@ -1,5 +1,5 @@
-#include "player.hpp"
-#include "misc.hpp"
+#include "engine/player.hpp"
+#include "engine/misc.hpp"
 
 static bool IsColinear(vec3 u, vec3 v)
 
