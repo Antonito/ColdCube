@@ -6,6 +6,7 @@
 #  include <GL/glew.h>
 # endif
 
+# include <stdbool.h>
 # include <stdint.h>
 # include <pthread.h>
 # include <SDL/SDL.h>
