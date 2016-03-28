@@ -5,7 +5,7 @@
 #include <unistd.h>
 #include <pthread.h>
 #include <string.h>
-#include "common_struct.h"
+#include "common_structs.hpp"
 
 void		*tcp_thread(void *data)
 {

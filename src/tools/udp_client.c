@@ -1,11 +1,11 @@
 /*
 ** udp_client_test.c for udp client test for server in /home/lokoum/prog
-** 
+**
 ** Made by Lucas Troncy
 ** Login   <troncy_l@epitech.net>
-** 
+**
 ** Started on  Mon Mar 07 16:48:42 2016 Lucas Troncy
-** Last update Mon Mar 28 16:43:33 2016 Lucas Troncy
+** Last update Mon Mar 28 17:48:45 2016 Antoine Baché
 */
 
 #include <stdlib.h>
@@ -15,7 +15,7 @@
 #include <arpa/inet.h>
 #include <sys/types.h>
 #include <pthread.h>
-#include "common_struct.h"
+#include "common_structs.hpp"
 
 int		run = 42;
 int		sock;

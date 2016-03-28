@@ -34,8 +34,9 @@ ENGINE_C_FILES=		cload_chunk.c
 
 TOOLS_PREFIX=		src/tools/
 
-TOOLS_FILES=		text.cpp	\
-			udp_client.c	\
+TOOLS_FILES=		text.cpp
+
+TOOLS_C_FILES=		udp_client.c	\
 			tcp_client.c	\
 
 GAME=			$(addprefix $(GAME_PREFIX),$(GAME_FILES))
@@ -44,9 +45,11 @@ SERVER=			$(addprefix $(SERV_PREFIX),$(SERV_FILES))
 
 ENGINE=			$(addprefix $(ENGINE_PREFIX),$(ENGINE_FILES))
 
+TOOLS=			$(addprefix $(TOOLS_PREFIX),$(TOOLS_FILES))
+
 ENGINE_C=		$(addprefix $(ENGINE_PREFIX),$(ENGINE_C_FILES))
 
-TOOLS=			$(addprefix $(TOOLS_PREFIX),$(TOOLS_FILES))
+TOOLS_C=		$(addprefix $(TOOLS_PREFIX),$(TOOLS_C_FILES))
 
 GAME+=			$(TOOLS)
 
@@ -91,6 +94,8 @@ LIB=			-lstdc++	\
 OBJ=			$(GAME:.cpp=.o)
 
 OBJ+=			$(ENGINE_C:.c=.o)
+
+OBJ+=			$(TOOLS_C:.c=.o)
 
 OBJSERV=		$(SERVER:.c=.o)
 
