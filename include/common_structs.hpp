@@ -23,6 +23,7 @@ typedef	struct		s_udpc
   int			sock;
   struct sockaddr_in	to_serv;
   int			run;
+  char			buff[70];
   pthread_t		thread;
 }			t_udpc;
 
@@ -30,14 +31,20 @@ typedef	struct		s_tcpc
 {
   int			sock;
   struct sockaddr_in	to_serv;
+  char			buff[140];
   pthread_t		thread;
   int			run;
 }			t_tcpc;
 
 typedef	struct		s_network
 {
-  t_tcpc       		tcp;
-  t_udpc       		udp;
+  t_tcpc		tcp;
+  t_udpc		udp;
+  char			*ip;
+  char			*pseudo;
+  int			port;
+  int			playerIndexTcp;
+  int			playerIndexUdp;
 }			t_network;
 
 /*
@@ -83,7 +90,7 @@ typedef	struct		s_chunk
 typedef	struct		s_map
 {
   t_chunk		chunks[256];
-  vector3      		spawn[16];
+  vector3		spawn[16];
 }			t_map;
 
 /*
@@ -149,6 +156,7 @@ typedef	struct		s_data
   t_objects		*obj;
   t_interface		interface;
   t_game		game;
+  t_network		net;
   char			sounds[];
 }			t_data;
 
