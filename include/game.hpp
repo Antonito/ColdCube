@@ -24,6 +24,7 @@
 # include <SDL/SDL.h>
 # include "common_structs.hpp"
 
+int	engineMain();
 void	free_game(t_data *);
 
 #endif	/* !GAME_H_ */

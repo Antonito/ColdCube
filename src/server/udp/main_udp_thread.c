@@ -3,22 +3,24 @@
 void		*main_udp_thread(void *data)
 {
   t_udps	udp;
+  int		port;
 
   udp_init_zero_pseudo(&udp);
   udp.nb_actual = 0;
+  port = *(int *)data;
   if ((udp.main_sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == -1)
     {
-      fprintf(stderr, "cannot create socket \n");
+      fprintf(stderr, "Cannot create socket\n");
       return ((void *)0);
     }
   udp.my_addr.sin_family = AF_INET;
-  printf("the port used = %d\n", (int)data);
-  udp.my_addr.sin_port = htons((int)data);
+  printf("The port used = %d\n", port);
+  udp.my_addr.sin_port = htons(port);
   udp.my_addr.sin_addr.s_addr = htonl(INADDR_ANY);
   udp.my_addrl = sizeof(udp.my_addr);
   if (bind(udp.main_sock, (struct sockaddr *)&udp.my_addr, udp.my_addrl) == -1)
     {
-      fprintf(stderr, "cannot bind on main socket :(\n");
+      fprintf(stderr, "Cannot bind on main socket\n");
       return ((void *)0);
     }
   udp_thread(&udp);
@@ -46,7 +48,7 @@ void		udp_thread(t_udps *udp)
     go = select(udp->main_sock + 1, &udp->readfds, NULL, NULL, &udp->ms);
     if (go == -1)
       {
-	fprintf(stderr, "error select :(\n");
+	fprintf(stderr, "Error select\n");
       }
     else if (go == 0 && udp->nb_actual > 0)
       {
@@ -57,14 +59,14 @@ void		udp_thread(t_udps *udp)
       {
 	FD_CLR(udp->main_sock, &udp->readfds);
 	if ((len = recvfrom(udp->main_sock,
-			udp->buff, 70, 0,
-			(struct sockaddr *)&udp->tmp_sock, (socklen_t *)&udp->cli_addrl)) > 0)
+			    udp->buff, 70, 0,
+			    (struct sockaddr *)&udp->tmp_sock, (socklen_t *)&udp->cli_addrl)) > 0)
 	  {
 	    server_check_msg_udp(udp);
 	  }
 	else
 	  {
-	    fprintf(stdout, "nop\n");
+	    fprintf(stdout, "Error\n");
 	  }
       }
     }
@@ -85,7 +87,8 @@ void		server_check_msg_udp(t_udps *udp)
       udp->cli_sock[i] = udp->tmp_sock;
       sprintf(tmp, "%d", udp->nb_actual);
       udp->nb_actual += 1;
-      sendto(udp->main_sock, tmp, 1, 0, (struct sockaddr *)&udp->tmp_sock, udp->cli_addrl);
+      sendto(udp->main_sock, tmp, 1, 0,
+	     (struct sockaddr *)&udp->tmp_sock, udp->cli_addrl);
     }
   else
     {

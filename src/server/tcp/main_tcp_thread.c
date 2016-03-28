@@ -18,7 +18,7 @@ void		*main_tcp_thread(void *data)
     }
   tcp.my_addr.sin_family = AF_INET;
   tcp.my_addr.sin_addr.s_addr = INADDR_ANY;
-  tcp.port = (int)data;
+  tcp.port = *(int *)data;
   tcp.my_addr.sin_port = htons(tcp.port);
   if (bind(tcp.main_sock, (struct sockaddr *)&tcp.my_addr, sizeof(tcp.my_addr)) != 0)
     {

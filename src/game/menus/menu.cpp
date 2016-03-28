@@ -1,7 +1,7 @@
 #include "class/menu.hpp"
 #include <iostream>
 #include <stdlib.h>
-#include <tools.hpp>
+#include "tools.hpp"
 
 int		Menu::initMenu(int posx, int posy, char *text)
 {
@@ -169,7 +169,7 @@ void		Menu::deleteAllButton(void)
   delete tmp;
 }
 
-void	Menu::display(void)
+void		Menu::display(void)
 {
   t_button	*tmp;
 
