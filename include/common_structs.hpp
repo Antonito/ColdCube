@@ -23,6 +23,7 @@ typedef	struct		s_udpc
   int			sock;
   struct sockaddr_in	to_serv;
   int			run;
+  char			buff[70];
   pthread_t		thread;
 }			t_udpc;
 
@@ -30,6 +31,7 @@ typedef	struct		s_tcpc
 {
   int			sock;
   struct sockaddr_in	to_serv;
+  char			buff[140];
   pthread_t		thread;
   int			run;
 }			t_tcpc;
@@ -38,6 +40,11 @@ typedef	struct		s_network
 {
   t_tcpc		tcp;
   t_udpc		udp;
+  char			*ip;
+  char			*pseudo;
+  int			port;
+  int			playerIndexTcp;
+  int			playerIndexUdp;
 }			t_network;
 
 /*
