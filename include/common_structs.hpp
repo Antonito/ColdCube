@@ -36,8 +36,8 @@ typedef	struct		s_tcpc
 
 typedef	struct		s_network
 {
-  t_tcpc       		tcp;
-  t_udpc       		udp;
+  t_tcpc		tcp;
+  t_udpc		udp;
 }			t_network;
 
 /*
@@ -83,7 +83,7 @@ typedef	struct		s_chunk
 typedef	struct		s_map
 {
   t_chunk		chunks[256];
-  vector3      		spawn[16];
+  vector3		spawn[16];
 }			t_map;
 
 /*
@@ -149,6 +149,7 @@ typedef	struct		s_data
   t_objects		*obj;
   t_interface		interface;
   t_game		game;
+  t_network		net;
   char			sounds[];
 }			t_data;
 
