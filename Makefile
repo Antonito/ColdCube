@@ -10,7 +10,14 @@ GAME_FILES=		main.cpp			\
 
 SERV_PREFIX=		src/server/
 
-SERV_FILES=		test.cpp
+SERV_FILES=		main.c				\
+			udp/udp_server_pseudo.c		\
+			udp/main_udp_thread.c		\
+			udp/server_udp_msg.c		\
+			tcp/main_tcp_thread.c		\
+			tcp/server_tcp_functions.c	\
+			tcp/server_tcp_msg.c		\
+			tcp/tcp_server_pseudo.c		\
 
 ENGINE_PREFIX=		src/engine/
 
@@ -85,7 +92,7 @@ OBJ+=			$(ENGINE_C:.c=.o)
 
 OBJSERV=		$(SERVER:.c=.o)
 
-$(NAMESERV):	$(NAME) $(OBJSERV)
+$(NAMESERV):	$(OBJSERV)
 	@echo -n "[ "
 	@echo -n -e "\e[1m\e[92mOK\e[0m"
 	@echo -n " ] "
@@ -123,7 +130,7 @@ endif
 	@echo "Compiling" $<
 	@$(CXX) $(CXXFLAGS) -c -o $@ $<
 
-all:	$(NAME) $(NAMESERV)
+all:	$(NAMESERV) $(NAME)
 
 clean:
 	@echo -n "[ "

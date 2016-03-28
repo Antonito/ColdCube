@@ -1,0 +1,11 @@
+[]
+msg separe par des \0, tout les data des structures
+
+id = char = index du tableau des users connecte; = 48 pour lindex 0 et 58 pour le 10eme joueur
+
+x y z = posistion du joueur, = des doubles
+X1 Y1 Z1 = orientation de joueurs =  des doubles;
+arme = int pour id de larme;
+int32_t event = le champ de bits;
+[id\0X\0Y\0Z\0X1\0Y1\0Z1\0arme\0events\0]
+une taille de 70 octet !!!

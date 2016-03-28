@@ -1,7 +1,7 @@
 #include "class/menu.hpp"
 #include <iostream>
 #include <stdlib.h>
-#include <tools.hpp>
+#include "tools.hpp"
 
 int		Menu::initMenu(int posx, int posy, char *text)
 {
