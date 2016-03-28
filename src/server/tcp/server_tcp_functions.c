@@ -36,14 +36,14 @@ void		tcps_cli_add(t_tcps *tcp)
 	  break;
 	}
     }
-  tcps_sync_all(tcp);/* now, clients know each other */
+  tcps_sync_all(tcp);
 }
 
 void		tcps_check_received(t_tcps *tcp)
 {
-  if (tcp->buff[0] == '/')/* this is a sync message then */
+  if (tcp->buff[0] == '/')
     {
-      if (tcp->buff[1] == 'a')/* we add new client pseudo here*/
+      if (tcp->buff[1] == 'a')
 	{
 	  if (tcp_server_add_pseudo(tcp, &tcp->buff[3]) == -1)
 	    {
@@ -53,7 +53,6 @@ void		tcps_check_received(t_tcps *tcp)
 	  else
 	    {
 	      fprintf(stdout, "pseudo: OK, client added\n");
-	      /*tcps_cli_add(tcp);*/
 	    }
 	}
     }
