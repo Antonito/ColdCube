@@ -79,7 +79,7 @@ typedef	struct		s_cube
 
 typedef struct		s_block
 {
-  s_cube		cube;
+  t_cube		cube;
   unsigned char		byte;
 }			t_block;
 

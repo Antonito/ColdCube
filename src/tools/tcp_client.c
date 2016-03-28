@@ -22,7 +22,6 @@ void		*tcp_thread(void *data)
 
 int		clientLaunchTcpc(t_data *data)
 {
-  int		len;
   char		tmp[30];
 
   if ((data->net.tcp.sock = socket(AF_INET, SOCK_STREAM, 0)) == -1)
@@ -40,7 +39,7 @@ int		clientLaunchTcpc(t_data *data)
       return (-1);
     }
   snprintf(tmp, 24, "/a %s", data->net.pseudo);
-  if (write(data->net.tcp.sock, tmp, strlen(tmp)) != strlen(tmp))
+  if (write(data->net.tcp.sock, tmp, strlen(tmp)) != (int)strlen(tmp))
     {
       fprintf(stderr, "error sending pseudo\n");
       return (-1);
