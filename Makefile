@@ -4,8 +4,8 @@ GAME_PREFIX=		src/game/
 
 GAME_FILES=		main.cpp			\
 			free.cpp			\
-			main_menu.cpp			\
-			Menu.cpp
+			menus/main_menu.cpp		\
+			menus/Menu.cpp
 
 SERV_PREFIX=		src/server/
 
@@ -82,13 +82,14 @@ CXX=			clang
 
 RM=			rm -f
 
-LIB=			-lstdc++	\
-			-lpthread	\
-			-lSDL2		\
-			-lGL		\
-			-lm		\
-			-lGLEW		\
-			-lglut		\
+LIB=			-lstdc++			\
+			-lpthread			\
+			-lSDL2				\
+			-lSDL_ttf			\
+			-lGL				\
+			-lm				\
+			-lGLEW				\
+			-lglut				\
 			-lX11
 
 OBJ=			$(GAME:.cpp=.o)

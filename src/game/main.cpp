@@ -6,7 +6,7 @@
 
 int	game()
 {
-  t_data		*data;
+  t_data		*data = new t_data;
   Display		display(WIN_X, WIN_Y, "Coldcube");
   std::vector<menuItem>	items(5);
   std::string		inputText = "Some text";
@@ -15,9 +15,7 @@ int	game()
   SDL_Surface		*surface = NULL;
   Menu			*menu = new Menu(screen, &items);
 
-  if (!(data = malloc(sizeof(t_data))))
-    return (write(2, "[Err] Malloc failed\n", 20), 1);
-  surface = SDL_LoadBMP("asets/imgs/cursor.bmp");
+  surface = SDL_LoadBMP("assets/imgs/cursor.bmp");
   SDL_SetColorKey(surface, 0, SDL_MapRGB(surface->format, 0, 0, 0));
   SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 255, 255, 255));
   pos.x = (screen->w >> 1)- (surface->w >> 1);
@@ -28,10 +26,9 @@ int	game()
       // SDL_WaitEvent(&event);
       // if (engineMain(display))
       // 	return (1);
-      display.UpdateMenu(menu, items, &data->game.running, &pos, screen,
-			 surface, data);
+      display.UpdateMenu(menu, items, &pos, screen, surface, data);
     }
-  free(data);
+  delete data;
   return (0);
 }
 

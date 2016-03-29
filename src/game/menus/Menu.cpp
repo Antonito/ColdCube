@@ -1,4 +1,4 @@
-#include "SDL2/SDL.h"
+#include <SDL2/SDL.h>
 #include "SDL2/SDL_ttf.h"
 #include "Menu.h"
 #include <vector>
@@ -23,7 +23,7 @@ void Menu::hover(int x, int y) {
 }
 
 void Menu::moveDown() {
-  if (this->currentItem < (this->items->size() - 1))
+  if (this->currentItem < (int)(this->items->size() - 1))
     ++this->currentItem;
 }
 
@@ -43,7 +43,7 @@ void Menu::draw() {
   color.b = 0;
   positionZozor.x = 10;
   positionZozor.y = 10;
-  for (int i = 0; i < this->items->size; ++i) {
+  for (int i = 0; i < (int)this->items->size(); ++i) {
     SDL_SetColorKey(bg, 0, SDL_MapRGB(bg->format, 0, 0, 255));
     SDL_FillRect(bg, NULL, SDL_MapRGB(bg->format, 255, i == this->currentItem ? 100 : 255, 0));
     text = TTF_RenderText_Blended(this->font, (*this->items)[i].text.c_str(), color);

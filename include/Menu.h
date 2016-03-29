@@ -1,9 +1,12 @@
-#include "SDL/SDL.h"
-#include "SDL/SDL_ttf.h"
+#ifndef	MENU_H_
+# define MENU_H_
+
+#include <SDL2/SDL.h>
+#include "SDL2/SDL_ttf.h"
 #include <vector>
 #include <string>
 
-typedef struct	Point
+typedef struct	s_Point
 {
   int	x;
   int	y;
@@ -37,3 +40,5 @@ private:
 	SDL_Surface *textSurface;
 	SDL_Rect cursor;
 };
+
+#endif // MENU_H_
