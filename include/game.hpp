@@ -3,7 +3,7 @@
 
 # define WIN_X		1920
 # define WIN_Y		1080
-# define WIN_TITLE	"TekdoomV2"
+# define WIN_TITLE	"ColdCube"
 
 # ifdef _WIN32
 #  include <windows.h>

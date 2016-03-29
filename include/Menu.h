@@ -16,6 +16,8 @@ struct menuItem
 	void (*ptToFunc)();
 };
 
+void	mainMenu(std::vector<menuItem> &items);
+
 class Menu
 {
 public:

@@ -3,6 +3,8 @@
 #include "engine/display.hpp"
 #include <iostream>
 #include <SDL2/SDL.h>
+#include "common_structs.hpp"
+#include "game.hpp"
 
 Display::Display(int width, int height, const std::string& title)
 {
@@ -52,7 +54,6 @@ bool	Display::IsClosed()
 {
   return (m_isClosed);
 }
-
 
 void	Display::Update(Camera &cam, Map &map)
 {
@@ -137,5 +138,45 @@ void	Display::Update(Camera &cam, Map &map)
 	  cam.UpdateFor();
 	  break ;
 	}
+    }
+}
+
+void	Display::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
+			    SDL_Rect *pos, SDL_Surface *screen,
+			    SDL_Surface *surface, t_data *data)
+{
+  SDL_Event	event;
+
+  while (SDL_PollEvent(&event))
+    {
+      switch(event.type)
+	{
+	case SDL_QUIT:
+	  data->game.running = false;
+	  break;
+	case SDL_KEYDOWN:
+	  if (event.key.keysym.sym == SDLK_DOWN)
+	    menu->moveDown();
+	  if (event.key.keysym.sym == SDLK_UP)
+	    menu->moveUp();
+	  if (event.key.keysym.sym == SDLK_BACKSPACE)
+	    items[menu->currentItem].text.erase(items[menu->currentItem].text.length() - 1);
+	  if (event.key.keysym.sym == SDLK_RETURN)
+	    engineMain(*this);
+	  break;
+	case SDL_MOUSEMOTION:
+	  pos->x = event.motion.x - 20;
+	  pos->y = event.motion.y - 20;
+	  menu->hover(event.motion.x, event.motion.y);
+	  break;
+	case SDL_TEXTINPUT:
+	  printf("readed \"%s\"\n", event.text.text);
+	  items[menu->currentItem].text += event.text.text;
+	  break;
+	}
+      SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 255, 255, 255));
+      menu->draw();
+      SDL_BlitSurface(surface, NULL, screen, pos);
+      SDL_UpdateWindowSurface(m_window);
     }
 }
