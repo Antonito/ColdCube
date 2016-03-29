@@ -5,6 +5,7 @@
 #include <SDL2/SDL.h>
 #include "common_structs.hpp"
 #include "game.hpp"
+#include "tools.hpp"
 
 Display::Display(int width, int height, const std::string& title)
 {
@@ -168,8 +169,21 @@ void	Display::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
 	    items[menu->currentItem].text.erase(items[menu->currentItem].text.length() - 1);
 	  if (event.key.keysym.sym == SDLK_RETURN)
 	    {
+	      //Initilisation
+	      data->net.port = atoi(items[3].text.c_str());
+	      data->net.ip = (char *)items[4].text.c_str();
+	      data->net.pseudo = (char *)items[5].text.c_str();
 	      this->setClosed(false);
-	      engineMain(*this);
+
+	      // Penser a checker IP + Pseudo + Port
+
+	      printf("Port = %d\n", data->net.port);
+	      printf("Ip = %s\n", data->net.ip);
+	      printf("Pseudo = %s\n", data->net.pseudo);
+	      if (!clientLaunchTcpc(data)) //TCP Start
+		{
+		  engineMain(*this);
+		}
 	    }
 	  break;
 	case SDL_MOUSEMOTION:

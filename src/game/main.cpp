@@ -14,7 +14,7 @@ int	game()
 {
   t_data		*data = new t_data;
   Display		display(WIN_X, WIN_Y, "Coldcube");
-  std::vector<menuItem>	items(5);
+  std::vector<menuItem>	items(6);
   std::string		inputText = "Some text";
   SDL_Rect		pos;
   SDL_Surface		*screen = SDL_GetWindowSurface(display.GetWin());
@@ -30,9 +30,6 @@ int	game()
   initData(data);
   while (data->game.running)
     {
-      // SDL_WaitEvent(&event);
-      // if (engineMain(display))
-      // 	return (1);
       display.UpdateMenu(menu, items, &pos, screen, surface, data);
     }
   delete data;
