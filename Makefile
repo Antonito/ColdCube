@@ -35,6 +35,7 @@ ENGINE_C_FILES=		cload_chunk.c
 TOOLS_PREFIX=		src/tools/
 
 TOOLS_FILES=		text.cpp			\
+			udpPacket.cpp			\
 			udp_client.cpp			\
 			check_package.cpp		\
 			tcp_client.cpp
