@@ -1,5 +1,4 @@
 #include <GL/glew.h>
-//#include <GL/glut.h>
 #include <GL/gl.h>
 #include "engine/display.hpp"
 #include <iostream>
@@ -7,30 +6,22 @@
 
 Display::Display(int width, int height, const std::string& title)
 {
-  SDL_ClearError();
   if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
     {
       std::cerr << "Failed to init SDL: " << SDL_GetError() << std::endl;
       exit(1);
     }
-  printf("SDL Init: %s\n", SDL_GetError());
-  // SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
-  // SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
-  // SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
-  // SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 8);
-  // SDL_GL_SetAttribute(SDL_GL_BUFFER_SIZE, 32);
-  // SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
-  // SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+  SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
+  SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
+  SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
+  SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 8);
+  SDL_GL_SetAttribute(SDL_GL_BUFFER_SIZE, 32);
+  SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
+  SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
-    SDL_ClearError();
-  if (SDL_SetRelativeMouseMode(SDL_TRUE) == 0)
-    printf("WORKED!\n");
-    SDL_ClearError();
+  SDL_SetRelativeMouseMode(SDL_TRUE);
   m_window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_OPENGL);
-    printf("SDL create: %s\n", SDL_GetError());
-      SDL_ClearError();
   m_glContext = SDL_GL_CreateContext(m_window);
-    printf("SDL gl context: %s\n", SDL_GetError());
 
   GLenum status = glewInit();
   if (status != GLEW_OK)
@@ -39,15 +30,9 @@ Display::Display(int width, int height, const std::string& title)
       exit(1);
     }
   m_isClosed = false;
-  SDL_ClearError();
   glEnable(GL_DEPTH_TEST);
-    printf("SDL depth: %s\n", SDL_GetError());
-      SDL_ClearError();
   glEnable(GL_CULL_FACE);
-    printf("SDL cull: %s\n", SDL_GetError());
-      SDL_ClearError();
   glCullFace(GL_BACK);
-  printf("SDL back: %s\n", SDL_GetError());
 }
 
 Display::~Display()

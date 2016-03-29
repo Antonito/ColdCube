@@ -25,7 +25,7 @@
 # include "engine/display.hpp"
 # include "common_structs.hpp"
 
-int	engineMain(Display *);
+int	engineMain(Display &);
 void	free_game(t_data *);
 
 #endif	/* !GAME_H_ */

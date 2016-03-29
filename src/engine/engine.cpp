@@ -10,19 +10,16 @@
 #include "engine/map.hpp"
 #include <time.h>
 
-#define W 1280
-#define H 720
-
 using namespace glm;
 
 Mesh	SetPlanes(int, vec3);
 
-int	engineMain(Display *display)
+int	engineMain(Display &display)
 {
   Shader	shader("shaders/test1");
 
   Map		map("map");
-  Camera camera(glm::vec3(0, 0, 10), 70.0f, (float)W / H, 0.01f, 500.0f);
+  Camera camera(glm::vec3(0, 0, 10), 70.0f, (float)WIN_X / WIN_Y, 0.01f, 500.0f);
   Transform transform;
   int		fps = 0;
   int		t = time(NULL);
