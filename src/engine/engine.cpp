@@ -27,7 +27,7 @@ int	engineMain(Display &display)
   //   {2, 0, 0, 0,  5, 7, 4, 400.0,
   //    30, 40, 5, 10};
 
-  while (!display->IsClosed())
+  while (!display.IsClosed())
     {
       fps++;
       if (t != time(NULL))
@@ -37,12 +37,12 @@ int	engineMain(Display &display)
 	  // fflush(stdout);
 	  fps = 0;
 	}
-      display->Clear(0.0f, 0.3f, 0.8f, 1.0f);
+      display.Clear(0.0f, 0.3f, 0.8f, 1.0f);
 
       shader.Bind();
       shader.Update(transform, camera);
       map.Draw();
-      display->Update(camera, map);
+      display.Update(camera, map);
     }
   return (0);
 }
