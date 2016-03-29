@@ -16,6 +16,8 @@ void		*tcp_thread(void *data)
     {
       len = read(_data->net.tcp.sock, _data->net.tcp.buff, 199);
       _data->net.tcp.buff[len] = 0;
+      fprintf(stderr, ":%s:", _data->net.tcp.buff);
+      fflush(stderr);
     }
   return (NULL);
 }

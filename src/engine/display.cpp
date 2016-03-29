@@ -1,3 +1,4 @@
+#include <unistd.h>
 #include <GL/glew.h>
 #include <GL/gl.h>
 #include "engine/display.hpp"
@@ -178,12 +179,22 @@ void	Display::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
 
 	      // Penser a checker IP + Pseudo + Port
 
-	      printf("Port = %d\n", data->net.port);
-	      printf("Ip = %s\n", data->net.ip);
-	      printf("Pseudo = %s\n", data->net.pseudo);
+	      if (data->net.port < 0)
+		std::cerr << "Incorrect port\n";
+
+#ifdef	DEBUG
+	      std::clog << "[Infos] Port = " << data->net.port << "\n";
+	      std::clog << "[Infos] Ip = " << data->net.ip << "\n";
+	      std::clog << "[Infos] Pseudo = " << data->net.pseudo << "\n";
+#endif
+
 	      if (!clientLaunchTcpc(data) && !clientLaunchUdpc(data)) //TCP Start
 		{
 		  engineMain(*this);
+		  data->net.udp.run = false;
+		  data->net.tcp.run = false;
+		  close(data->net.tcp.sock);
+		  close(data->net.udp.sock);
 		}
 	    }
 	  break;
