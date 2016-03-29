@@ -165,7 +165,8 @@ void	Display::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
 	    menu->moveDown();
 	  if (event.key.keysym.sym == SDLK_UP)
 	    menu->moveUp();
-	  if (event.key.keysym.sym == SDLK_BACKSPACE)
+	  if (event.key.keysym.sym == SDLK_BACKSPACE &&
+	      items[menu->currentItem].text.length())
 	    items[menu->currentItem].text.erase(items[menu->currentItem].text.length() - 1);
 	  if (event.key.keysym.sym == SDLK_RETURN)
 	    {
