@@ -1,6 +1,7 @@
 #include "common_structs.hpp"
+#include "tools.hpp"
 
-int		createUdpPacket(t_player *player)
+int		createUdpPacket(t_data *data, t_player *player)
 {
   char		packet[70];
   char		*tmp;
@@ -72,5 +73,7 @@ int		createUdpPacket(t_player *player)
       packet[n + i] = tmp[i];
       ++i;
     }
+  if (sendUdpPacket(data, packet) != 0)
+    return (1);
   return (0);
 }
