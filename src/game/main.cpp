@@ -4,6 +4,12 @@
 #include "Menu.h"
 #include <GL/glut.h>
 
+void	initData(t_data *data)
+{
+  memset(data, 0, sizeof(t_data));
+  data->game.running = true;
+}
+
 int	game()
 {
   t_data		*data = new t_data;
@@ -21,6 +27,7 @@ int	game()
   pos.x = (screen->w >> 1)- (surface->w >> 1);
   pos.y = (screen->h >> 1)- (surface->h >> 1);
   SDL_StartTextInput();
+  initData(data);
   while (data->game.running)
     {
       // SDL_WaitEvent(&event);
@@ -34,6 +41,8 @@ int	game()
 
 int	main(int ac, char **av, char **env)
 {
+  (void) ac;
+  (void) av;
   if (!*env)
     {
       write(2, "Environment variable are missing\n", 33);

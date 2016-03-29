@@ -85,7 +85,7 @@ RM=			rm -f
 LIB=			-lstdc++			\
 			-lpthread			\
 			-lSDL2				\
-			-lSDL_ttf			\
+			-lSDL2_ttf			\
 			-lGL				\
 			-lm				\
 			-lGLEW				\
