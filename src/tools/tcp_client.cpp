@@ -44,7 +44,6 @@ int		clientLaunchTcpc(t_data *data)
       fprintf(stderr, "error sending pseudo\n");
       return (-1);
     }
-  write(data->net.tcp.sock, tmp, 24);
   data->net.playerIndexTcp = atoi(tmp);
   pthread_create(&data->net.tcp.thread, NULL, tcp_thread, (void *)data);
   return (0);
