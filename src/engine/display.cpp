@@ -181,7 +181,7 @@ void	Display::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
 	      printf("Port = %d\n", data->net.port);
 	      printf("Ip = %s\n", data->net.ip);
 	      printf("Pseudo = %s\n", data->net.pseudo);
-	      if (!clientLaunchTcpc(data)) //TCP Start
+	      if (!clientLaunchTcpc(data) && !clientLaunchUdpc(data)) //TCP Start
 		{
 		  engineMain(*this);
 		}
