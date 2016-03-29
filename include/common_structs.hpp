@@ -10,11 +10,11 @@
 # include <stdint.h>
 # include <pthread.h>
 # include <SDL/SDL.h>
-# include <GL/glu.h>
-# include <GL/glext.h>
-# include <glm/glm.hpp>
+// # include <GL/glu.h>
+// # include <GL/glext.h>
 # include <GL/gl.h>
 # include <arpa/inet.h>
+# include <glm/glm.hpp>
 
 /*
 ** Network

@@ -34,10 +34,9 @@ ENGINE_C_FILES=		cload_chunk.c
 
 TOOLS_PREFIX=		src/tools/
 
-TOOLS_FILES=		text.cpp
-
-TOOLS_C_FILES=		udp_client.c	\
-			tcp_client.c	\
+TOOLS_FILES=		text.cpp	\
+			udp_client.cpp	\
+			tcp_client.cpp
 
 GAME=			$(addprefix $(GAME_PREFIX),$(GAME_FILES))
 
@@ -83,7 +82,6 @@ RM=			rm -f
 
 LIB=			-lstdc++	\
 			-lpthread	\
-			-lSDL		\
 			-lSDL2		\
 			-lGL		\
 			-lm		\
@@ -94,8 +92,6 @@ LIB=			-lstdc++	\
 OBJ=			$(GAME:.cpp=.o)
 
 OBJ+=			$(ENGINE_C:.c=.o)
-
-OBJ+=			$(TOOLS_C:.c=.o)
 
 OBJSERV=		$(SERVER:.c=.o)
 
