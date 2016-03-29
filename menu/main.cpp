@@ -23,7 +23,7 @@ int main(int argc, char *argv[])
     SDL_FillRect(ecran, NULL, SDL_MapRGB(ecran->format, 255, 255, 255));
     Menu *menu = new Menu(ecran, &items);
 
-    zozor = SDL_LoadBMP("cursor.bmp");
+    zozor = SDL_LoadBMP("assets/img/cursor.bmp");
     SDL_SetColorKey(zozor, 0, SDL_MapRGB(zozor->format, 0, 0, 0));
     //SDL_SetColorKey(zozor, SDL_TRUE, 0);
 
