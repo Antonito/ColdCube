@@ -26,10 +26,10 @@ int	game_loop(t_data *data, SDL_Event event, Menu *mainMenu)
 {
   Display	display(WIN_X, WIN_Y, "Coldcube - Best solution to cooling your computer");
 
-  while (!display.IsClosed())
-    {
-	      engineMain(display);
-    }
+  // while (!display.IsClosed())
+  //   {
+      engineMain(&display);
+      //    }
 
   // while (data->game.running)
   //   {
@@ -97,25 +97,30 @@ int		game(int ac, char **av)
 
 int	main(int ac, char **av, char **env)
 {
-  if (!*env)
-    {
-      write(2, "Environment variable are missing\n", 33);
-#ifdef DEBUG
-      write(2, "[INFOS] Game exited with status error 1\n", 40);
-#endif
-      return (1);
-    }
-  // Lancement du thread TCP
-  if (game(ac, av) == 1) //Lancement de la partie graphique
-    {
-      write(2, "An error occured.\n", 18);
-#ifdef DEBUG
-      write(2, "[INFOS] Game exited with status error 1\n", 40);
-#endif
-      return (1);
-    }
-#ifdef DEBUG
-  write(2, "[INFOS] Game exited correctly\n", 30);
-#endif
+  Display	display(1280, 720, "Coldcube");
+
+  // while (!display.IsClosed())
+  //   {
+      engineMain(&display);
+//   if (!*env)
+//     {
+//       write(2, "Environment variable are missing\n", 33);
+// #ifdef DEBUG
+//       write(2, "[INFOS] Game exited with status error 1\n", 40);
+// #endif
+//       return (1);
+//     }
+//   // Lancement du thread TCP
+//   if (game(ac, av) == 1) //Lancement de la partie graphique
+//     {
+//       write(2, "An error occured.\n", 18);
+// #ifdef DEBUG
+//       write(2, "[INFOS] Game exited with status error 1\n", 40);
+// #endif
+//       return (1);
+//     }
+// #ifdef DEBUG
+//   write(2, "[INFOS] Game exited correctly\n", 30);
+// #endif
   return (0);
 }

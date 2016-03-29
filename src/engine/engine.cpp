@@ -10,16 +10,19 @@
 #include "engine/map.hpp"
 #include <time.h>
 
+#define W 1280
+#define H 720
+
 using namespace glm;
 
 Mesh	SetPlanes(int, vec3);
 
-int	engineMain(Display &display)
+int	engineMain(Display *display)
 {
   Shader	shader("shaders/test1");
 
   Map		map("map");
-  Camera camera(glm::vec3(0, 0, 10), 70.0f, (float)WIN_X / WIN_Y, 0.01f, 500.0f);
+  Camera camera(glm::vec3(0, 0, 10), 70.0f, (float)W / H, 0.01f, 500.0f);
   Transform transform;
   int		fps = 0;
   int		t = time(NULL);
@@ -27,7 +30,7 @@ int	engineMain(Display &display)
   //   {2, 0, 0, 0,  5, 7, 4, 400.0,
   //    30, 40, 5, 10};
 
-  while (!display.IsClosed())
+  while (!display->IsClosed())
     {
       fps++;
       if (t != time(NULL))
@@ -37,13 +40,12 @@ int	engineMain(Display &display)
 	  // fflush(stdout);
 	  fps = 0;
 	}
-      display.Clear(0.0f, 0.3f, 0.8f, 1.0f);
+      display->Clear(0.0f, 0.3f, 0.8f, 1.0f);
 
       shader.Bind();
-      shader.Update(transform, camera// , 2, lights
-		    );
+      shader.Update(transform, camera);
       map.Draw();
-      display.Update(camera, map);
+      display->Update(camera, map);
     }
   return (0);
 }
