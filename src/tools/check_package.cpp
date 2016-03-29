@@ -2,7 +2,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-bool	checkPackage(char *str)
+bool	checkPacket(char *str)
 {
   int	i;
 

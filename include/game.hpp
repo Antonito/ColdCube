@@ -1,8 +1,8 @@
 #ifndef	GAME_H_
 # define GAME_H_
 
-# define WIN_X		1920
-# define WIN_Y		1080
+# define WIN_X		1280
+# define WIN_Y		720
 # define WIN_TITLE	"ColdCube"
 
 # ifdef _WIN32
