@@ -155,6 +155,11 @@ void	Display::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
 	  data->game.running = false;
 	  break;
 	case SDL_KEYDOWN:
+	  if (event.key.keysym.sym == SDLK_ESCAPE)
+	    {
+	      data->game.running = false;
+	      break;
+	    }
 	  if (event.key.keysym.sym == SDLK_DOWN)
 	    menu->moveDown();
 	  if (event.key.keysym.sym == SDLK_UP)
@@ -162,7 +167,9 @@ void	Display::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
 	  if (event.key.keysym.sym == SDLK_BACKSPACE)
 	    items[menu->currentItem].text.erase(items[menu->currentItem].text.length() - 1);
 	  if (event.key.keysym.sym == SDLK_RETURN)
-	    engineMain(*this);
+	    {
+	      engineMain(*this);
+	    }
 	  break;
 	case SDL_MOUSEMOTION:
 	  pos->x = event.motion.x - 20;

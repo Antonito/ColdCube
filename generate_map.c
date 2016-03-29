@@ -4,17 +4,17 @@
 #include <unistd.h>
 #include <fcntl.h>
 
-int	main(int ac, char **av)
+intmain(int ac, char **av)
 {
-  int	nb;
-  int	i = 0;
-  char	filename[14] = {0};
-  int	fd;
-  int	height;
-  int	j;
-  int	temp = 0;
-  unsigned char	col = 0;
-  int	total = 0;
+  intnb;
+  inti = 0;
+  charfilename[14] = {0};
+  intfd;
+  intheight;
+  intj;
+  inttemp = 0;
+  unsigned charcol = 0;
+  inttotal = 0;
 
   srand(time(NULL));
   if (ac >= 2)
@@ -54,13 +54,13 @@ int	main(int ac, char **av)
 	    col = 0;
 	  /* if (rand() % 20) */
 	  /* if (j < 3 * 256) */
-	  /*   //	    col = rand() % 55 + 200; */
+	  /*   //    col = rand() % 55 + 200; */
 	  /*   col = rand() % 7 + 1; */
 	  /*   // col = j; */
 	  /* else if (rand() % 20 == 0) */
 	  /*   col = rand() % 7 + 1; */
 	  /* else */
-	    /* col = 0; */
+	  /* col = 0; */
 	  write(fd, &col, 1);
 	  total++;
 	  j++;
