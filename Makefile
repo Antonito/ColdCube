@@ -36,6 +36,7 @@ TOOLS_PREFIX=		src/tools/
 
 TOOLS_FILES=		text.cpp			\
 			udpPacket.cpp			\
+			sendUdpPacket.cpp		\
 			udp_client.cpp			\
 			check_package.cpp		\
 			tcp_client.cpp
