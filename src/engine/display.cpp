@@ -180,7 +180,15 @@ void	Display::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
 	      // Penser a checker IP + Pseudo + Port
 
 	      if (data->net.port < 0)
-		std::cerr << "Incorrect port\n";
+		{
+		  std::cerr << "Incorrect port\n";
+		  break;
+		}
+	      if (strlen(data->net.pseudo) > 20)
+		{
+		  std::cerr << "Pseudo is too long\n";
+		  break;
+		}
 
 #ifdef	DEBUG
 	      std::clog << "[Infos] Port = " << data->net.port << "\n";
@@ -188,13 +196,13 @@ void	Display::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
 	      std::clog << "[Infos] Pseudo = " << data->net.pseudo << "\n";
 #endif
 
-	      if (!clientLaunchTcpc(data) && !clientLaunchUdpc(data)) //TCP Start
+	      if (!clientLaunchTcpc(data)) //TCP Start
 		{
 		  engineMain(*this);
 		  data->net.udp.run = false;
 		  data->net.tcp.run = false;
 		  close(data->net.tcp.sock);
-		  close(data->net.udp.sock);
+		  // close(data->net.udp.sock);
 		}
 	    }
 	  break;
