@@ -18,6 +18,7 @@ class Display
 		   SDL_Surface *screen, SDL_Surface *surface, t_data *data);
   SDL_Window	*GetWin(){return m_window;};
   bool	IsClosed();
+  void	setClosed(bool state){m_isClosed = state;};
 
   virtual ~Display();
  protected:

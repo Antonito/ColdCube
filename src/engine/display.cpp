@@ -168,6 +168,7 @@ void	Display::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
 	    items[menu->currentItem].text.erase(items[menu->currentItem].text.length() - 1);
 	  if (event.key.keysym.sym == SDLK_RETURN)
 	    {
+	      this->setClosed(false);
 	      engineMain(*this);
 	    }
 	  break;
