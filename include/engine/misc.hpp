@@ -1,9 +1,11 @@
 #ifndef MISC_HPP_
 # define MISC_HPP_
 
-# include <GL/gl.h>
 # include <ctime>
-# include "camera.hpp"
+// # include <glm/gtx/transform.hpp>
+# include <GL/glew.h>
+# include <GL/gl.h>
+# include <glm/glm.hpp>
 
 
 # define OFFSET(TYPE, MEMBER) (((TYPE)NULL).MEMBER)

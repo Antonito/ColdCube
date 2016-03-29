@@ -1,7 +1,7 @@
 #ifndef CHUNK_HPP_
 # define CHUNK_HPP_
 
-# include <glm/glm.hpp>
+# include "misc.hpp"
 # include "texture.hpp"
 # include "mesh.hpp"
 

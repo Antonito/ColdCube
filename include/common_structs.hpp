@@ -12,6 +12,7 @@
 # include <SDL/SDL.h>
 # include <GL/glu.h>
 # include <GL/glext.h>
+# include <glm/glm.hpp>
 # include <GL/gl.h>
 # include <arpa/inet.h>
 
@@ -62,12 +63,7 @@ typedef struct		s_objects
 ** Map
 */
 
-typedef	struct		vec3
-{
-  double		x;
-  double		y;
-  double		z;
-}			vector3;
+typedef glm::vec3	vector3;
 
 typedef	struct		s_cube
 {

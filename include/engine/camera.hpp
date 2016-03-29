@@ -1,11 +1,9 @@
 #ifndef CAMERA_HPP_
 # define CAMERA_HPP_
 
-# include <glm/glm.hpp>
-# include <glm/gtx/transform.hpp>
-
 # include <math.h>
 # include <stdio.h>
+# include "engine/misc.hpp"
 
 using namespace glm;
 

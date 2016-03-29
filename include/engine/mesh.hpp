@@ -1,8 +1,7 @@
 #ifndef MESH_HPP_
 # define MESH_HPP_
 
-# include <glm/glm.hpp>
-# include <GL/glew.h>
+# include "misc.hpp"
 # include <vector>
 # include <string>
 

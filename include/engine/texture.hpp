@@ -2,7 +2,7 @@
 # define TEXTURE_HPP_
 
 # include <string>
-# include <GL/glew.h>
+# include "engine/misc.hpp"
 
 class	Texture
 {

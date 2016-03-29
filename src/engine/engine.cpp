@@ -1,4 +1,6 @@
-#include <GL/glew.h>
+//#include <GL/glew.h>
+#include <ctime>
+#include "game.hpp"
 #include "engine/display.hpp"
 #include "engine/shader.hpp"
 #include "engine/mesh.hpp"
@@ -6,25 +8,18 @@
 #include "engine/transform.hpp"
 #include "engine/camera.hpp"
 #include "engine/map.hpp"
-#include <ctime>
-
-#define WIDTH 1280
-#define HEIGHT 720
-
 #include <time.h>
 
 using namespace glm;
 
 Mesh	SetPlanes(int, vec3);
 
-int	engineMain()
+int	engineMain(Display &display)
 {
-  Display display(WIDTH, HEIGHT, "The display title");
-
   Shader	shader("shaders/test1");
 
   Map		map("map");
-  Camera camera(glm::vec3(0, 0, 10), 70.0f, (float)WIDTH / HEIGHT, 0.01f, 500.0f);
+  Camera camera(glm::vec3(0, 0, 10), 70.0f, (float)WIN_X / WIN_Y, 0.01f, 500.0f);
   Transform transform;
   int		fps = 0;
   int		t = time(NULL);

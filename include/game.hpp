@@ -21,10 +21,11 @@
 # include <fcntl.h>
 # include <time.h>
 # include <pthread.h>
-# include <SDL/SDL.h>
+# include <SDL2/SDL.h>
+# include "engine/display.hpp"
 # include "common_structs.hpp"
 
-int	engineMain();
+int	engineMain(Display &);
 void	free_game(t_data *);
 
 #endif	/* !GAME_H_ */

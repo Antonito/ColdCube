@@ -2,7 +2,6 @@
 # define SHADER_H
 
 # include <string>
-# include <GL/glew.h>
 # include "transform.hpp"
 # include "camera.hpp"
 
