@@ -34,8 +34,9 @@ ENGINE_C_FILES=		cload_chunk.c
 
 TOOLS_PREFIX=		src/tools/
 
-TOOLS_FILES=		text.cpp	\
-			udp_client.cpp	\
+TOOLS_FILES=		text.cpp			\
+			udp_client.cpp			\
+			check_package.cpp		\
 			tcp_client.cpp
 
 GAME=			$(addprefix $(GAME_PREFIX),$(GAME_FILES))
