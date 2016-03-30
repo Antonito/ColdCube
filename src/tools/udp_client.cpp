@@ -5,7 +5,7 @@
 ** Login   <troncy_l@epitech.net>
 **
 ** Started on  Mon Mar 07 16:48:42 2016 Lucas Troncy
-** Last update Wed Mar 30 00:51:58 2016 Lucas Troncy
+** Last update Wed Mar 30 06:31:29 2016 Lucas Troncy
 */
 
 #include <stdlib.h>
@@ -15,6 +15,7 @@
 #include <arpa/inet.h>
 #include <sys/types.h>
 #include <pthread.h>
+#include "tools.hpp"
 #include "common_structs.hpp"
 
 void		*udp_thread(void *data)
@@ -26,8 +27,9 @@ void		*udp_thread(void *data)
   len = sizeof(_data->net.udp.to_serv);
   while (_data->net.udp.run)
     {
-      recvfrom(_data->net.udp.sock, _data->net.udp.buff, 70, 0,
-	       (struct sockaddr *)&_data->net.tcp.to_serv, (socklen_t *)&len);
+      if (recvfrom(_data->net.udp.sock, _data->net.udp.buff, 70, 0,
+	       (struct sockaddr *)&_data->net.tcp.to_serv, (socklen_t *)&len) == 70)
+	readUdpPacket(_data);
     }
   close(_data->net.udp.sock);
   return (NULL);

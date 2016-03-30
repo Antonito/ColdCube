@@ -196,11 +196,12 @@ void	Display::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
 	      std::clog << "[Infos] Pseudo = " << data->net.pseudo << "\n";
 #endif
 
-	      if (!clientLaunchTcpc(data)) //TCP Start
+	      if (!clientLaunchTcpc(data) && !clientLaunchUdpc(data)) //TCP Start
 		{
 		  engineMain(*this, data);
 		  write(data->net.tcp.sock, "/r", 2);
 		  data->net.tcp.run = 0;
+		  data->net.udp.run = 0;
 		  fprintf(stdout, "tcp fd closed\n");
 		}
 	    }
