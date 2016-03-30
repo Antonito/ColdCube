@@ -78,7 +78,7 @@ int	engineMain(Display &display, t_data *data)
 	    }
       	  i++;
       	}
-      display.Update(camera, map, player);
+      display.Update(camera, map, player, data);
       player.FillCPlayer(data->players + player.GetId(), camera.GetFor());
     }
   return (0);

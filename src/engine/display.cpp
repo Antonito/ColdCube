@@ -57,7 +57,8 @@ bool	Display::IsClosed()
   return (m_isClosed);
 }
 
-void	Display::Update(Camera &cam, Map &map, Player &player)
+void	Display::Update(Camera &cam, Map &map, Player &player,
+			t_data *data)
 {
   SDL_GL_SwapWindow(m_window);
   static	int cur(0), old(0), tot(0), nb(0);
@@ -65,6 +66,7 @@ void	Display::Update(Camera &cam, Map &map, Player &player)
   int		t = cur - old + 1;
   float		dTime = t / 1000.0f;
   old = cur;
+  bool		hadEvent = false;
   SDL_Event	e;
 
   tot += 1000 / t;
@@ -84,12 +86,15 @@ void	Display::Update(Camera &cam, Map &map, Player &player)
 	  switch (e.key.keysym.sym)
 	    {
 	    case (SDLK_z):
+	      hadEvent = true;
 	      player.Move(vec2(cam.GetFor().x, cam.GetFor().y));
 	      break ;
 	    case (SDLK_s):
+	      hadEvent = true;
 	      player.Move(-vec2(cam.GetFor().x, cam.GetFor().y));
 	      break ;
 	    case (SDLK_SPACE):
+	      hadEvent = true;
 	      player.Jump();
 	      break ;
 	    // case (SDLK_q):
@@ -129,6 +134,7 @@ void	Display::Update(Camera &cam, Map &map, Player &player)
 	    }
 	  break ;
 	case (SDL_MOUSEMOTION):
+	  hadEvent = true;
 	  player.GetRot().y -= e.motion.xrel / 20.0f;
 	  player.GetRot().x -= e.motion.yrel / 20.0f;
 	  if (player.GetRot().x > 89.99f)
@@ -139,6 +145,8 @@ void	Display::Update(Camera &cam, Map &map, Player &player)
 	  break ;
 	}
     }
+  if (hadEvent)
+    createUdpPacket(data, &data->players[data->net.playerIndexUdp]);
   player.Update(dTime);
   player.SetCam(cam);
 }

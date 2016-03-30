@@ -15,7 +15,7 @@ class Display
   Display(int width, int height, const std::string& title);
 
   void	Clear(float r, float g, float b, float a);
-  void  Update(Camera &cam, Map &map, Player &player);
+  void  Update(Camera &cam, Map &map, Player &player, t_data *data);
   void  UpdateMenu(Menu *menu, std::vector<menuItem> &items, SDL_Rect *pos,
 		   SDL_Surface *screen, SDL_Surface *surface, t_data *data);
   SDL_Window	*GetWin(){return m_window;};
