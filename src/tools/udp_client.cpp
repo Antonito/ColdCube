@@ -5,7 +5,7 @@
 ** Login   <troncy_l@epitech.net>
 **
 ** Started on  Mon Mar 07 16:48:42 2016 Lucas Troncy
-** Last update Wed Mar 30 07:20:47 2016 Lucas Troncy
+** Last update Wed Mar 30 07:46:42 2016 Lucas Troncy
 */
 
 #include <stdlib.h>
@@ -27,7 +27,7 @@ void		*udp_thread(void *data)
   len = sizeof(_data->net.udp.to_serv);
   while (_data->net.udp.run)
     {
-      if (recvfrom(_data->net.udp.sock, _data->net.udp.buff, 70, 0,
+      if (recvfrom(_data->net.udp.sock, _data->net.udp.buff, 42, 0,
 	       (struct sockaddr *)&_data->net.tcp.to_serv, (socklen_t *)&len) == 70)
 	{
 	  if (!checkPacket(_data->net.udp.buff))
