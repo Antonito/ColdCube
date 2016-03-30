@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <unistd.h>
 
-int		sendUdpPacket(t_data *data, char packet[70])
+int		sendUdpPacket(t_data *data, char packet[42])
 {
   unsigned int	len;
 
