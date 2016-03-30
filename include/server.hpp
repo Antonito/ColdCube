@@ -25,6 +25,7 @@
 
 typedef struct		s_tcps
 {
+  int			addIndex;
   int			main_sock;
   int			my_addrl;
   int			cli_addrl;

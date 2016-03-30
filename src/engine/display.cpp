@@ -183,9 +183,8 @@ void	Display::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
 	      if (!clientLaunchTcpc(data)) //TCP Start
 		{
 		  engineMain(*this);
-		  data->net.tcp.run = 0;
 		  write(data->net.tcp.sock, "/r", 2);
-		  close(data->net.tcp.sock);
+		  data->net.tcp.run = 0;
 		  fprintf(stdout, "tcp fd closed\n");
 		}
 	    }

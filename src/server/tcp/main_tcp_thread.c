@@ -91,6 +91,7 @@ void		server_check_msg_tcp(t_tcps *tcp)
 		/*we got a MSG here */
 		fprintf(stdout, "we got a massage here\n");
 		tcp->buff[len] = '\0';
+		fprintf(stdout, ":%s:\n", tcp->buff);
 		tcps_check_received(tcp, i);
 	      }
 	  }

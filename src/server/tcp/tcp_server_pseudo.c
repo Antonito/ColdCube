@@ -18,7 +18,7 @@ int		tcp_server_add_pseudo(t_tcps *tcp, char *str)
 {
   if (tcp_server_check_pseudo(tcp, str) == -1)
     return (-1);
-  strncpy(tcp->pseudo[tcp->nb_actual], str, strlen(str));
+  strncpy(tcp->pseudo[tcp->addIndex], str, strlen(str));
   return (0);
 }
 
@@ -48,7 +48,7 @@ void		tcp_server_remove_pseudo_str(t_tcps *tcp, char *str)
       strncpy(tcp->pseudo[i], tcp->pseudo[i + 1], 20);
       ++i;
     }
-  tcp->nb_actual += 1;
+  tcp->nb_actual -= 1;
 }
 
 int		tcp_get_pseudo_index(t_tcps *tcp, char *str)

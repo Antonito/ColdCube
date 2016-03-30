@@ -22,7 +22,6 @@ void		*tcp_thread(void *data)
       _data->net.tcp.buff[len] = 0;
     }
   fprintf(stdout, "stoped tcp thread\n");
-  close(_data->net.tcp.sock);
   return (NULL);
 }
 
@@ -53,5 +52,6 @@ int		clientLaunchTcpc(t_data *data)
   data->net.tcp.run = 1;
   data->net.playerIndexTcp = atoi(tmp);
   pthread_create(&data->net.tcp.thread, NULL, tcp_thread, (void *)data);
+  close(data->net.tcp.sock);
   return (0);
 }
