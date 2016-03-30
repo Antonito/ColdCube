@@ -5,7 +5,7 @@
 ** Login   <troncy_l@epitech.net>
 **
 ** Started on  Mon Mar 07 16:48:42 2016 Lucas Troncy
-** Last update Wed Mar 30 06:31:29 2016 Lucas Troncy
+** Last update Wed Mar 30 07:20:47 2016 Lucas Troncy
 */
 
 #include <stdlib.h>
@@ -29,7 +29,14 @@ void		*udp_thread(void *data)
     {
       if (recvfrom(_data->net.udp.sock, _data->net.udp.buff, 70, 0,
 	       (struct sockaddr *)&_data->net.tcp.to_serv, (socklen_t *)&len) == 70)
-	readUdpPacket(_data);
+	{
+	  if (!checkPacket(_data->net.udp.buff))
+	    {
+	      fprintf(stderr, "wrong package output");
+	      fflush(stderr);
+	    }
+	  readUdpPacket(_data);
+	}
     }
   close(_data->net.udp.sock);
   return (NULL);
@@ -59,6 +66,7 @@ int		clientLaunchUdpc(t_data *data)
   recvfrom(data->net.udp.sock, tmp, 10, 0,
 	  (struct sockaddr *)&data->net.tcp.to_serv, (socklen_t *)&len);
   data->net.playerIndexUdp = atoi(tmp);
+  fprintf(stdout, "mon id est: %d\n", data->net.playerIndexUdp);
   data->net.udp.run = 1;
   pthread_create(&data->net.udp.thread, NULL, udp_thread, (void *)data);
   return (0);

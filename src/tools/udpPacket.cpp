@@ -9,8 +9,9 @@ int		createUdpPacket(t_data *data, t_player *player)
   int		n;
   unsigned int	i;
 
-  packet[0] = (char)player->id;
-  n = 1;
+  memset(packet, 0, 70);
+  packet[0] = (char)data->net.playerIndexUdp;
+  n = 2;
   i = 0;
   tmp = (char *)&player->position.x;
   while (i < sizeof(GLfloat))
@@ -18,7 +19,7 @@ int		createUdpPacket(t_data *data, t_player *player)
       packet[n + i] = tmp[i];
       ++i;
     }
-  n += i;
+  n += i + 1;
   i = 0;
   tmp = (char *)&player->position.y;
   while (i < sizeof(GLfloat))
@@ -26,7 +27,7 @@ int		createUdpPacket(t_data *data, t_player *player)
       packet[n + i] = tmp[i];
       ++i;
     }
-  n += i;
+  n += i + 1;
   i = 0;
   tmp = (char *)&player->position.z;
   while (i < sizeof(GLfloat))
@@ -34,7 +35,7 @@ int		createUdpPacket(t_data *data, t_player *player)
       packet[n + i] = tmp[i];
       ++i;
     }
-  n += i;
+  n += i + 1;
   i = 0;
   tmp = (char *)&player->direction.x;
   while (i < sizeof(GLfloat))
@@ -42,7 +43,7 @@ int		createUdpPacket(t_data *data, t_player *player)
       packet[n + i] = tmp[i];
       ++i;
     }
-  n += i;
+  n += i + 1;
   i = 0;
   tmp = (char *)&player->direction.y;
   while (i < sizeof(GLfloat))
@@ -50,7 +51,7 @@ int		createUdpPacket(t_data *data, t_player *player)
       packet[n + i] = tmp[i];
       ++i;
     }
-  n += i;
+  n += i + 1;
   i = 0;
   tmp = (char *)&player->direction.z;
   while (i < sizeof(GLfloat))
@@ -58,7 +59,7 @@ int		createUdpPacket(t_data *data, t_player *player)
       packet[n + i] = tmp[i];
       ++i;
     }
-  n += i;
+  n += i + 1;
   i = 0;
   tmp = (char *)&player->selected_weapon;
   while (i < 4)
@@ -66,7 +67,7 @@ int		createUdpPacket(t_data *data, t_player *player)
       packet[n + i] = tmp[i];
       ++i;
     }
-  n += i;
+  n += i + 1;
   i = 0;
   tmp = (char *)&player->events;
   while (i < 4)
@@ -89,8 +90,8 @@ int		readUdpPacket(t_data *data)
 
   if (!checkPacket(data->net.udp.buff))
     {
-      fprintf(stderr, "package wrong");
-      fflush(stderr);
+      /*fprintf(stderr, "package wrong");
+      fflush(stderr);*/
       return (1);
     }
   i = 0;
