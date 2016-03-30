@@ -4,12 +4,12 @@
 
 int		createUdpPacket(t_data *data, t_player *player)
 {
-  char		packet[70];
+  char		packet[42];
   char		*tmp;
   int		n;
   unsigned int	i;
 
-  memset(packet, 0, 70);
+  memset(packet, 0, 42);
   packet[0] = (char)data->net.playerIndexUdp;
   n = 2;
   i = 0;
@@ -96,7 +96,7 @@ int		readUdpPacket(t_data *data)
     }
   i = 0;
   flo = 0.0f;
-  all = 1;
+  all = 2;
   tlo = 0;
   tmp = (char *)&flo;
   while (i < sizeof(GLfloat))
@@ -167,5 +167,12 @@ int		readUdpPacket(t_data *data)
       ++i;
     }
   data->players[(int)data->net.udp.buff[0]].events = tlo;
+  if ((int)data->net.udp.buff[0] == 1)
+    {
+      fprintf(stdout, "x = %f y = %f z = %f\n",
+	      data->players[(int)data->net.udp.buff[0]].position.x,
+	      data->players[(int)data->net.udp.buff[0]].position.y,
+	      data->players[(int)data->net.udp.buff[0]].position.z);
+    }
   return (0);
 }
