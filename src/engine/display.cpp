@@ -66,10 +66,10 @@ void	Display::Update(Camera &cam, Map &map, Player &player,
   int			t = cur - old + 1;
   float			dTime = t / 1000.0f;
   old = cur;
-  bool			hadEvent = false;
-  clock_t		t1;
-  static clock_t	t2 = 0;
-  SDL_Event		e;
+  bool		hadEvent = false;
+  SDL_Event	e;
+  static clock_t t1 = 0;
+  clock_t	t2;
 
   tot += 1000 / t;
   nb++;
@@ -147,8 +147,14 @@ void	Display::Update(Camera &cam, Map &map, Player &player,
     }
   player.Update(dTime);
   player.SetCam(cam);
-  if (hadEvent)
+  if (!t1)
     {
+      t1 = clock();
+    }
+  t2 = clock();
+  if (((float)(t2 - t1) / CLOCKS_PER_SEC ) * 1000.0f >= 10.0f)
+    {
+      t1 = 0;
       createUdpPacket(data, &data->players[data->net.playerIndexUdp]);
     }
 }
