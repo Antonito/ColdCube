@@ -59,7 +59,7 @@ void		udp_thread(t_udps *udp)
       {
 	FD_CLR(udp->main_sock, &udp->readfds);
 	if ((len = recvfrom(udp->main_sock,
-			    udp->buff, 70, 0,
+			    udp->buff, 42, 0,
 			    (struct sockaddr *)&udp->tmp_sock, (socklen_t *)&udp->cli_addrl)) > 0)
 	  {
 	    server_check_msg_udp(udp);
