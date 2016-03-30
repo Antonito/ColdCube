@@ -41,7 +41,7 @@ void		udp_thread(t_udps *udp)
     if (udp->ms.tv_usec == 0)
       {
 	udp->ms.tv_sec = 0;
-	udp->ms.tv_usec = 1500;
+	udp->ms.tv_usec = 1700;
       }
     FD_ZERO(&udp->readfds);
     FD_SET(udp->main_sock, &udp->readfds);
