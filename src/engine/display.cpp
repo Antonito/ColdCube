@@ -68,6 +68,8 @@ void	Display::Update(Camera &cam, Map &map, Player &player,
   old = cur;
   bool		hadEvent = false;
   SDL_Event	e;
+  static clock_t t1 = 0;
+  clock_t	t2;
 
   tot += 1000 / t;
   nb++;
@@ -145,10 +147,18 @@ void	Display::Update(Camera &cam, Map &map, Player &player,
 	  break ;
 	}
     }
-  if (hadEvent)
-    createUdpPacket(data, &data->players[data->net.playerIndexUdp]);
   player.Update(dTime);
   player.SetCam(cam);
+  if (!t1)
+    {
+      t1 = clock();
+    }
+  t2 = clock();
+  if (((float)(t2 - t1) / 1000000.0F ) * 1000 >= 20)
+    {
+      t1 = 0;
+      createUdpPacket(data, &data->players[data->net.playerIndexUdp]);
+    }
 }
 
 void	Display::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
