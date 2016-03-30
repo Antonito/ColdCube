@@ -10,7 +10,7 @@ int		createUdpPacket(t_data *data, t_player *player)
   unsigned int	i;
 
   memset(packet, 0, 70);
-  packet[0] = (char)player->id;
+  packet[0] = (char)data->net.playerIndexUdp;
   n = 2;
   i = 0;
   tmp = (char *)&player->position.x;
@@ -90,8 +90,8 @@ int		readUdpPacket(t_data *data)
 
   if (!checkPacket(data->net.udp.buff))
     {
-      fprintf(stderr, "package wrong");
-      fflush(stderr);
+      /*fprintf(stderr, "package wrong");
+      fflush(stderr);*/
       return (1);
     }
   i = 0;
