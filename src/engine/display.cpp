@@ -61,24 +61,23 @@ void	Display::Update(Camera &cam, Map &map, Player &player,
 			t_data *data)
 {
   SDL_GL_SwapWindow(m_window);
-  static	int cur(0), old(0), tot(0), nb(0);
+  static		int cur(0), old(0), tot(0), nb(0);
   cur = SDL_GetTicks();
-  int		t = cur - old + 1;
-  float		dTime = t / 1000.0f;
+  int			t = cur - old + 1;
+  float			dTime = t / 1000.0f;
   old = cur;
-  bool		hadEvent = false;
-  SDL_Event	e;
-  static clock_t tzero = 0;
-  clock_t	tnow;
+  bool			hadEvent = false;
+  clock_t		t1;
+  static clock_t	t2 = 0;
+  SDL_Event		e;
 
   tot += 1000 / t;
   nb++;
+  t1 = clock();
   if (nb == 1)
     tot = 0;
   printf("\r%d  %d  ", tot / nb, 1000 / t);
   fflush(stdout);
-  if (!tzero)
-    tzero = clock();
   while (SDL_PollEvent(&e))
     {
       switch (e.type)
@@ -90,15 +89,12 @@ void	Display::Update(Camera &cam, Map &map, Player &player,
 	  switch (e.key.keysym.sym)
 	    {
 	    case (SDLK_z):
-	      hadEvent = true;
 	      player.Move(vec2(cam.GetFor().x, cam.GetFor().y));
 	      break ;
 	    case (SDLK_s):
-	      hadEvent = true;
 	      player.Move(-vec2(cam.GetFor().x, cam.GetFor().y));
 	      break ;
 	    case (SDLK_SPACE):
-	      hadEvent = true;
 	      player.Jump();
 	      break ;
 	    // case (SDLK_q):
@@ -149,14 +145,12 @@ void	Display::Update(Camera &cam, Map &map, Player &player,
 	  break ;
 	}
     }
-  tnow = clock();
-  if ((tnow - tzero) * 1000.0 / CLOCKS_PER_SEC >= 10)
-    {
-      tzero = 0;
-      createUdpPacket(data, &data->players[data->net.playerIndexUdp]);
-    }
   player.Update(dTime);
   player.SetCam(cam);
+  if (hadEvent)
+    {
+      createUdpPacket(data, &data->players[data->net.playerIndexUdp]);
+    }
 }
 
 void	Display::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
