@@ -77,7 +77,8 @@ void	Display::Update(Camera &cam, Map &map, Player &player,
     tot = 0;
   printf("\r%d  %d  ", tot / nb, 1000 / t);
   fflush(stdout);
-  tzero = clock();
+  if (!tzero)
+    tzero = clock();
   while (SDL_PollEvent(&e))
     {
       switch (e.type)
@@ -148,14 +149,11 @@ void	Display::Update(Camera &cam, Map &map, Player &player,
 	  break ;
 	}
     }
-  if (hadEvent)
+  tnow = clock();
+  if ((tnow - tzero) * 1000.0 / CLOCKS_PER_SEC >= 10)
     {
-      tnow = clock();
-      if ((tnow - tzero) * 1000.0 / CLOCKS_PER_SEC >= 10)
-	{
-	  tzero = clock();
-	  createUdpPacket(data, &data->players[data->net.playerIndexUdp]);
-	}
+      tzero = 0;
+      createUdpPacket(data, &data->players[data->net.playerIndexUdp]);
     }
   player.Update(dTime);
   player.SetCam(cam);
