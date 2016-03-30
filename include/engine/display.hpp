@@ -3,7 +3,8 @@
 
 # include <SDL2/SDL.h>
 # include <string>
-# include "map.hpp"
+# include "engine/map.hpp"
+# include "engine/player.hpp"
 
 class Display
 {
@@ -11,7 +12,7 @@ class Display
   Display(int width, int height, const std::string& title);
 
   void	Clear(float r, float g, float b, float a);
-  void  Update(Camera &cam, Map &map);
+  void  Update(Camera &cam, Map &map, Player &player);
   bool	IsClosed();
 
   virtual ~Display();

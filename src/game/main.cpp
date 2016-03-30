@@ -12,7 +12,7 @@ int	main(int ac, char **av, char **env)
 
   // while (!display.IsClosed())
   //   {
-      engineMain(display);
+  engineMain(display);
 //   if (!*env)
 //     {
 //       write(2, "Environment variable are missing\n", 33);

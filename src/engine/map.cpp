@@ -49,10 +49,25 @@ Map::~Map()
 void Map::PutCube(unsigned char cube, ivec3 pos)
 {
   int chunk = pos.x / 16 + pos.y / 16 * 8;
-  ivec3 chunk_pos = ivec3(pos.x % 16, pos.y % 16, pos.z - 1);
+  ivec3 chunk_pos = ivec3(pos.x % 16, pos.y % 16, pos.z);
 
   if (m_chunks[chunk].IsLoaded())
     m_chunks[chunk].PutCube(cube, chunk_pos);
+}
+
+unsigned char	Map::GetBlock(vec3 pos)
+{
+  ivec3 p((int)pos.x, (int)pos.y, (int)pos.z);
+  int	x;
+  int	y;
+  int	c;
+
+  x = p.x / 16;
+  y = p.y / 16;
+  if (x < 0 || x > 7 || y < 0 || y > 7 || p.z < 1.0f || p.z > 16.0f)
+    return (0);
+  c = x + 8 * y;
+  return (m_chunks[c].GetBlock(p.x % 16, p.y % 16, p.z));
 }
 
 void Map::Save()
@@ -67,4 +82,18 @@ void Map::Save()
       i++;
     }
   printf("\nMap Saved !\n");
+}
+
+bool	Map::IsLoaded(ivec3 pos)
+{
+  int	x;
+  int	y;
+  int	c;
+
+  x = pos.x / 16;
+  y = pos.y / 16;
+  if (x < 0 || x > 7 || y < 0 || y > 7)
+    return (0);
+  c = x + 8 * y;
+  return (m_chunks[c].IsLoaded());
 }

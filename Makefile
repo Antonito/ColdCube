@@ -26,6 +26,7 @@ ENGINE_FILES=		chunk.cpp			\
 			load_shader.cpp			\
 			map.cpp				\
 			mesh.cpp			\
+			player.cpp			\
 			shader.cpp			\
 			texture.cpp			\
 			engine.cpp
