@@ -11,7 +11,9 @@ class Map
   Map();
   Map(const std::string &dir);
   void PutCube(unsigned char cube, ivec3 pos);
+  unsigned char GetBlock(vec3 pos);
   ~Map();
+  bool IsLoaded(ivec3 pos);
   void Draw();
   void Save();
 private:

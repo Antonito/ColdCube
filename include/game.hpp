@@ -1,10 +1,11 @@
 #ifndef	GAME_H_
 # define GAME_H_
 
-# define WIN_X		1280
+# define WIN_X	        1280
 # define WIN_Y		720
-# define WIN_TITLE	"ColdCube"
-
+# define WIN_TITLE	"TekdoomV2"
+# define PLAYER_SIZE 0.9
+# define PLAYER_HEIGHT 1.8
 # define MAX_PSEUDO	20
 
 # ifdef _WIN32
@@ -27,7 +28,7 @@
 # include "engine/display.hpp"
 # include "common_structs.hpp"
 
-int	engineMain(Display &);
+int	engineMain(Display &, t_data *);
 void	free_game(t_data *);
 
 #endif	/* !GAME_H_ */

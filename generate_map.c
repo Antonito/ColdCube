@@ -4,17 +4,17 @@
 #include <unistd.h>
 #include <fcntl.h>
 
-intmain(int ac, char **av)
+int	main(int ac, char **av)
 {
-  intnb;
-  inti = 0;
-  charfilename[14] = {0};
-  intfd;
-  intheight;
-  intj;
-  inttemp = 0;
-  unsigned charcol = 0;
-  inttotal = 0;
+  int	nb;
+  int	i = 0;
+  char	filename[14] = {0};
+  int	fd;
+  int	height;
+  int	j;
+  int	temp = 0;
+  unsigned char	col = 0;
+  int	total = 0;
 
   srand(time(NULL));
   if (ac >= 2)
@@ -30,7 +30,7 @@ intmain(int ac, char **av)
 	  return (1);
 	}
       /* height = rand() % 20 + 12; */
-      height = (i < 4) ? 32 : 1;
+      height = 10;
       printf("%s %d\n", filename, height);
       write(fd, &height, 4);
       total += 4;
@@ -48,7 +48,10 @@ intmain(int ac, char **av)
       height *= 256;
       while (j < height)
 	{
-	  if (j / 256 == 0)
+	  /* if (j / 256 == 0) */
+	  /*   col = rand() % 6 + 1; */
+	  /* else */
+	  if (j == 50)
 	    col = 1;
 	  else
 	    col = 0;

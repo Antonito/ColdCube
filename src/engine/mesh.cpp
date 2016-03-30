@@ -3,9 +3,6 @@
 
 #include <stdio.h>
 
-
-#include <stdio.h>
-
 Mesh::Mesh()
 {
   m_vertexArrayObject = 0;

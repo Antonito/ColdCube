@@ -57,22 +57,22 @@ bool	Display::IsClosed()
   return (m_isClosed);
 }
 
-void	Display::Update(Camera &cam, Map &map)
+void	Display::Update(Camera &cam, Map &map, Player &player)
 {
   SDL_GL_SwapWindow(m_window);
-  // static	int cur(0), old(0), tot(0), nb(0);
-  // cur = SDL_GetTicks();
-  // int		t = cur - old + 1;
-  // float		dTime = t / 1000.0f;
-  // old = cur;
+  static	int cur(0), old(0), tot(0), nb(0);
+  cur = SDL_GetTicks();
+  int		t = cur - old + 1;
+  float		dTime = t / 1000.0f;
+  old = cur;
   SDL_Event	e;
 
-  // tot += 1000 / t;
-  // nb++;
-  // if (nb == 1)
-  //   tot = 0;
-  // printf("\r%d  %d  ", tot / nb, 1000 / t);
-  // fflush(stdout);
+  tot += 1000 / t;
+  nb++;
+  if (nb == 1)
+    tot = 0;
+  printf("\r%d  %d  ", tot / nb, 1000 / t);
+  fflush(stdout);
   while (SDL_PollEvent(&e))
     {
       switch (e.type)
@@ -84,22 +84,20 @@ void	Display::Update(Camera &cam, Map &map)
 	  switch (e.key.keysym.sym)
 	    {
 	    case (SDLK_z):
-	      cam.GetPos() += cam.GetFor() * 50.0f;
+	      player.Move(vec2(cam.GetFor().x, cam.GetFor().y));
 	      break ;
 	    case (SDLK_s):
-	      cam.GetPos() -= cam.GetFor() * 50.0f;
+	      player.Move(-vec2(cam.GetFor().x, cam.GetFor().y));
 	      break ;
-	    case (SDLK_q):
-	      cam.GetPos() += normalize(vec3((cross(cam.GetFor(), vec3(0, 1, 0))).x, (cross(cam.GetFor(), vec3(0, 1, 0))).y, 0));
+	    case (SDLK_SPACE):
+	      player.Jump();
 	      break ;
-	    case (SDLK_d):
-	      cam.GetPos() -= normalize(vec3((cross(cam.GetFor(), vec3(0, 1, 0))).x, (cross(cam.GetFor(), vec3(0, 1, 0))).y, 0));
-	      break ;
-	    case (SDLK_a):
-	      cam.GetPos() += vec3(0, 1, 0);
-	      break ;
-	    case (SDLK_e):
-	      cam.GetPos() -= vec3(0, 1, 0);
+	    // case (SDLK_q):
+	    //   player.GetPos() += normalize(vec3((cross(cam.GetFor(), vec3(0, 1, 0))).x, (cross(cam.GetFor(), vec3(0, 1, 0))).y, 0));
+	    //   break ;
+	    // case (SDLK_d):
+	    //   player.GetPos() -= normalize(vec3((cross(cam.GetFor(), vec3(0, 1, 0))).x, (cross(cam.GetFor(), vec3(0, 1, 0))).y, 0));
+	    //   break ;
 	      break ;
 	    case (SDLK_ESCAPE):
 	      m_isClosed = true;
@@ -131,16 +129,18 @@ void	Display::Update(Camera &cam, Map &map)
 	    }
 	  break ;
 	case (SDL_MOUSEMOTION):
-	  cam.GetRot().y -= e.motion.xrel / 20.0f;
-	  cam.GetRot().x -= e.motion.yrel / 20.0f;
-	  if (cam.GetRot().x > 89.99f)
-	    cam.GetRot().x = 89.99f;
-	  if (cam.GetRot().x < -89.99f)
-	    cam.GetRot().x = -89.99f;
+	  player.GetRot().y -= e.motion.xrel / 20.0f;
+	  player.GetRot().x -= e.motion.yrel / 20.0f;
+	  if (player.GetRot().x > 89.99f)
+	    player.GetRot().x = 89.99f;
+	  if (player.GetRot().x < -89.99f)
+	    player.GetRot().x = -89.99f;
 	  cam.UpdateFor();
 	  break ;
 	}
     }
+  player.Update(dTime);
+  player.SetCam(cam);
 }
 
 void	Display::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
@@ -198,7 +198,7 @@ void	Display::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
 
 	      if (!clientLaunchTcpc(data)) //TCP Start
 		{
-		  engineMain(*this);
+		  engineMain(*this, data);
 		  write(data->net.tcp.sock, "/r", 2);
 		  data->net.tcp.run = 0;
 		  fprintf(stdout, "tcp fd closed\n");
