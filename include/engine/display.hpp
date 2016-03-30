@@ -5,6 +5,9 @@
 # include <string>
 # include "engine/map.hpp"
 # include "engine/player.hpp"
+# include "Menu.h"
+# include "map.hpp"
+# include "common_structs.hpp"
 
 class Display
 {
@@ -13,7 +16,11 @@ class Display
 
   void	Clear(float r, float g, float b, float a);
   void  Update(Camera &cam, Map &map, Player &player);
+  void  UpdateMenu(Menu *menu, std::vector<menuItem> &items, SDL_Rect *pos,
+		   SDL_Surface *screen, SDL_Surface *surface, t_data *data);
+  SDL_Window	*GetWin(){return m_window;};
   bool	IsClosed();
+  void	setClosed(bool state){m_isClosed = state;};
 
   virtual ~Display();
  protected:

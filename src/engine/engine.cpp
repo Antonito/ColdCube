@@ -21,27 +21,28 @@ int	engineMain(Display &display, t_data *data)
   Shader	shader("shaders/test1");
 
   Map		map("map");
-  Player	player(vec3(10, 5, 1), 90, &map, data->net->playerIndexUdp);
-  t_player	players[10];
+  Player	player(vec3(10, 5, 1), 90, &map, data->net.playerIndexUdp);
   Camera camera(glm::vec3(0, 0, 10), 70.0f, (float)WIN_X / WIN_Y, 0.01f, 500.0f);
   Transform transform;
   int		fps = 0;
   int		t = time(NULL);
   Vertex v[] = {Vertex(vec3(0, 0, 0), vec2(0, 0)),
-		Vertex(vec3(0, 0, PLAYER_SIZE), vec2(0, 0)),
-		Vertex(vec3(0, PLAYER_SIZE, PLAYER_SIZE), vec2(0, 0)),
-		Vertex(vec3(0, PLAYER_SIZE, 0), vec2(0, 0)),
-		Vertex(vec3(PLAYER_SIZE, 0, 0), vec2(0, 0)),
-		Vertex(vec3(PLAYER_SIZE, 0, PLAYER_SIZE), vec2(0, 0)),
-		Vertex(vec3(PLAYER_SIZE, PLAYER_SIZE, PLAYER_SIZE), vec2(0, 0)),
+		Vertex(vec3(0, 0, PLAYER_HEIGHT), vec2(0, 1)),
+		Vertex(vec3(0, PLAYER_SIZE, PLAYER_HEIGHT), vec2(1, 1)),
+		Vertex(vec3(0, PLAYER_SIZE, 0), vec2(0, 1)),
+		Vertex(vec3(PLAYER_SIZE, 0, 0), vec2(0, 1)),
+		Vertex(vec3(PLAYER_SIZE, 0, PLAYER_HEIGHT), vec2(1, 1)),
+		Vertex(vec3(PLAYER_SIZE, PLAYER_SIZE, PLAYER_HEIGHT), vec2(1, 0)),
 		Vertex(vec3(PLAYER_SIZE, PLAYER_SIZE, 0), vec2(0, 0))};
-  unsigned int i[] = {0, 3, 2,  0, 2, 1,
-		      0, 1, 5,  0, 5, 4,
-		      1, 2, 6,  1, 6, 5,
-		      2, 3, 7,  2, 7, 6,
-		      3, 0, 4,  3, 4, 7,
-		      5, 6, 7,  5, 7, 4};
-  Mesh playerModel(v, 8, i, 36);
+  unsigned int index[] = {0, 2, 3,  0, 1, 2,
+		      0, 5, 1,  0, 4, 5,
+		      1, 6, 2,  1, 5, 6,
+		      2, 7, 3,  2, 6, 7,
+		      3, 4, 0,  3, 7, 4,
+		      5, 7, 6,  5, 4, 7};
+  Mesh playerModel(v, 36, index, 36);
+  unsigned char	tt[] = {255, 255, 255, 255};
+  Texture text(tt, 1, 1, false);
   int	i;
 
   // float		lights[120] =
@@ -66,12 +67,19 @@ int	engineMain(Display &display, t_data *data)
       map.Draw();
       i = 0;
       while (i < 10)
-	{
-	  transform.GetPos() = players[i].pos;
-	  shader.Update(transform, camera);
-	  playerModel.Draw();
-	}
+      	{
+	  if (i != player.GetId())
+	    {
+	      transform.GetPos() = data->players[i].position;
+	      shader.Bind();
+	      shader.Update(transform, camera);
+	      text.Bind(0);
+	      playerModel.Draw();
+	    }
+      	  i++;
+      	}
       display.Update(camera, map, player);
+      player.FillCPlayer(data->players + player.GetId(), camera.GetFor());
     }
   return (0);
 }

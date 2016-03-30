@@ -128,7 +128,7 @@ typedef	struct		s_player
   int			id; /* Le serveur defini l'id du joueur*/
   char			*pseudo;
   char			life;
-  int			selected_weapon; /* Index du t_weapon */
+  uint32_t     		selected_weapon; /* Index du t_weapon */
   t_weapon		weapons[3];
   vector3		position;
   vector3		direction;

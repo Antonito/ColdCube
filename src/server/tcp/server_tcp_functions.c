@@ -33,13 +33,15 @@ void		tcps_cli_add(t_tcps *tcp)
       if (tcp->cli_sock[i] == 0)
 	{
 	  tcp->cli_sock[i] = tcp->tmp_sock;
+	  tcp->addIndex = i;
+	  fprintf(stdout, "added on index = %d\n", tcp->addIndex);
 	  break;
 	}
     }
   tcps_sync_all(tcp);
 }
 
-void		tcps_check_received(t_tcps *tcp)
+void		tcps_check_received(t_tcps *tcp, int i)
 {
   if (tcp->buff[0] == '/')
     {
@@ -48,13 +50,23 @@ void		tcps_check_received(t_tcps *tcp)
 	  if (tcp_server_add_pseudo(tcp, &tcp->buff[3]) == -1)
 	    {
 	      fprintf(stdout, "client rejected\n");
+	      fprintf(stdout, ":%s:\n", &tcp->buff[3]);
 	      write(tcp->tmp_sock, "sorry bad pseudo or server full\n", 33);
 	    }
 	  else
 	    {
+	      fprintf(stdout, ":%s:\n", &tcp->buff[3]);
 	      fprintf(stdout, "pseudo: OK, client added\n");
 	    }
 	}
+      if (tcp->buff[1] == 'r')
+	{
+	  fprintf(stdout, "client disconnected by /r\n");
+	  close(tcp->cli_sock[i]);
+	  tcps_remove_sock(tcp, i);
+	  fprintf(stdout, "removing: %s:\n", tcp->pseudo[i]);
+	  tcp_server_remove_pseudo_str(tcp, tcp->pseudo[i]);
+	 }
     }
   else
     tcps_send_to_all(tcp);

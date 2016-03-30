@@ -44,7 +44,7 @@ void Player::Jump()
 {
   //  ivec3 p(m_pos);
 
-  m_fall = 25;
+  m_fall = 10;
   // if (m_pos.z != (int)m_pos.z)
   //   {
   //     if (m_map->IsLoaded(p))
@@ -65,14 +65,14 @@ void Player::Fall(float time)
     {
       if (!m_map->IsLoaded(p) ||
   	  !m_map->GetBlock(m_pos))
-  	    m_fall -= 0.4f;
+	m_fall -= 0.4f;
       else
 	{
 	  m_fall = 0.0f;
 	  m_move *= 0.9;
 	}
-	}
-	}
+    }
+}
 
 
 bool	CheckPos(vec3 pos, Map *map)
@@ -102,10 +102,12 @@ vec3 Player::GetCollisionMove(vec3 pos, vec3 move)
   corner.x = ((move.x < 0) ? -PLAYER_SIZE : PLAYER_SIZE) / 2.0;
   corner.y = ((move.y < 0) ? -PLAYER_SIZE : PLAYER_SIZE) / 2.0;
   corner.z = (move.z < 0) ? 0 : PLAYER_HEIGHT;
-  pos += corner;
+  //  pos += corner;
   temp = (pos.x - (int)pos.x) / move.x;
 
-  while ();
+  pos += move;
+  if (pos.z < 1)
+    pos.z = 1;
   return (pos);
 }
 
@@ -114,8 +116,8 @@ void Player::Update(float time)
   this->Fall(time);
 
   vec3 move(m_move * m_speed * time, m_fall * time);
-  // m_pos = GetCollisionMove(m_pos, move);
-  m_move *= 0.90;
+  m_pos = GetCollisionMove(m_pos, move);
+  m_move *= 0.93;
   printf("\r(%.2f, %.2f, %.2f)             ", m_pos.x, m_pos.y, m_pos.z);
   fflush(stdout);
 }
@@ -142,4 +144,10 @@ void	Player::SetCam(Camera &cam)
 void	Player::Draw()
 {
   m_model.Draw();
+}
+
+void	Player::FillCPlayer(t_player *p, vec3 dir)
+{
+  p->position = m_pos;
+  p->direction = dir;
 }

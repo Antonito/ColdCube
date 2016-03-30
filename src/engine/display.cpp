@@ -1,8 +1,12 @@
+#include <unistd.h>
 #include <GL/glew.h>
 #include <GL/gl.h>
 #include "engine/display.hpp"
 #include <iostream>
 #include <SDL2/SDL.h>
+#include "common_structs.hpp"
+#include "game.hpp"
+#include "tools.hpp"
 
 Display::Display(int width, int height, const std::string& title)
 {
@@ -53,7 +57,6 @@ bool	Display::IsClosed()
   return (m_isClosed);
 }
 
-
 void	Display::Update(Camera &cam, Map &map, Player &player)
 {
   SDL_GL_SwapWindow(m_window);
@@ -95,12 +98,7 @@ void	Display::Update(Camera &cam, Map &map, Player &player)
 	    // case (SDLK_d):
 	    //   player.GetPos() -= normalize(vec3((cross(cam.GetFor(), vec3(0, 1, 0))).x, (cross(cam.GetFor(), vec3(0, 1, 0))).y, 0));
 	    //   break ;
-	    // case (SDLK_a):
-	    //   player.GetPos() += vec3(0, 1, 0);
-	    //   break ;
-	    // case (SDLK_e):
-	    //   player.GetPos() -= vec3(0, 1, 0);
-	    //   break ;
+	      break ;
 	    case (SDLK_ESCAPE):
 	      m_isClosed = true;
 	      break ;
@@ -143,4 +141,83 @@ void	Display::Update(Camera &cam, Map &map, Player &player)
     }
   player.Update(dTime);
   player.SetCam(cam);
+}
+
+void	Display::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
+			    SDL_Rect *pos, SDL_Surface *screen,
+			    SDL_Surface *surface, t_data *data)
+{
+  SDL_Event	event;
+
+  while (SDL_PollEvent(&event))
+    {
+      switch(event.type)
+	{
+	case SDL_QUIT:
+	  data->game.running = false;
+	  break;
+	case SDL_KEYDOWN:
+	  if (event.key.keysym.sym == SDLK_ESCAPE)
+	    {
+	      data->game.running = false;
+	      break;
+	    }
+	  if (event.key.keysym.sym == SDLK_DOWN)
+	    menu->moveDown();
+	  if (event.key.keysym.sym == SDLK_UP)
+	    menu->moveUp();
+	  if (event.key.keysym.sym == SDLK_BACKSPACE &&
+	      items[menu->currentItem].text.length())
+	    items[menu->currentItem].text.erase(items[menu->currentItem].text.length() - 1);
+	  if (event.key.keysym.sym == SDLK_RETURN)
+	    {
+	      //Initilisation
+	      data->net.port = atoi(items[3].text.c_str());
+	      data->net.ip = (char *)items[4].text.c_str();
+	      data->net.pseudo = (char *)items[5].text.c_str();
+	      this->setClosed(false);
+
+	      // Penser a checker IP + Pseudo + Port
+
+	      if (data->net.port < 0)
+		{
+		  std::cerr << "Incorrect port\n";
+		  break;
+		}
+	      if (strlen(data->net.pseudo) > 20)
+		{
+		  std::cerr << "Pseudo is too long\n";
+		  break;
+		}
+
+#ifdef	DEBUG
+	      std::clog << "[Infos] Port = " << data->net.port << "\n";
+	      std::clog << "[Infos] Ip = " << data->net.ip << "\n";
+	      std::clog << "[Infos] Pseudo = " << data->net.pseudo << "\n";
+#endif
+
+	      if (!clientLaunchTcpc(data)) //TCP Start
+		{
+		  engineMain(*this, data);
+		  write(data->net.tcp.sock, "/r", 2);
+		  data->net.tcp.run = 0;
+		  fprintf(stdout, "tcp fd closed\n");
+		}
+	    }
+	  break;
+	case SDL_MOUSEMOTION:
+	  pos->x = event.motion.x - 20;
+	  pos->y = event.motion.y - 20;
+	  menu->hover(event.motion.x, event.motion.y);
+	  break;
+	case SDL_TEXTINPUT:
+	  printf("readed \"%s\"\n", event.text.text);
+	  items[menu->currentItem].text += event.text.text;
+	  break;
+	}
+      SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 255, 255, 255));
+      menu->draw();
+      SDL_BlitSurface(surface, NULL, screen, pos);
+      SDL_UpdateWindowSurface(m_window);
+    }
 }

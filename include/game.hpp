@@ -6,6 +6,7 @@
 # define WIN_TITLE	"TekdoomV2"
 # define PLAYER_SIZE 0.9
 # define PLAYER_HEIGHT 1.8
+# define MAX_PSEUDO	20
 
 # ifdef _WIN32
 #  include <windows.h>

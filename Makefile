@@ -4,9 +4,8 @@ GAME_PREFIX=		src/game/
 
 GAME_FILES=		main.cpp			\
 			free.cpp			\
-			menus/menu.cpp			\
 			menus/main_menu.cpp		\
-			menus/options_menu.cpp
+			menus/Menu.cpp
 
 SERV_PREFIX=		src/server/
 
@@ -37,6 +36,7 @@ TOOLS_PREFIX=		src/tools/
 
 TOOLS_FILES=		text.cpp			\
 			udpPacket.cpp			\
+			sendUdpPacket.cpp		\
 			udp_client.cpp			\
 			check_package.cpp		\
 			tcp_client.cpp
@@ -83,13 +83,14 @@ CXX=			clang
 
 RM=			rm -f
 
-LIB=			-lstdc++	\
-			-lpthread	\
-			-lSDL2		\
-			-lGL		\
-			-lm		\
-			-lGLEW		\
-			-lglut		\
+LIB=			-lstdc++			\
+			-lpthread			\
+			-lSDL2				\
+			-lSDL2_ttf			\
+			-lGL				\
+			-lm				\
+			-lGLEW				\
+			-lglut				\
 			-lX11
 
 OBJ=			$(GAME:.cpp=.o)

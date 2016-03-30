@@ -25,6 +25,7 @@
 
 typedef struct		s_tcps
 {
+  int			addIndex;
   int			main_sock;
   int			my_addrl;
   int			cli_addrl;
@@ -92,7 +93,7 @@ void		server_check_msg_tcp(t_tcps *);
 void		init_tcps_cli(t_tcps *);
 void		set_max_fd(t_tcps *);
 void		tcps_cli_add(t_tcps *);
-void		tcps_check_received(t_tcps *);
+void		tcps_check_received(t_tcps *, int);
 void		tcps_remove_sock(t_tcps *, int);
 
 /* src/server/tcp/server_tcp_msg.c */

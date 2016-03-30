@@ -2,6 +2,7 @@
 # define PLAYER_HPP_
 
 # include <glm/glm.hpp>
+# include "common_structs.hpp"
 # include "engine/chunk.hpp"
 # include "engine/map.hpp"
 # include "engine/mesh.hpp"
@@ -13,7 +14,7 @@ class Player
 {
  public:
   Player();
-  Player(vec3 pos, float rot, Map *map);
+  Player(vec3 pos, float rot, Map *map, int id);
   void Move(vec2 dir);
   void Jump();
   void Fall(float time);
@@ -24,6 +25,10 @@ class Player
   vec3 GetCollisionMove(vec3 pos, vec3 move);
   vec3 &GetPos() {return m_pos;};
   vec2 &GetRot() {return m_rot;};
+
+  int	GetId() {return m_id;};
+  void	FillCPlayer(t_player *p, vec3 dir);
+
  private:
   vec3		m_pos;
   vec2		m_rot;

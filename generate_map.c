@@ -48,19 +48,22 @@ int	main(int ac, char **av)
       height *= 256;
       while (j < height)
 	{
-	  if (j / 256 == 0)
-	    col = rand() % 6 + 1;
+	  /* if (j / 256 == 0) */
+	  /*   col = rand() % 6 + 1; */
+	  /* else */
+	  if (j == 50)
+	    col = 1;
 	  else
 	    col = 0;
 	  /* if (rand() % 20) */
 	  /* if (j < 3 * 256) */
-	  /*   //	    col = rand() % 55 + 200; */
+	  /*   //    col = rand() % 55 + 200; */
 	  /*   col = rand() % 7 + 1; */
 	  /*   // col = j; */
 	  /* else if (rand() % 20 == 0) */
 	  /*   col = rand() % 7 + 1; */
 	  /* else */
-	    /* col = 0; */
+	  /* col = 0; */
 	  write(fd, &col, 1);
 	  total++;
 	  j++;

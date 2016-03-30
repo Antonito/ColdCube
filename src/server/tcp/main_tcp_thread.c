@@ -66,6 +66,7 @@ void		tcp_thread(t_tcps *tcp)
 	}
       server_check_msg_tcp(tcp);
     }
+  fprintf(stdout, "QUITTING\n");
 }
 
 void		server_check_msg_tcp(t_tcps *tcp)
@@ -90,7 +91,8 @@ void		server_check_msg_tcp(t_tcps *tcp)
 		/*we got a MSG here */
 		fprintf(stdout, "we got a massage here\n");
 		tcp->buff[len] = '\0';
-		tcps_check_received(tcp);
+		fprintf(stdout, ":%s:\n", tcp->buff);
+		tcps_check_received(tcp, i);
 	      }
 	  }
     }
