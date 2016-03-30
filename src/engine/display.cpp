@@ -201,6 +201,7 @@ void	Display::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
 		  engineMain(*this);
 		  data->net.udp.run = false;
 		  data->net.tcp.run = false;
+		  write(data->net.tcp.sock, "/r", 2);
 		  close(data->net.tcp.sock);
 		  // close(data->net.udp.sock);
 		}

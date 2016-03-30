@@ -15,13 +15,17 @@ void		*tcp_thread(void *data)
 
   while (_data->net.tcp.run)
     {
-      std::clog << "Run = " << _data->net.tcp.run << "\n";
-      len = read(_data->net.tcp.sock, _data->net.tcp.buff, 199);
+      if ((len = read(_data->net.tcp.sock, _data->net.tcp.buff, 199)) == 0)
+	{
+	  _data->net.tcp.run = 0;
+	  fprintf(stdout, "run thread = 0\n");
+	}
       _data->net.tcp.buff[len] = 0;
       fprintf(stderr, ":%s:", _data->net.tcp.buff);
       fflush(stderr);
     }
   fprintf(stdout, "stoped tcp thread\n");
+  close(_data->net.tcp.sock);
   return (NULL);
 }
 
