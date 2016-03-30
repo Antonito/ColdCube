@@ -39,7 +39,7 @@ void		tcps_cli_add(t_tcps *tcp)
   tcps_sync_all(tcp);
 }
 
-void		tcps_check_received(t_tcps *tcp)
+void		tcps_check_received(t_tcps *tcp, int i)
 {
   if (tcp->buff[0] == '/')
     {
@@ -55,6 +55,13 @@ void		tcps_check_received(t_tcps *tcp)
 	      fprintf(stdout, "pseudo: OK, client added\n");
 	    }
 	}
+      if (tcp->buff[1] == 'r')
+	{
+	  fprintf(stdout, "client disconnected\n");
+	  close(tcp->cli_sock[i]);
+	  tcps_remove_sock(tcp, i);
+	  tcp_server_remove_pseudo_str(tcp, tcp->pseudo[i]);
+	 }
     }
   else
     tcps_send_to_all(tcp);

@@ -184,6 +184,7 @@ void	Display::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
 		{
 		  engineMain(*this);
 		  data->net.tcp.run = 0;
+		  write(data->net.tcp.sock, "/r", 2);
 		  close(data->net.tcp.sock);
 		  fprintf(stdout, "tcp fd closed\n");
 		}
