@@ -5,7 +5,7 @@
 ** Login   <troncy_l@epitech.net>
 **
 ** Started on  Mon Mar 07 16:48:42 2016 Lucas Troncy
-// Last update Wed Mar 30 09:56:14 2016 Lucas Troncy
+// Last update Wed Mar 30 10:33:58 2016 Lucas Troncy
 */
 
 #include <stdlib.h>
@@ -18,10 +18,10 @@
 #include "tools.hpp"
 #include "common_structs.hpp"
 
-void		*udp_thread(void *data)
+void			*udp_thread(void *data)
 {
-  int		len;
-  t_data	*_data;
+  int			len;
+  t_data		*_data;
 
   _data = (t_data *) data;
   len = sizeof(_data->net.udp.to_serv);
