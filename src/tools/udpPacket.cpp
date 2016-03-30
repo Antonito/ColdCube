@@ -106,8 +106,8 @@ int		readUdpPacket(t_data *data)
     }
   data->players[(int)data->net.udp.buff[0]].position.x = flo;
   flo = 0.0f;
-  i = 0;
   all += i + 1;
+  i = 0;
   while (i < sizeof(GLfloat))
     {
       tmp[i] = data->net.udp.buff[all + i];
@@ -115,8 +115,8 @@ int		readUdpPacket(t_data *data)
     }
   data->players[(int)data->net.udp.buff[0]].position.y = flo;
   flo = 0.0f;
-  i = 0;
   all += i + 1;
+  i = 0;
   while (i < sizeof(GLfloat))
     {
       tmp[i] = data->net.udp.buff[all + i];
@@ -124,8 +124,8 @@ int		readUdpPacket(t_data *data)
     }
   data->players[(int)data->net.udp.buff[0]].position.z = flo;
   flo = 0.0f;
-  i = 0;
   all += i + 1;
+  i = 0;
   while (i < sizeof(GLfloat))
     {
       tmp[i] = data->net.udp.buff[all + i];
@@ -133,8 +133,8 @@ int		readUdpPacket(t_data *data)
     }
   data->players[(int)data->net.udp.buff[0]].direction.x = flo;
   flo = 0.0f;
-  i = 0;
   all += i + 1;
+  i = 0;
   while (i < sizeof(GLfloat))
     {
       tmp[i] = data->net.udp.buff[all + i];
@@ -142,8 +142,8 @@ int		readUdpPacket(t_data *data)
     }
   data->players[(int)data->net.udp.buff[0]].direction.y = flo;
   flo = 0.0f;
-  i = 0;
   all += i + 1;
+  i = 0;
   while (i < sizeof(GLfloat))
     {
       tmp[i] = data->net.udp.buff[all + i];
@@ -151,16 +151,16 @@ int		readUdpPacket(t_data *data)
     }
   data->players[(int)data->net.udp.buff[0]].direction.z = flo;
   tmp = (char *)&tlo;
-  i = 0;
   all = i + 1;
+  i = 0;
   while (i < sizeof(uint32_t))
     {
       tmp[i] = data->net.udp.buff[all + i];
       ++i;
     }
   data->players[(int)data->net.udp.buff[0]].selected_weapon = tlo;
-  i = 0;
   all = i + 1;
+  i = 0;
   while (i < sizeof(uint32_t))
     {
       tmp[i] = data->net.udp.buff[all + i];
