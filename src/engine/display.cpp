@@ -1,3 +1,4 @@
+#include <unistd.h>
 #include <GL/glew.h>
 #include <GL/gl.h>
 #include "engine/display.hpp"
@@ -165,7 +166,8 @@ void	Display::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
 	    menu->moveDown();
 	  if (event.key.keysym.sym == SDLK_UP)
 	    menu->moveUp();
-	  if (event.key.keysym.sym == SDLK_BACKSPACE)
+	  if (event.key.keysym.sym == SDLK_BACKSPACE &&
+	      items[menu->currentItem].text.length())
 	    items[menu->currentItem].text.erase(items[menu->currentItem].text.length() - 1);
 	  if (event.key.keysym.sym == SDLK_RETURN)
 	    {
@@ -177,9 +179,23 @@ void	Display::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
 
 	      // Penser a checker IP + Pseudo + Port
 
-	      printf("Port = %d\n", data->net.port);
-	      printf("Ip = %s\n", data->net.ip);
-	      printf("Pseudo = %s\n", data->net.pseudo);
+	      if (data->net.port < 0)
+		{
+		  std::cerr << "Incorrect port\n";
+		  break;
+		}
+	      if (strlen(data->net.pseudo) > 20)
+		{
+		  std::cerr << "Pseudo is too long\n";
+		  break;
+		}
+
+#ifdef	DEBUG
+	      std::clog << "[Infos] Port = " << data->net.port << "\n";
+	      std::clog << "[Infos] Ip = " << data->net.ip << "\n";
+	      std::clog << "[Infos] Pseudo = " << data->net.pseudo << "\n";
+#endif
+
 	      if (!clientLaunchTcpc(data)) //TCP Start
 		{
 		  engineMain(*this);

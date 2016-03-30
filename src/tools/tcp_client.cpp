@@ -5,6 +5,7 @@
 #include <unistd.h>
 #include <pthread.h>
 #include <string.h>
+#include <iostream>
 #include "common_structs.hpp"
 
 void		*tcp_thread(void *data)
@@ -20,7 +21,10 @@ void		*tcp_thread(void *data)
 	  fprintf(stdout, "run thread = 0\n");
 	}
       _data->net.tcp.buff[len] = 0;
+      fprintf(stderr, ":%s:", _data->net.tcp.buff);
+      fflush(stderr);
     }
+  close(_data->net.tcp.sock);
   fprintf(stdout, "stoped tcp thread\n");
   return (NULL);
 }
@@ -52,6 +56,5 @@ int		clientLaunchTcpc(t_data *data)
   data->net.tcp.run = 1;
   data->net.playerIndexTcp = atoi(tmp);
   pthread_create(&data->net.tcp.thread, NULL, tcp_thread, (void *)data);
-  close(data->net.tcp.sock);
   return (0);
 }

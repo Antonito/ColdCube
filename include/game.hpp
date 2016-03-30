@@ -5,6 +5,8 @@
 # define WIN_Y		720
 # define WIN_TITLE	"ColdCube"
 
+# define MAX_PSEUDO	20
+
 # ifdef _WIN32
 #  include <windows.h>
 # endif

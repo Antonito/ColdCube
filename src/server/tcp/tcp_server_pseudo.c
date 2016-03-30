@@ -48,7 +48,6 @@ void		tcp_server_remove_pseudo_str(t_tcps *tcp, char *str)
       strncpy(tcp->pseudo[i], tcp->pseudo[i + 1], 20);
       ++i;
     }
-  tcp->nb_actual -= 1;
 }
 
 int		tcp_get_pseudo_index(t_tcps *tcp, char *str)
