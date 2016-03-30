@@ -4,7 +4,6 @@ void		udps_send_to_all(t_udps *udp)
 {
   int		i;
   int		j;
-  static int d = 0;
 
   i = -1;
   j = -1;
@@ -14,8 +13,6 @@ void		udps_send_to_all(t_udps *udp)
 	{
 	  sendto(udp->main_sock, udp->cli_buff[j], 70, 0,
 		 (struct sockaddr *)&udp->cli_sock[i], udp->cli_addrl);
-	  ++d;
-	  fflush(stdout);
 	}
     }
 }
