@@ -89,12 +89,15 @@ void	Display::Update(Camera &cam, Map &map, Player &player,
 	  switch (e.key.keysym.sym)
 	    {
 	    case (SDLK_z):
+	      hadEvent = true;
 	      player.Move(vec2(cam.GetFor().x, cam.GetFor().y));
 	      break ;
 	    case (SDLK_s):
+	      hadEvent = true;
 	      player.Move(-vec2(cam.GetFor().x, cam.GetFor().y));
 	      break ;
 	    case (SDLK_SPACE):
+	      hadEvent = true;
 	      player.Jump();
 	      break ;
 	    // case (SDLK_q):
@@ -129,6 +132,7 @@ void	Display::Update(Camera &cam, Map &map, Player &player,
 	      map.PutCube(0, ivec3(cam.GetPos() + cam.GetFor() * 2.0f));
 	      break ;
 	    case (SDLK_v):
+	      hadEvent = true;
 	      map.Save();
 	      break ;
 	    }
@@ -147,15 +151,10 @@ void	Display::Update(Camera &cam, Map &map, Player &player,
     }
   player.Update(dTime);
   player.SetCam(cam);
-  if (!t1)
+  if (hadEvent)
     {
-      t1 = clock();
-    }
-  t2 = clock();
-  if (((float)(t2 - t1) / CLOCKS_PER_SEC ) * 1000.0f >= 10.0f)
-    {
-      t1 = 0;
       createUdpPacket(data, &data->players[data->net.playerIndexUdp]);
+      hadEvent = false;
     }
 }
 

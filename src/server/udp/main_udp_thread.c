@@ -31,11 +31,14 @@ void		udp_thread(t_udps *udp)
 {
   int		len;
   int		go;
+  clock_t	t1, t2;
+  float		diff;
 
   udp->action = 1;
   udp->cli_addrl = sizeof(udp->tmp_sock);
   udp->ms.tv_sec = 0;
   udp->ms.tv_usec = 0;
+  t1 = clock();
   while (udp->action)
   {
     if (udp->ms.tv_usec == 0)
@@ -45,15 +48,17 @@ void		udp_thread(t_udps *udp)
       }
     FD_ZERO(&udp->readfds);
     FD_SET(udp->main_sock, &udp->readfds);
-    go = select(udp->main_sock + 1, &udp->readfds, NULL, NULL, &udp->ms);
+    t2 = clock();
+    diff = ((float)(t2 - t1) / CLOCKS_PER_SEC) * 1000.0f;
+    go = select(udp->main_sock + 1, &udp->readfds, NULL, NULL, NULL);
     if (go == -1)
       {
 	fprintf(stderr, "Error select\n");
       }
-    else if (go == 0 && udp->nb_actual > 0)
+    if (diff >= 20.0f)
       {
 	udps_send_to_all(udp);
-	continue;
+	t1 = clock();
       }
     if (FD_ISSET(udp->main_sock, &udp->readfds))
       {
