@@ -119,8 +119,8 @@ void Player::Update(float time)
   vec3 move(m_move * m_speed * time, m_fall * time);
   m_pos = GetCollisionMove(m_pos, move);
   m_move *= 0.93;
-  printf("(%.2f, %.2f, %.2f)             ", m_pos.x, m_pos.y, m_pos.z);
-  fflush(stdout);
+  // printf("(%.2f, %.2f, %.2f)             ", m_pos.x, m_pos.y, m_pos.z);
+  // fflush(stdout);
 }
 
 static bool IsColinear(vec3 u, vec3 v)
