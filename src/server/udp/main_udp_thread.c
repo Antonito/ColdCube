@@ -1,3 +1,4 @@
+#include <sys/time.h>
 #include "server.hpp"
 
 void		*main_udp_thread(void *data)
@@ -7,7 +8,8 @@ void		*main_udp_thread(void *data)
 
   udp_init_zero_pseudo(&udp);
   udp.nb_actual = 0;
-  port = *(int *)data;
+  if ((port = *(int *)data) < 1024)
+    return ((void *)0);
   if ((udp.main_sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == -1)
     {
       fprintf(stderr, "Cannot create socket\n");
@@ -27,33 +29,46 @@ void		*main_udp_thread(void *data)
   return ((void *)0);
 }
 
-void		udp_thread(t_udps *udp)
+void			udp_thread(t_udps *udp)
 {
-  int		len;
-  int		go;
+  int			len;
+  int			go;
+  time_t		diffout, z1, z2;
+  suseconds_t		diff;
+  struct timeval	t1, t2;
 
   udp->action = 1;
   udp->cli_addrl = sizeof(udp->tmp_sock);
-  udp->ms.tv_sec = 0;
-  udp->ms.tv_usec = 0;
+  udp->nb_actual = 0;
+  z1 = time(NULL);
+  gettimeofday(&t1, NULL);
   while (udp->action)
   {
     if (udp->ms.tv_usec == 0)
       {
 	udp->ms.tv_sec = 0;
-	udp->ms.tv_usec = 1500;
+	udp->ms.tv_usec = 1700;
       }
     FD_ZERO(&udp->readfds);
     FD_SET(udp->main_sock, &udp->readfds);
-    go = select(udp->main_sock + 1, &udp->readfds, NULL, NULL, &udp->ms);
+    gettimeofday(&t2, NULL);
+    diff = t2.tv_usec - t1.tv_usec;
+    z2 = time(NULL);
+    diffout = z2 - z1;
+    go = select(udp->main_sock + 1, &udp->readfds, NULL, NULL, NULL);
     if (go == -1)
       {
 	fprintf(stderr, "Error select\n");
       }
-    else if (go == 0 && udp->nb_actual > 0)
+    if (diff >= 15000)
       {
 	udps_send_to_all(udp);
-	continue;
+	gettimeofday(&t1, NULL);
+      }
+    if (diffout >= 10)
+      {
+	udps_check_timeout(udp);
+	z1 = time(NULL);
       }
     if (FD_ISSET(udp->main_sock, &udp->readfds))
       {
@@ -86,6 +101,7 @@ void		server_check_msg_udp(t_udps *udp)
 	return ;
       udp->cli_sock[i] = udp->tmp_sock;
       sprintf(tmp, "%d", udp->nb_actual);
+      udp->timeout[udp->nb_actual] = 0;
       udp->nb_actual += 1;
       sendto(udp->main_sock, tmp, 1, 0,
 	     (struct sockaddr *)&udp->tmp_sock, udp->cli_addrl);

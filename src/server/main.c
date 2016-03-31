@@ -25,11 +25,7 @@ int		main(int argc, char **argv)
       fprintf(stderr, "error creating the udp thread :(\n");
       return (1);
     }
-  cmd_loop();
+  pthread_join(tcpt, NULL);
+  pthread_join(tudp, NULL);
   return (0);
-}
-
-void		cmd_loop(void)
-{
-  while (42);
 }

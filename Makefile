@@ -87,6 +87,7 @@ LIB=			-lstdc++			\
 			-lpthread			\
 			-lSDL2				\
 			-lSDL2_ttf			\
+			-lSDL2_image			\
 			-lGL				\
 			-lm				\
 			-lGLEW				\
@@ -99,7 +100,7 @@ OBJ+=			$(ENGINE_C:.c=.o)
 
 OBJSERV=		$(SERVER:.c=.o)
 
-$(NAMESERV):	$(OBJSERV)
+$(NAMESERV):	$(OBJSERV) $(NAME)
 	@echo -n "[ "
 	@echo -n -e "\e[1m\e[92mOK\e[0m"
 	@echo -n " ] "
