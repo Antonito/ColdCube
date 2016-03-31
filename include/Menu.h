@@ -31,8 +31,11 @@ class Menu
   void moveDown();
   void draw();
   void selectCurrentItem();
+  void hold();
+  void unhold();
   int currentItem;
  private:
+  bool holded;
   TTF_Font *font;
   SDL_Surface *screen;
   Point menuLocation;
