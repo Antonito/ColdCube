@@ -32,13 +32,17 @@ void		udp_thread(t_udps *udp)
   int		len;
   int		go;
   clock_t	t1, t2;
-  float		diff;
+  time_t	diff;
+  float		diffout;
+  time_t	out1;
+  time_t	out2;
 
   udp->action = 1;
   udp->cli_addrl = sizeof(udp->tmp_sock);
   udp->ms.tv_sec = 0;
   udp->ms.tv_usec = 0;
   t1 = clock();
+  out1 = time(NULL);
   while (udp->action)
   {
     if (udp->ms.tv_usec == 0)
@@ -50,6 +54,8 @@ void		udp_thread(t_udps *udp)
     FD_SET(udp->main_sock, &udp->readfds);
     t2 = clock();
     diff = ((float)(t2 - t1) / CLOCKS_PER_SEC) * 1000.0f;
+    out2 = time(NULL);
+    diffout = out2 - out1;
     go = select(udp->main_sock + 1, &udp->readfds, NULL, NULL, NULL);
     if (go == -1)
       {
@@ -59,6 +65,10 @@ void		udp_thread(t_udps *udp)
       {
 	udps_send_to_all(udp);
 	t1 = clock();
+      }
+    if (diffout >= 10)
+      {
+	udps_check_timeout(udp);
       }
     if (FD_ISSET(udp->main_sock, &udp->readfds))
       {

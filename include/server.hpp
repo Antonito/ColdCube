@@ -59,6 +59,7 @@ typedef struct		s_udps
   char			pseudo[10][21];
   char			cli_buff[8][200];
   char			buff[UDP_READ + 1];
+  int			timeout[10];
   struct sockaddr_in	my_addr;
   fd_set		readfds;
   struct timeval	ms;
