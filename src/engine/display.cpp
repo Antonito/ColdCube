@@ -147,7 +147,7 @@ void	Display::Update(Camera &cam, Map &map, Player &player,
     t1 = clock();
   t2 = clock();
   diff = ((float)(t2 - t1) / CLOCKS_PER_SEC) * 1000.0f;
-  if (diff >= 5.0f)
+  if (diff >= 1.0f)
     {
       createUdpPacket(data, &data->players[data->net.playerIndexUdp]);
       t1 = 0;
