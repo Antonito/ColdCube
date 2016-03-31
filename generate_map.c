@@ -30,7 +30,7 @@ int	main(int ac, char **av)
 	  return (1);
 	}
       /* height = rand() % 20 + 12; */
-      height = 10;
+      height = 32;
       printf("%s %d\n", filename, height);
       write(fd, &height, 4);
       total += 4;
@@ -51,8 +51,8 @@ int	main(int ac, char **av)
 	  /* if (j / 256 == 0) */
 	  /*   col = rand() % 6 + 1; */
 	  /* else */
-	  if (j == 50)
-	    col = 1;
+	  if (rand() % 3)
+	    col = rand() % 7;
 	  else
 	    col = 0;
 	  /* if (rand() % 20) */

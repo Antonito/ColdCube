@@ -73,7 +73,7 @@ void Mesh::Draw()
   glDrawElements(GL_TRIANGLES, m_drawCount, GL_UNSIGNED_INT, 0);
   //  glDrawArrays(GL_TRIANGLES, 0, m_drawCount);
 
-  glBindVertexArray(0);
+  //  glBindVertexArray(0);
 }
 
 void IndexedModel::CalcNormals()

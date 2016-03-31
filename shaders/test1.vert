@@ -7,6 +7,9 @@ attribute vec3 normal;
 varying vec2 texCoord0;
 varying vec3 normal0;
 varying float z0;
+
+// varying	vec3 N;
+// varying vec3 v;
 // varying float lum;
 
 uniform mat4 transform;
@@ -27,6 +30,8 @@ void	main()
 	// lum /= lights[0].x;
 	// lum += 1;
 	gl_Position = transform * vec4(position, 1.0);
+	// v = vec3(gl_Position);
+	// N = normal;
 	texCoord0 = texCoord;
 	normal0 = normal;
 	z0 = gl_Position.z;

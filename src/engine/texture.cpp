@@ -19,6 +19,7 @@ Texture::Texture(const unsigned char *imgData, int width, int height, bool temp)
 
   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+  // glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST);
 
   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, imgData);
 }
@@ -33,6 +34,6 @@ void Texture::Bind(unsigned int unit)
 {
   assert(unit <= 31);
 
-  glActiveTexture(GL_TEXTURE0 + unit);
+  // glActiveTexture(GL_TEXTURE0 + unit);
   glBindTexture(GL_TEXTURE_2D, m_texture);
 }

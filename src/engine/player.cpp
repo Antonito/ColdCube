@@ -102,6 +102,7 @@ vec3 Player::GetCollisionMove(vec3 pos, vec3 move)
   corner.x = ((move.x < 0) ? -PLAYER_SIZE : PLAYER_SIZE) / 2.0;
   corner.y = ((move.y < 0) ? -PLAYER_SIZE : PLAYER_SIZE) / 2.0;
   corner.z = (move.z < 0) ? 0 : PLAYER_HEIGHT;
+  usleep(10000);
   //  pos += corner;
   temp = (pos.x - (int)pos.x) / move.x;
 
@@ -118,7 +119,7 @@ void Player::Update(float time)
   vec3 move(m_move * m_speed * time, m_fall * time);
   m_pos = GetCollisionMove(m_pos, move);
   m_move *= 0.93;
-  printf("\r(%.2f, %.2f, %.2f)             ", m_pos.x, m_pos.y, m_pos.z);
+  //  printf("\r(%.2f, %.2f, %.2f)             ", m_pos.x, m_pos.y, m_pos.z);
   fflush(stdout);
 }
 
