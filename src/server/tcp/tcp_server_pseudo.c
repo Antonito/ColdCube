@@ -27,7 +27,7 @@ int		tcp_server_check_pseudo(t_tcps *tcp, char *str)
   int		i;
 
   i = -1;
-  while (++i < 10)
+  while (++i < tcp->nb_actual - 1)
     {
       if (strncmp(tcp->pseudo[i], str, 20) == 0)
 	return (-1);

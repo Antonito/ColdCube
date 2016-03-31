@@ -100,7 +100,7 @@ OBJ+=			$(ENGINE_C:.c=.o)
 
 OBJSERV=		$(SERVER:.c=.o)
 
-$(NAMESERV):	$(OBJSERV)
+$(NAMESERV):	$(OBJSERV) $(NAME)
 	@echo -n "[ "
 	@echo -n -e "\e[1m\e[92mOK\e[0m"
 	@echo -n " ] "
