@@ -176,17 +176,30 @@ void			Display::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
 	  data->game.running = false;
 	  break;
 	case SDL_KEYUP:
-	  if (event.key.keysym.sym == SDLK_DOWN
-	      || event.key.keysym.sym == SDLK_RETURN
-	      || event.key.keysym.sym == SDLK_TAB
-	      || event.key.keysym.sym == SDLK_UP)
+	  if (menu->holded)
+	  {
+	    if (menu->currentItem == 6)
+	      data->game.running = false;
 	    menu->unhold();
+	  }
 	  break;
 	case SDL_KEYDOWN:
 	  if (event.key.keysym.sym == SDLK_ESCAPE)
 	    {
 	      data->game.running = false;
 	      break;
+	    }
+	  if (event.key.keysym.sym == SDLK_LEFT)
+	    {
+	      menu->moveLeft();
+	      if (menu->currentItem < 4)
+		menu->hold();
+	    }
+	  if (event.key.keysym.sym == SDLK_RIGHT)
+	    {
+	      menu->moveRight();
+	      if (menu->currentItem < 4)
+		menu->hold();
 	    }
 	  if (event.key.keysym.sym == SDLK_UP)
 	    {
@@ -201,6 +214,11 @@ void			Display::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
 		items[menu->currentItem].text.erase(items[menu->currentItem].text.length() - 2);
 	      else
 		items[menu->currentItem].text.erase(items[menu->currentItem].text.length() - 1);
+	    }
+	  if (event.key.keysym.sym == SDLK_RETURN &&
+	      (menu->currentItem == 5 || menu->currentItem == 6))
+	    {
+	      menu->hold();
 	    }
 	  if (event.key.keysym.sym == SDLK_RETURN &&
 	      (menu->currentItem == 3 || menu->currentItem == 4))
@@ -240,11 +258,17 @@ void			Display::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
 		  fprintf(stdout, "tcp fd closed\n");
 		}
 	    }
-	  if (event.key.keysym.sym == SDLK_DOWN
-	      || (event.key.keysym.sym == SDLK_RETURN && menu->currentItem < 4)
-	      || event.key.keysym.sym == SDLK_TAB)
+	  if (event.key.keysym.sym == SDLK_DOWN)
 	    {
 	      menu->moveDown();
+	      if (menu->currentItem < 4)
+		menu->hold();
+	    }
+	  if ((event.key.keysym.sym == SDLK_RETURN
+	       || event.key.keysym.sym == SDLK_TAB)
+	      && menu->currentItem < 4)
+	    {
+	      menu->moveNext();
 	      if (menu->currentItem < 4)
 		menu->hold();
 	    }

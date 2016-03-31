@@ -29,13 +29,16 @@ class Menu
   void hover(int, int);
   void moveUp();
   void moveDown();
+  void moveLeft();
+  void moveRight();
+  void moveNext();
   void draw();
   void selectCurrentItem();
   void hold();
   void unhold();
   int currentItem;
- private:
   bool holded;
+ private:
   TTF_Font *font;
   SDL_Surface *screen;
   std::vector<menuItem> *items;

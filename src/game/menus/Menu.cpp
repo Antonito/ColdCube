@@ -24,17 +24,86 @@ Menu::~Menu() {
 }
 
 void Menu::hover(int x, int y) {
-  printf("toto\n");
-}
+  int	focusedx;
+  int	focusedy;
 
-void Menu::moveDown() {
-  if (this->currentItem < (int)(this->items->size()))
-    ++this->currentItem;
+  focusedx = (WIN_X - 1408) / 2;
+  focusedy = (WIN_Y - 540) / 2;
 }
 
 void Menu::moveUp() {
-  if (this->currentItem)
-    --this->currentItem;
+  switch (this->currentItem) {
+    case 5:
+      this->currentItem = 1;
+      break;
+    case 4:
+      this->currentItem = 2;
+      break;
+    case 3:
+      this->currentItem = 4;
+      break;
+    case 6:
+      this->currentItem = 5;
+      break;
+  }
+  if (!this->currentItem)
+    this->currentItem = 1;
+}
+
+void Menu::moveDown() {
+  switch (this->currentItem) {
+    case 1:
+      this->currentItem = 5;
+      break;
+    case 2:
+      this->currentItem = 4;
+      break;
+    case 4:
+      this->currentItem = 3;
+      break;
+    case 5:
+      this->currentItem = 6;
+      break;
+  }
+  if (!this->currentItem)
+    this->currentItem = 1;
+}
+
+void Menu::moveRight() {
+  switch (this->currentItem) {
+    case 1:
+      this->currentItem = 2;
+      break;
+    case 5:
+      this->currentItem = 4;
+      break;
+    case 6:
+      this->currentItem = 3;
+      break;
+  }
+  if (!this->currentItem)
+    this->currentItem = 1;
+}
+
+void Menu::moveLeft() {
+  switch (this->currentItem) {
+    case 2:
+      this->currentItem = 1;
+      break;
+    case 4:
+      this->currentItem = 5;
+      break;
+    case 3:
+      this->currentItem = 6;
+      break;
+  }
+  if (!this->currentItem)
+    this->currentItem = 1;
+}
+
+void Menu::moveNext() {
+  if (this->currentItem < 7)
+    ++this->currentItem;
 }
 
 void Menu::draw() {
