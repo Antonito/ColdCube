@@ -62,11 +62,11 @@ void Menu::draw() {
   SDL_FillRect(this->screen, NULL, SDL_MapRGB(this->screen->format, 143, 45, 42));
   SDL_BlitSurface(menu, NULL, this->screen, &pos);
   pos.y += 60;
-  pos.x += 220;
+  pos.x += 260;
   text = TTF_RenderUTF8_Blended(this->font, (*this->items)[1].text.c_str(), color);
   SDL_BlitSurface(text, NULL, this->screen, &pos);
   SDL_FreeSurface(text);
-  pos.x += 680 + (7 - (*this->items)[2].text.length()) * 15;
+  pos.x += 630 + (7 - (*this->items)[2].text.length()) * 15;
   text = TTF_RenderUTF8_Blended(this->font, (*this->items)[2].text.c_str(), color);
   SDL_BlitSurface(text, NULL, this->screen, &pos);
   SDL_FreeSurface(text);
