@@ -42,10 +42,10 @@ void Menu::draw() {
   char path[32],
        curr[32];
   SDL_Surface *text;
-  SDL_Color color = {8, 93, 163};
-  SDL_Color light = {243, 237, 211};
-  SDL_Color selected = {1, 4, 45};
-  SDL_Color selected2 = {191, 178, 175};
+  SDL_Color color = {8, 93, 163, 0};
+  SDL_Color light = {243, 237, 211, 0};
+  SDL_Color selected = {1, 4, 45, 0};
+  SDL_Color selected2 = {191, 178, 175, 0};
 
   sprintf(curr, "selected-%d", this->currentItem);
   sprintf(path, "assets/imgs/menu/%s.bmp", this->holded && this->currentItem ? curr : "base");
