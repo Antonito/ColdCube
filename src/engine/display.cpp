@@ -1,6 +1,8 @@
+#include <sys/time.h>
 #include <unistd.h>
 #include <GL/glew.h>
 #include <GL/gl.h>
+#include <sys/time.h>
 #include "engine/display.hpp"
 #include <iostream>
 #include <SDL2/SDL.h>
@@ -63,13 +65,13 @@ void	Display::Update(Camera &cam, Map &map, Player &player,
 			t_data *data)
 {
   SDL_GL_SwapWindow(m_window);
-  static	int cur(0), old(0), tot(0), nb(0);
+  static		int cur(0), old(0), tot(0), nb(0);
   cur = SDL_GetTicks();
-  int		t = cur - old + 1;
-  float		dTime = t / 1000.0f;
+  int			t = cur - old + 1;
+  float			dTime = t / 1000.0f;
   old = cur;
-  bool		hadEvent = false;
   SDL_Event	e;
+  struct timeval	t1;
 
   tot += 1000 / t;
   nb++;
@@ -88,15 +90,12 @@ void	Display::Update(Camera &cam, Map &map, Player &player,
 	  switch (e.key.keysym.sym)
 	    {
 	    case (SDLK_z):
-	      hadEvent = true;
 	      player.Move(vec2(cam.GetFor().x, cam.GetFor().y));
 	      break ;
 	    case (SDLK_s):
-	      hadEvent = true;
 	      player.Move(-vec2(cam.GetFor().x, cam.GetFor().y));
 	      break ;
 	    case (SDLK_SPACE):
-	      hadEvent = true;
 	      player.Jump();
 	      break ;
 	    // case (SDLK_q):
@@ -136,7 +135,6 @@ void	Display::Update(Camera &cam, Map &map, Player &player,
 	    }
 	  break ;
 	case (SDL_MOUSEMOTION):
-	  hadEvent = true;
 	  player.GetRot().y -= e.motion.xrel / 20.0f;
 	  player.GetRot().x -= e.motion.yrel / 20.0f;
 	  if (player.GetRot().x > 89.99f)
@@ -147,24 +145,42 @@ void	Display::Update(Camera &cam, Map &map, Player &player,
 	  break ;
 	}
     }
-  if (hadEvent)
-    createUdpPacket(data, &data->players[data->net.playerIndexUdp]);
+  gettimeofday(&t1, NULL);
+  if (t1.tv_usec % 3000)
+    {
+      createUdpPacket(data, &data->players[data->net.playerIndexUdp]);
+    }
   player.Update(dTime);
   player.SetCam(cam);
 }
 
-void	Display::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
-			    SDL_Rect *pos, SDL_Surface *screen,
-			    SDL_Surface *surface, t_data *data)
+void			Display::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
+					    SDL_Rect *pos, SDL_Surface *screen,
+					    SDL_Surface *surface, t_data *data)
 {
-  SDL_Event	event;
+  SDL_Event		event;
+  struct timeval	tv;
 
   while (SDL_PollEvent(&event))
     {
       switch(event.type)
 	{
+	case SDL_MOUSEBUTTONDOWN:
+	  menu->hover(event.button.x, event.button.y);
+	  menu->hold();
+	  break;
+	case SDL_MOUSEBUTTONUP:
+	  menu->unhold();
+	  break;
 	case SDL_QUIT:
 	  data->game.running = false;
+	  break;
+	case SDL_KEYUP:
+	  if (event.key.keysym.sym == SDLK_DOWN
+	      || event.key.keysym.sym == SDLK_RETURN
+	      || event.key.keysym.sym == SDLK_TAB
+	      || event.key.keysym.sym == SDLK_UP)
+	    menu->unhold();
 	  break;
 	case SDL_KEYDOWN:
 	  if (event.key.keysym.sym == SDLK_ESCAPE)
@@ -172,19 +188,28 @@ void	Display::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
 	      data->game.running = false;
 	      break;
 	    }
-	  if (event.key.keysym.sym == SDLK_DOWN)
-	    menu->moveDown();
 	  if (event.key.keysym.sym == SDLK_UP)
-	    menu->moveUp();
+	    {
+	      menu->moveUp();
+	      if (menu->currentItem < 4)
+		menu->hold();
+	    }
 	  if (event.key.keysym.sym == SDLK_BACKSPACE &&
 	      items[menu->currentItem].text.length())
-	    items[menu->currentItem].text.erase(items[menu->currentItem].text.length() - 1);
-	  if (event.key.keysym.sym == SDLK_RETURN)
 	    {
+	      if (!isprint(items[menu->currentItem].text[items[menu->currentItem].text.length() - 1]))
+		items[menu->currentItem].text.erase(items[menu->currentItem].text.length() - 2);
+	      else
+		items[menu->currentItem].text.erase(items[menu->currentItem].text.length() - 1);
+	    }
+	  if (event.key.keysym.sym == SDLK_RETURN &&
+	      (menu->currentItem == 3 || menu->currentItem == 4))
+	    {
+	      menu->hold();
 	      //Initilisation
 	      data->net.port = atoi(items[3].text.c_str());
-	      data->net.ip = (char *)items[4].text.c_str();
-	      data->net.pseudo = (char *)items[5].text.c_str();
+	      data->net.ip = (char *)items[2].text.c_str();
+	      data->net.pseudo = (char *)items[1].text.c_str();
 	      this->setClosed(false);
 
 	      // Penser a checker IP + Pseudo + Port
@@ -215,20 +240,42 @@ void	Display::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
 		  fprintf(stdout, "tcp fd closed\n");
 		}
 	    }
+	  if (event.key.keysym.sym == SDLK_DOWN
+	      || (event.key.keysym.sym == SDLK_RETURN && menu->currentItem < 4)
+	      || event.key.keysym.sym == SDLK_TAB)
+	    {
+	      menu->moveDown();
+	      if (menu->currentItem < 4)
+		menu->hold();
+	    }
 	  break;
 	case SDL_MOUSEMOTION:
 	  pos->x = event.motion.x - 20;
 	  pos->y = event.motion.y - 20;
-	  menu->hover(event.motion.x, event.motion.y);
 	  break;
 	case SDL_TEXTINPUT:
-	  printf("readed \"%s\"\n", event.text.text);
-	  items[menu->currentItem].text += event.text.text;
+	  if (menu->currentItem < 4 &&
+	      items[menu->currentItem].text.length() < 14)
+	  {
+	    if (items[menu->currentItem].text == " ")
+	      items[menu->currentItem].text = "";
+	    items[menu->currentItem].text += event.text.text;
+	  }
 	  break;
 	}
       SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 255, 255, 255));
-      menu->draw();
-      SDL_BlitSurface(surface, NULL, screen, pos);
-      SDL_UpdateWindowSurface(m_window);
     }
+  if (menu->currentItem < 4)
+    {
+      gettimeofday(&tv, NULL);
+      if (tv.tv_usec / 500000 % 2)
+	items[menu->currentItem].text += " ";
+      else
+	items[menu->currentItem].text += "|";
+    }
+  menu->draw();
+  SDL_BlitSurface(surface, NULL, screen, pos);
+  SDL_UpdateWindowSurface(m_window);
+  if (menu->currentItem < 4)
+    items[menu->currentItem].text.erase(items[menu->currentItem].text.length() - 1);
 }

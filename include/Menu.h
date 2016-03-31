@@ -31,14 +31,15 @@ class Menu
   void moveDown();
   void draw();
   void selectCurrentItem();
+  void hold();
+  void unhold();
   int currentItem;
  private:
+  bool holded;
   TTF_Font *font;
   SDL_Surface *screen;
-  Point menuLocation;
   std::vector<menuItem> *items;
   SDL_Surface *textSurface;
-  SDL_Rect cursor;
 };
 
 void	loginMenu(std::vector<menuItem> &items);

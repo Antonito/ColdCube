@@ -5,7 +5,7 @@
 ** Login   <troncy_l@epitech.net>
 **
 ** Started on  Mon Mar 07 16:48:42 2016 Lucas Troncy
-** Last update Wed Mar 30 08:00:09 2016 Lucas Troncy
+// Last update Wed Mar 30 10:33:58 2016 Lucas Troncy
 */
 
 #include <stdlib.h>
@@ -18,10 +18,10 @@
 #include "tools.hpp"
 #include "common_structs.hpp"
 
-void		*udp_thread(void *data)
+void			*udp_thread(void *data)
 {
-  int		len;
-  t_data	*_data;
+  int			len;
+  t_data		*_data;
 
   _data = (t_data *) data;
   len = sizeof(_data->net.udp.to_serv);
@@ -66,7 +66,7 @@ int		clientLaunchUdpc(t_data *data)
   recvfrom(data->net.udp.sock, tmp, 10, 0,
 	  (struct sockaddr *)&data->net.tcp.to_serv, (socklen_t *)&len);
   data->net.playerIndexUdp = atoi(tmp);
-  fprintf(stdout, "mon id est: %d\n", data->net.playerIndexUdp);
+  printf("Id = %d\n", data->net.playerIndexUdp);
   data->net.udp.run = 1;
   pthread_create(&data->net.udp.thread, NULL, udp_thread, (void *)data);
   return (0);

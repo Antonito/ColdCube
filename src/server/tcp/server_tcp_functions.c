@@ -38,7 +38,6 @@ void		tcps_cli_add(t_tcps *tcp)
 	  break;
 	}
     }
-  tcps_sync_all(tcp);
 }
 
 void		tcps_check_received(t_tcps *tcp, int i)
@@ -56,7 +55,8 @@ void		tcps_check_received(t_tcps *tcp, int i)
 	  else
 	    {
 	      fprintf(stdout, ":%s:\n", &tcp->buff[3]);
-	      fprintf(stdout, "pseudo: OK, client added\n");
+	      fprintf(stdout, "pseudo: OK, client added, synced\n");
+	      tcps_sync_all(tcp);
 	    }
 	}
       if (tcp->buff[1] == 'r')
@@ -66,6 +66,8 @@ void		tcps_check_received(t_tcps *tcp, int i)
 	  tcps_remove_sock(tcp, i);
 	  fprintf(stdout, "removing: %s:\n", tcp->pseudo[i]);
 	  tcp_server_remove_pseudo_str(tcp, tcp->pseudo[i]);
+	  tcps_sync_all(tcp);
+	  tcp->nb_actual -= 1;
 	 }
     }
   else
@@ -74,7 +76,6 @@ void		tcps_check_received(t_tcps *tcp, int i)
 
 void		tcps_remove_sock(t_tcps *tcp, int index)
 {
-  tcp->nb_actual -= 1;
   while (index + 1 < 10)
     {
       tcp->cli_sock[index] = tcp->cli_sock[index + 1];
