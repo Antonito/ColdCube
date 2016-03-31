@@ -66,14 +66,13 @@ void	Display::Update(Camera &cam, Map &map, Player &player,
   int			t = cur - old + 1;
   float			dTime = t / 1000.0f;
   old = cur;
-  bool		hadEvent = false;
   SDL_Event	e;
   static clock_t t1 = 0;
   clock_t	t2;
+  float		diff;
 
   tot += 1000 / t;
   nb++;
-  t1 = clock();
   if (nb == 1)
     tot = 0;
   printf("\r%d  %d  ", tot / nb, 1000 / t);
@@ -89,15 +88,12 @@ void	Display::Update(Camera &cam, Map &map, Player &player,
 	  switch (e.key.keysym.sym)
 	    {
 	    case (SDLK_z):
-	      hadEvent = true;
 	      player.Move(vec2(cam.GetFor().x, cam.GetFor().y));
 	      break ;
 	    case (SDLK_s):
-	      hadEvent = true;
 	      player.Move(-vec2(cam.GetFor().x, cam.GetFor().y));
 	      break ;
 	    case (SDLK_SPACE):
-	      hadEvent = true;
 	      player.Jump();
 	      break ;
 	    // case (SDLK_q):
@@ -132,13 +128,11 @@ void	Display::Update(Camera &cam, Map &map, Player &player,
 	      map.PutCube(0, ivec3(cam.GetPos() + cam.GetFor() * 2.0f));
 	      break ;
 	    case (SDLK_v):
-	      hadEvent = true;
 	      map.Save();
 	      break ;
 	    }
 	  break ;
 	case (SDL_MOUSEMOTION):
-	  hadEvent = true;
 	  player.GetRot().y -= e.motion.xrel / 20.0f;
 	  player.GetRot().x -= e.motion.yrel / 20.0f;
 	  if (player.GetRot().x > 89.99f)
@@ -149,13 +143,17 @@ void	Display::Update(Camera &cam, Map &map, Player &player,
 	  break ;
 	}
     }
-  player.Update(dTime);
-  player.SetCam(cam);
-  if (hadEvent)
+  if (t1 == 0)
+    t1 = clock();
+  t2 = clock();
+  diff = ((float)(t2 - t1) / CLOCKS_PER_SEC) * 1000.0f;
+  if (diff >= 5.0f)
     {
       createUdpPacket(data, &data->players[data->net.playerIndexUdp]);
-      hadEvent = false;
+      t1 = 0;
     }
+  player.Update(dTime);
+  player.SetCam(cam);
 }
 
 void	Display::UpdateMenu(Menu *menu, std::vector<menuItem> &items,

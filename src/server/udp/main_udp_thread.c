@@ -55,7 +55,7 @@ void		udp_thread(t_udps *udp)
       {
 	fprintf(stderr, "Error select\n");
       }
-    if (diff >= 20.0f)
+    if (diff >= 15.0f)
       {
 	udps_send_to_all(udp);
 	t1 = clock();
