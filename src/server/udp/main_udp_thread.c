@@ -63,6 +63,7 @@ void			udp_thread(t_udps *udp)
     if (diff >= 15000)
       {
 	udps_send_to_all(udp);
+	write(1, "A\n", 2);
 	gettimeofday(&t1, NULL);
       }
     if (diffout >= 10)

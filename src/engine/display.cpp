@@ -70,7 +70,7 @@ void	Display::Update(Camera &cam, Map &map, Player &player,
   SDL_Event	e;
   static struct timeval t1 = (struct timeval){0, 0};
   struct timeval	t2;
-  suseconds_t	diff;
+  long int	diff;
 
   tot += 1000 / t;
   nb++;
@@ -148,10 +148,12 @@ void	Display::Update(Camera &cam, Map &map, Player &player,
     gettimeofday(&t1, NULL);
   gettimeofday(&t2, NULL);
   diff = t2.tv_usec - t1.tv_usec;
+  fprintf(stdout, "diff = %ld\n", diff);
   if (diff >= 3000)
     {
       createUdpPacket(data, &data->players[data->net.playerIndexUdp]);
       gettimeofday(&t1, NULL);
+      fprintf(stdout, "bite\n");
     }
   player.Update(dTime);
   player.SetCam(cam);
