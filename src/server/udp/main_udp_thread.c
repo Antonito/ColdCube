@@ -7,7 +7,8 @@ void		*main_udp_thread(void *data)
 
   udp_init_zero_pseudo(&udp);
   udp.nb_actual = 0;
-  port = *(int *)data;
+  if ((port = *(int *)data) < 1024)
+    return ((void *)0);
   if ((udp.main_sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == -1)
     {
       fprintf(stderr, "Cannot create socket\n");
@@ -41,6 +42,7 @@ void		udp_thread(t_udps *udp)
   udp->cli_addrl = sizeof(udp->tmp_sock);
   udp->ms.tv_sec = 0;
   udp->ms.tv_usec = 0;
+  udp->nb_actual = 0;
   t1 = clock();
   out1 = time(NULL);
   while (udp->action)
@@ -101,6 +103,7 @@ void		server_check_msg_udp(t_udps *udp)
 	return ;
       udp->cli_sock[i] = udp->tmp_sock;
       sprintf(tmp, "%d", udp->nb_actual);
+      udp->timeout[udp->nb_actual] = 0;
       udp->nb_actual += 1;
       sendto(udp->main_sock, tmp, 1, 0,
 	     (struct sockaddr *)&udp->tmp_sock, udp->cli_addrl);

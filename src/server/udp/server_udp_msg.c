@@ -33,7 +33,7 @@ void		udps_check_timeout(t_udps *udp)
   int		i;
 
   i = -1;
-  while (++i < udp->nb_actual)
+  while (++i < udp->nb_actual - 1)
     {
       if (udp->timeout[i] == 0)
 	{

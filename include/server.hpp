@@ -68,6 +68,7 @@ typedef struct		s_udps
 /* src/server/udp/server_udp_msg.c */
 void		udps_send_to_all(t_udps *);
 void		set_cli_buff(t_udps *, int);
+void		udps_check_timeout(t_udps *);
 
 /* src/server/udp/udp_server_pseudo.c */
 void		udp_init_zero_pseudo(t_udps *);
