@@ -253,8 +253,12 @@ void			Display::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
 	  break;
 	case SDL_TEXTINPUT:
 	  if (menu->currentItem < 4 &&
-	      items[menu->currentItem].text.length() < 13)
+	      items[menu->currentItem].text.length() < 14)
+	  {
+	    if (items[menu->currentItem].text == " ")
+	      items[menu->currentItem].text = "";
 	    items[menu->currentItem].text += event.text.text;
+	  }
 	  break;
 	}
       SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 255, 255, 255));
