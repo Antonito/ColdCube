@@ -3,6 +3,7 @@
 #include "game.hpp"
 #include "Menu.h"
 #include <GL/glut.h>
+#include "SDL2/SDL_image.h"
 
 void	initData(t_data *data)
 {
@@ -13,7 +14,7 @@ void	initData(t_data *data)
 int	game()
 {
   t_data		*data = new t_data;
-  Display		display(WIN_X, WIN_Y, "Coldcube");
+  Display		display(WIN_X, WIN_Y, "ColdCube");
   std::vector<menuItem>	items(6);
   std::string		inputText = "Some text";
   SDL_Rect		pos;
@@ -21,9 +22,7 @@ int	game()
   SDL_Surface		*surface = NULL;
   Menu			*menu = new Menu(screen, &items);
 
-  surface = SDL_LoadBMP("assets/imgs/cursor.bmp");
-  SDL_SetColorKey(surface, 0, SDL_MapRGB(surface->format, 0, 0, 0));
-  SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 255, 255, 255));
+  surface = IMG_Load("assets/imgs/cursor.bmp");
   pos.x = (screen->w >> 1)- (surface->w >> 1);
   pos.y = (screen->h >> 1)- (surface->h >> 1);
   SDL_StartTextInput();
