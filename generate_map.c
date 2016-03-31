@@ -51,8 +51,8 @@ int	main(int ac, char **av)
 	  /* if (j / 256 == 0) */
 	  /*   col = rand() % 6 + 1; */
 	  /* else */
-	  if (j < 256 && rand() % 3)
-	    col = rand() % 7;
+	  if (j < 256)
+	    col = rand() % 6 + 1;
 	  else
 	    col = 0;
 	  /* if (rand() % 20) */
