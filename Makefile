@@ -87,6 +87,7 @@ LIB=			-lstdc++			\
 			-lpthread			\
 			-lSDL2				\
 			-lSDL2_ttf			\
+			-lSDL2_image			\
 			-lGL				\
 			-lm				\
 			-lGLEW				\
