@@ -1,3 +1,4 @@
+#include <sys/time.h>
 #include <unistd.h>
 #include <GL/glew.h>
 #include <GL/gl.h>
@@ -68,9 +69,9 @@ void	Display::Update(Camera &cam, Map &map, Player &player,
   float			dTime = t / 1000.0f;
   old = cur;
   SDL_Event	e;
-  static clock_t t1 = 0;
-  clock_t	t2;
-  float		diff;
+  static struct timeval t1 = (struct timeval){0, 0};
+  struct timeval	t2;
+  suseconds_t	diff;
 
   tot += 1000 / t;
   nb++;
@@ -144,14 +145,14 @@ void	Display::Update(Camera &cam, Map &map, Player &player,
 	  break ;
 	}
     }
-  if (t1 == 0)
-    t1 = clock();
-  t2 = clock();
-  diff = ((float)(t2 - t1) / CLOCKS_PER_SEC) * 1000.0f;
-  if (diff >= 1.0f)
+  if (t1.tv_usec == 0)
+    gettimeofday(&t1, NULL);
+  gettimeofday(&t2, NULL);
+  diff = t2.tv_usec - t1.tv_usec;
+  if (diff >= 3000)
     {
       createUdpPacket(data, &data->players[data->net.playerIndexUdp]);
-      t1 = 0;
+      gettimeofday(&t1, NULL);
     }
   player.Update(dTime);
   player.SetCam(cam);

@@ -5,6 +5,7 @@ void		*main_tcp_thread(void *data)
   t_tcps	tcp;
   int		i;
 
+  memset(&tcp, 0, sizeof(t_tcps));
   i = 1;
   if ((tcp.main_sock = socket(AF_INET, SOCK_STREAM, 0)) < 1)
     {
@@ -18,7 +19,8 @@ void		*main_tcp_thread(void *data)
     }
   tcp.my_addr.sin_family = AF_INET;
   tcp.my_addr.sin_addr.s_addr = INADDR_ANY;
-  tcp.port = *(int *)data;
+  if ((tcp.port = *(int *)data) < 1024)
+    return ((void *)0);
   tcp.my_addr.sin_port = htons(tcp.port);
   if (bind(tcp.main_sock, (struct sockaddr *)&tcp.my_addr, sizeof(tcp.my_addr)) != 0)
     {
@@ -65,6 +67,7 @@ void		tcp_thread(t_tcps *tcp)
 	  tcps_cli_add(tcp);
 	}
       server_check_msg_tcp(tcp);
+      memset(tcp->buff, 0, 210);
     }
   fprintf(stdout, "QUITTING\n");
 }
@@ -85,6 +88,7 @@ void		server_check_msg_tcp(t_tcps *tcp)
 		close(tcp->cli_sock[i]);
 		tcps_remove_sock(tcp, i);
 		tcp_server_remove_pseudo_str(tcp, tcp->pseudo[i]);
+		tcp->nb_actual -= 1;
 	      }
 	    else
 	      {
