@@ -34,14 +34,12 @@ void			udp_thread(t_udps *udp)
   int			len;
   int			go;
   time_t		diffout, z1, z2;
-  suseconds_t		diff;
-  struct timeval	t1, t2;
+  struct timeval	t1;
 
   udp->action = 1;
   udp->cli_addrl = sizeof(udp->tmp_sock);
   udp->nb_actual = 0;
   z1 = time(NULL);
-  gettimeofday(&t1, NULL);
   while (udp->action)
   {
     if (udp->ms.tv_usec == 0)
@@ -51,8 +49,6 @@ void			udp_thread(t_udps *udp)
       }
     FD_ZERO(&udp->readfds);
     FD_SET(udp->main_sock, &udp->readfds);
-    gettimeofday(&t2, NULL);
-    diff = t2.tv_usec - t1.tv_usec;
     z2 = time(NULL);
     diffout = z2 - z1;
     go = select(udp->main_sock + 1, &udp->readfds, NULL, NULL, NULL);
@@ -60,7 +56,8 @@ void			udp_thread(t_udps *udp)
       {
 	fprintf(stderr, "Error select\n");
       }
-    if (diff >= 15000)
+    gettimeofday(&t1, NULL);
+    if (t1.tv_usec % 15000)
       {
 	udps_send_to_all(udp);
 	gettimeofday(&t1, NULL);

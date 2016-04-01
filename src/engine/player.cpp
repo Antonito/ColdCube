@@ -102,7 +102,7 @@ vec3 Player::GetCollisionMove(vec3 pos, vec3 move)
   corner.x = ((move.x < 0) ? -PLAYER_SIZE : PLAYER_SIZE) / 2.0;
   corner.y = ((move.y < 0) ? -PLAYER_SIZE : PLAYER_SIZE) / 2.0;
   corner.z = (move.z < 0) ? 0 : PLAYER_HEIGHT;
-  usleep(10000);
+  // usleep(10000);
   //  pos += corner;
   temp = (pos.x - (int)pos.x) / move.x;
 
