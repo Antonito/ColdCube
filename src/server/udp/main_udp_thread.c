@@ -62,11 +62,11 @@ void			udp_thread(t_udps *udp)
 	udps_send_to_all(udp);
 	gettimeofday(&t1, NULL);
       }
-    if (diffout >= 10)
+    /*if (diffout >= 10)
       {
 	udps_check_timeout(udp);
 	z1 = time(NULL);
-      }
+	}*/
     if (FD_ISSET(udp->main_sock, &udp->readfds))
       {
 	FD_CLR(udp->main_sock, &udp->readfds);
