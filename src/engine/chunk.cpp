@@ -1,12 +1,15 @@
 #include "engine/chunk.hpp"
 #include <string.h>
-
 #include <fstream>
 #include <iostream>
 #include <iomanip>
 #include <sstream>
-#include <fcntl.h>
-#include <unistd.h>
+
+#ifdef _WIN32
+#else
+# include <fcntl.h>
+# include <unistd.h>
+#endif
 
 static Texture SetTex(char *, int);
  Mesh SetPlanes(int, vec3);

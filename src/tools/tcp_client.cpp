@@ -1,10 +1,13 @@
-#include <stdlib.h>
-#include <stdio.h>
-#include <arpa/inet.h>
-#include <sys/socket.h>
-#include <unistd.h>
-#include <pthread.h>
-#include <string.h>
+#ifdef _WIN32
+#else
+# include <stdlib.h>
+# include <stdio.h>
+# include <arpa/inet.h>
+# include <sys/socket.h>
+# include <unistd.h>
+# include <pthread.h>
+# include <string.h>
+#endif
 #include <iostream>
 #include "common_structs.hpp"
 

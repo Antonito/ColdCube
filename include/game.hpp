@@ -10,16 +10,17 @@
 
 # ifdef _WIN32
 #  include <windows.h>
+# else
+# include <unistd.h>
+# include <stdio.h>
+# include <stdlib.h>
+# include <sys/types.h>
+# include <sys/stat.h>
+# include <stdint.h>
 # endif
 
 # include <iostream>
 # include <istream>
-# include <unistd.h>
-# include <stdio.h>
-# include <stdlib.h>
-# include <stdint.h>
-# include <sys/types.h>
-# include <sys/stat.h>
 # include <math.h>
 # include <fcntl.h>
 # include <time.h>

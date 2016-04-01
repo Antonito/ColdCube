@@ -5,9 +5,11 @@
 ** Login   <troncy_l@epitech.net>
 **
 ** Started on  Mon Mar 07 16:48:42 2016 Lucas Troncy
-// Last update Wed Mar 30 10:33:58 2016 Lucas Troncy
+// Last update Fri Apr  1 20:37:08 2016 Antoine Baché
 */
 
+#ifdef _WIN32
+#else
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>
@@ -15,6 +17,7 @@
 #include <arpa/inet.h>
 #include <sys/types.h>
 #include <pthread.h>
+#endif
 #include "tools.hpp"
 #include "common_structs.hpp"
 

@@ -6,17 +6,22 @@
 # ifndef UDP_READ
 #  define UDP_READ (70)
 # endif /* !UDP_READ */
-# include <stdio.h>
-# include <stdlib.h>
-# include <unistd.h>
+
+# ifdef _WIN32
+# else
+#  include <stdio.h>
+#  include <stdlib.h>
+#  include <unistd.h>
+#  include <sys/time.h>
+#  include <sys/types.h>
+# endif
+
 # include <string.h>
 # include <pthread.h>
 # include <arpa/inet.h>
-# include <sys/types.h>
 # include <sys/socket.h>
 # include <sys/select.h>
 # include <netinet/in.h>
-# include <sys/time.h>
 
 /*
 ** s_tcps pour le server, il gere le tchate est la sync des clients
