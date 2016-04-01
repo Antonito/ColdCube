@@ -148,6 +148,45 @@ void	Display::Update(Camera &cam, Map &map, Player &player,
   player.SetCam(cam);
 }
 
+int	startGame(t_data *data, std::vector<menuItem> &items, Display &disp)
+{
+  //Initilisation
+  data->net.port = atoi(items[3].text.c_str());
+  data->net.ip = (char *)items[2].text.c_str();
+  data->net.pseudo = (char *)items[1].text.c_str();
+  disp.setClosed(false);
+
+  // Penser a checker IP + Pseudo + Port
+  if (data->net.port < 0)
+    {
+      std::cerr << "Incorrect port\n";
+      return (1);
+    }
+  if (strlen(data->net.pseudo) > 20)
+    {
+      std::cerr << "Pseudo is too long\n";
+      return (1);
+    }
+
+#ifdef	DEBUG
+  std::clog << "[Infos] Port = " << data->net.port << "\n";
+  std::clog << "[Infos] Ip = " << data->net.ip << "\n";
+  std::clog << "[Infos] Pseudo = " << data->net.pseudo << "\n";
+#endif
+
+  if (!clientLaunchTcpc(data)) //TCP Start
+    {
+      if (!clientLaunchUdpc(data))
+	engineMain(disp, data);
+      write(data->net.tcp.sock, "/r", 2);
+      fprintf(stdout, "tcp fd closed\n");
+    }
+  data->net.tcp.run = 0;
+  data->net.udp.run_send = 0;
+  data->net.udp.run = 0;
+  return (0);
+}
+
 void			Display::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
 					    SDL_Rect *pos, SDL_Surface *screen,
 					    SDL_Surface *surface, t_data *data)
@@ -169,40 +208,8 @@ void			Display::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
 	      if (menu->currentItem == 6)
 		data->game.running = false;
 	      else if (menu->currentItem == 4) {
-		//Initilisation
-		data->net.port = atoi(items[3].text.c_str());
-		data->net.ip = (char *)items[2].text.c_str();
-		data->net.pseudo = (char *)items[1].text.c_str();
-		this->setClosed(false);
-
-		// Penser a checker IP + Pseudo + Port
-
-		if (data->net.port < 0)
-		  {
-		    std::cerr << "Incorrect port\n";
-		    break;
-		  }
-		if (strlen(data->net.pseudo) > 20)
-		  {
-		    std::cerr << "Pseudo is too long\n";
-		    break;
-		  }
-
-#ifdef	DEBUG
-		std::clog << "[Infos] Port = " << data->net.port << "\n";
-		std::clog << "[Infos] Ip = " << data->net.ip << "\n";
-		std::clog << "[Infos] Pseudo = " << data->net.pseudo << "\n";
-#endif
-
-		if (!clientLaunchTcpc(data) && !clientLaunchUdpc(data)) //TCP Start
-		  {
-		    engineMain(*this, data);
-		    write(data->net.tcp.sock, "/r", 2);
-		    data->net.tcp.run = 0;
-		    data->net.udp.run_send = 0;
-		    data->net.udp.run = 0;
-		    fprintf(stdout, "tcp fd closed\n");
-		  }
+		if (startGame(data, items, *this))
+		  break;
 	      }
 	      menu->unhold();
 	    }
@@ -260,39 +267,8 @@ void			Display::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
 	    {
 	      menu->hold();
 	      //Initilisation
-	      data->net.port = atoi(items[3].text.c_str());
-	      data->net.ip = (char *)items[2].text.c_str();
-	      data->net.pseudo = (char *)items[1].text.c_str();
-	      this->setClosed(false);
-
-	      // Penser a checker IP + Pseudo + Port
-
-	      if (data->net.port < 0)
-		{
-		  std::cerr << "Incorrect port\n";
-		  break;
-		}
-	      if (strlen(data->net.pseudo) > 20)
-		{
-		  std::cerr << "Pseudo is too long\n";
-		  break;
-		}
-
-#ifdef	DEBUG
-	      std::clog << "[Infos] Port = " << data->net.port << "\n";
-	      std::clog << "[Infos] Ip = " << data->net.ip << "\n";
-	      std::clog << "[Infos] Pseudo = " << data->net.pseudo << "\n";
-#endif
-
-	      if (!clientLaunchTcpc(data) && !clientLaunchUdpc(data)) //TCP Start
-		{
-		  engineMain(*this, data);
-		  write(data->net.tcp.sock, "/r", 2);
-		  data->net.tcp.run = 0;
-		  data->net.udp.run_send = 0;
-		  data->net.udp.run = 0;
-		  fprintf(stdout, "tcp fd closed\n");
-		}
+	      if (startGame(data, items, *this))
+		break;
 	    }
 	  if (event.key.keysym.sym == SDLK_DOWN)
 	    {
