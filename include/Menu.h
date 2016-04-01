@@ -29,19 +29,20 @@ class Menu
   void hover(int, int);
   void moveUp();
   void moveDown();
+  void moveLeft();
+  void moveRight();
+  void moveNext();
   void draw();
   void selectCurrentItem();
   void hold();
   void unhold();
   int currentItem;
- private:
   bool holded;
+ private:
   TTF_Font *font;
   SDL_Surface *screen;
-  Point menuLocation;
   std::vector<menuItem> *items;
   SDL_Surface *textSurface;
-  SDL_Rect cursor;
 };
 
 void	loginMenu(std::vector<menuItem> &items);

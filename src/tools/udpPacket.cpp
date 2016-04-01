@@ -167,12 +167,5 @@ int		readUdpPacket(t_data *data)
       ++i;
     }
   data->players[(int)data->net.udp.buff[0]].events = tlo;
-  /*if ((int)data->net.udp.buff[0] != data->net.playerIndexUdp)
-    {
-      fprintf(stdout, "x = %f y = %f z = %f\n",
-	      data->players[(int)data->net.udp.buff[0]].position.x,
-	      data->players[(int)data->net.udp.buff[0]].position.y,
-	      data->players[(int)data->net.udp.buff[0]].position.z);
-    }*/
   return (0);
 }

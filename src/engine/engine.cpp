@@ -44,6 +44,7 @@ int	engineMain(Display &display, t_data *data)
   unsigned char	tt[] = {255, 255, 255, 255};
   Texture text(tt, 1, 1, false);
   int	i;
+  int	count(1), tot(0);
 
   // float		lights[120] =
   //   {2, 0, 0, 0,  5, 7, 4, 400.0,
@@ -55,31 +56,33 @@ int	engineMain(Display &display, t_data *data)
       if (t != time(NULL))
 	{
 	  t = time(NULL);
-	  // printf("\r%d   ", fps);
-	  // fflush(stdout);
+	  tot += fps;
+	  printf("\r%d\t%.2f\t", fps, (double)tot / count);
+	  fflush(stdout);
 	  fps = 0;
+	  count++;
 	}
 
-      display.Clear(0.0f, 0.3f, 0.8f, 1.0f);
-
       shader.Bind();
+
       shader.Update(transform, camera);
+      display.Clear(0.0f, 0.3f, 0.8f, 1.0f);
       map.Draw();
       i = 0;
       while (i < 10)
       	{
-	  if (i != player.GetId())
-	    {
-	      transform.GetPos() = data->players[i].position;
-	      shader.Bind();
-	      shader.Update(transform, camera);
-	      text.Bind(0);
-	      playerModel.Draw();
-	    }
+      	  if (i != player.GetId())
+      	    {
+      	      transform.GetPos() = data->players[i].position;
+      	      shader.Bind();
+      	      shader.Update(transform, camera);
+      	      text.Bind(0);
+      	      playerModel.Draw();
+      	    }
       	  i++;
       	}
-      display.Update(camera, map, player, data);
       player.FillCPlayer(data->players + player.GetId(), camera.GetFor());
+      display.Update(camera, map, player, data);
     }
   return (0);
 }

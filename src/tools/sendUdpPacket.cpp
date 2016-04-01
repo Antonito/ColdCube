@@ -1,4 +1,6 @@
 #include "common_structs.hpp"
+#include <stdio.h>
+#include <unistd.h>
 
 int		sendUdpPacket(t_data *data, char packet[42])
 {
