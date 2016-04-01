@@ -28,6 +28,7 @@ typedef	struct		s_udpc
   int			run_send;
   char			buff[70];
   pthread_t		thread;
+  pthread_t		thread_send;
 }			t_udpc;
 
 typedef	struct		s_tcpc

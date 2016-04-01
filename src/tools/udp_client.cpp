@@ -5,10 +5,11 @@
 ** Login   <troncy_l@epitech.net>
 **
 ** Started on  Mon Mar 07 16:48:42 2016 Lucas Troncy
-// Last update Fri Apr  1 20:37:08 2016 Antoine Baché
+// Last update Fri Apr 01 23:26:44 2016 Lucas Troncy
 */
 
 #ifdef _WIN32
+#include <windows.h>
 #else
 #include <stdlib.h>
 #include <stdio.h>
@@ -17,16 +18,33 @@
 #include <arpa/inet.h>
 #include <sys/types.h>
 #include <pthread.h>
+#include <sys/time.h>
 #endif
 #include "tools.hpp"
 #include "common_structs.hpp"
+
+void			*udp_send_thread(void *data)
+{
+  t_data		*_data;
+  int			len;
+  struct timeval	t1;
+
+  _data = (t_data *)data;
+  while (_data->net.udp.run_send)
+    {
+      gettimeofday(&t1, NULL);
+      if (t1.tv_usec % 3000)
+	createUdpPacket(_data, &_data->players[_data->net.playerIndexUdp]);
+    }
+  return (NULL);
+}
 
 void			*udp_thread(void *data)
 {
   int			len;
   t_data		*_data;
 
-  _data = (t_data *) data;
+  _data = (t_data *)data;
   len = sizeof(_data->net.udp.to_serv);
   while (_data->net.udp.run)
     {
@@ -71,6 +89,8 @@ int		clientLaunchUdpc(t_data *data)
   data->net.playerIndexUdp = atoi(tmp);
   printf("Id = %d\n", data->net.playerIndexUdp);
   data->net.udp.run = 1;
+  data->net.udp.run_send = 1;
   pthread_create(&data->net.udp.thread, NULL, udp_thread, (void *)data);
+  pthread_create(&data->net.udp.thread_send, NULL, udp_send_thread, (void *)data);
   return (0);
 }
