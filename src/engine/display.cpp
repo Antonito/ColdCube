@@ -205,6 +205,7 @@ void			Display::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
 		    engineMain(*this, data);
 		    write(data->net.tcp.sock, "/r", 2);
 		    data->net.tcp.run = 0;
+		    data->net.udp.run_send = 0;
 		    data->net.udp.run = 0;
 		    fprintf(stdout, "tcp fd closed\n");
 		  }
@@ -294,6 +295,7 @@ void			Display::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
 		  engineMain(*this, data);
 		  write(data->net.tcp.sock, "/r", 2);
 		  data->net.tcp.run = 0;
+		  data->net.udp.run_send = 0;
 		  data->net.udp.run = 0;
 		  fprintf(stdout, "tcp fd closed\n");
 		}
