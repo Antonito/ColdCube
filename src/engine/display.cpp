@@ -26,7 +26,7 @@ Display::Display(int width, int height, const std::string& title)
   SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
   SDL_SetRelativeMouseMode(SDL_TRUE);
-  m_window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_OPENGL);
+  m_window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN);
   m_glContext = SDL_GL_CreateContext(m_window);
 
   GLenum status = glewInit();
@@ -170,18 +170,58 @@ void			Display::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
 	  menu->hold();
 	  break;
 	case SDL_MOUSEBUTTONUP:
-	  menu->unhold();
+	  if (menu->holded)
+	    {
+	      if (menu->currentItem == 6)
+		data->game.running = false;
+	      else if (menu->currentItem == 4) {
+		//Initilisation
+		data->net.port = atoi(items[3].text.c_str());
+		data->net.ip = (char *)items[2].text.c_str();
+		data->net.pseudo = (char *)items[1].text.c_str();
+		this->setClosed(false);
+
+		// Penser a checker IP + Pseudo + Port
+
+		if (data->net.port < 0)
+		  {
+		    std::cerr << "Incorrect port\n";
+		    break;
+		  }
+		if (strlen(data->net.pseudo) > 20)
+		  {
+		    std::cerr << "Pseudo is too long\n";
+		    break;
+		  }
+
+#ifdef	DEBUG
+		std::clog << "[Infos] Port = " << data->net.port << "\n";
+		std::clog << "[Infos] Ip = " << data->net.ip << "\n";
+		std::clog << "[Infos] Pseudo = " << data->net.pseudo << "\n";
+#endif
+
+		if (!clientLaunchTcpc(data) && !clientLaunchUdpc(data)) //TCP Start
+		  {
+		    engineMain(*this, data);
+		    write(data->net.tcp.sock, "/r", 2);
+		    data->net.tcp.run = 0;
+		    data->net.udp.run = 0;
+		    fprintf(stdout, "tcp fd closed\n");
+		  }
+	      }
+	      menu->unhold();
+	    }
 	  break;
 	case SDL_QUIT:
 	  data->game.running = false;
 	  break;
 	case SDL_KEYUP:
 	  if (menu->holded)
-	  {
-	    if (menu->currentItem == 6)
-	      data->game.running = false;
-	    menu->unhold();
-	  }
+	    {
+	      if (menu->currentItem == 6)
+		data->game.running = false;
+	      menu->unhold();
+	    }
 	  break;
 	case SDL_KEYDOWN:
 	  if (event.key.keysym.sym == SDLK_ESCAPE)
@@ -274,8 +314,10 @@ void			Display::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
 	    }
 	  break;
 	case SDL_MOUSEMOTION:
-	  pos->x = event.motion.x - 20;
-	  pos->y = event.motion.y - 20;
+	  pos->x = event.motion.x;
+	  pos->y = event.motion.y;
+	  if (menu->holded)
+	    menu->hover(event.motion.x, event.motion.y);
 	  break;
 	case SDL_TEXTINPUT:
 	  if (menu->currentItem < 4 &&

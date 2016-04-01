@@ -24,11 +24,30 @@ Menu::~Menu() {
 }
 
 void Menu::hover(int x, int y) {
-  int	focusedx;
-  int	focusedy;
-
-  focusedx = (WIN_X - 1408) / 2;
-  focusedy = (WIN_Y - 540) / 2;
+  std::cout << "Pos " << x << ";" << y << std::endl;
+  if (y > 290 && y < 465) {
+    if (x > 450 && x < 880)
+      this->currentItem = 1;
+    else if (x > 1030 && x < 1510)
+      this->currentItem = 2;
+    else
+      this->currentItem = 0;
+  } else if (y > 465 && y < 650) {
+    if (x > 295 && x < 880)
+      this->currentItem = 5;
+    else if (x > 1080 && x < 1660)
+      this->currentItem = 4;
+    else
+      this->currentItem = 0;
+  } else if (y > 650 && y < 830) {
+    if (x > 450 && x < 880)
+      this->currentItem = 6;
+    else if (x  > 1030 && x < 1510)
+      this->currentItem = 3;
+    else
+      this->currentItem = 0;
+  } else
+    this->currentItem = 0;
 }
 
 void Menu::moveUp() {
@@ -172,7 +191,6 @@ void Menu::draw() {
 }
 
 void Menu::selectCurrentItem() {
-  printf("Selecting item %d\n", this->currentItem);
 }
 
 void Menu::hold() {
