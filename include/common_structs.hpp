@@ -25,6 +25,7 @@ typedef	struct		s_udpc
   int			sock;
   struct sockaddr_in	to_serv;
   int			run;
+  int			run_send;
   char			buff[70];
   pthread_t		thread;
 }			t_udpc;
