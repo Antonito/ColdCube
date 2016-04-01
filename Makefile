@@ -65,9 +65,9 @@ NAMESERV=		server_game
 
 HEAD=			-Iinclude
 
-CXXFLAGS= $(HEAD) -W -Wall -Wextra -O3
+CXXFLAGS= $(HEAD) -W -Wall -Wextra
 
-CFLAGS= $(HEAD) -W -Wall -Wextra -O3
+CFLAGS= $(HEAD) -W -Wall -Wextra
 
 ifeq ($(DEBUG), yes)
 
