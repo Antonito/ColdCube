@@ -33,7 +33,7 @@ void			udp_thread(t_udps *udp)
 {
   int			len;
   int			go;
-  time_t		diffout, z1, z2;
+  time_t		z1, z2;
   struct timeval	t1;
 
   udp->action = 1;
@@ -50,7 +50,7 @@ void			udp_thread(t_udps *udp)
     FD_ZERO(&udp->readfds);
     FD_SET(udp->main_sock, &udp->readfds);
     z2 = time(NULL);
-    diffout = z2 - z1;
+    /* diffout = z2 - z1; */
     go = select(udp->main_sock + 1, &udp->readfds, NULL, NULL, NULL);
     if (go == -1)
       {
