@@ -177,7 +177,16 @@ int	startGame(t_data *data, std::vector<menuItem> &items, Display &disp)
   if (!clientLaunchTcpc(data)) //TCP Start
     {
       if (!clientLaunchUdpc(data))
-	engineMain(disp, data);
+	{
+	  engineMain(disp, data);
+#ifdef _WIN32
+	  closesocket(data->net.udp.sock);
+	  closesocket(data->net.tcp.sock);
+#else
+	  close(data->net.udp.sock);
+	  close(data->net.tcp.sock);
+#endif
+	}
       write(data->net.tcp.sock, "/r", 2);
       fprintf(stdout, "tcp fd closed\n");
     }

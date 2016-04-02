@@ -1,4 +1,7 @@
 #ifdef _WIN32
+# include <windows.h>
+# include <winsock2.h>
+# pragma comment(lib,"ws2_32.lib")
 #else
 # include <stdlib.h>
 # include <stdio.h>
@@ -35,7 +38,15 @@ void		*tcp_thread(void *data)
 int		clientLaunchTcpc(t_data *data)
 {
   char		tmp[30];
+#ifdef _WIN32
+  WSADATA	wsa;
 
+    if (WSAStartup(MAKEWORD(2,2),&wsa) != 0)
+    {
+        printf("Failed. Error Code : %d",WSAGetLastError());
+        return 1;
+    }
+#endif
   if ((data->net.tcp.sock = socket(AF_INET, SOCK_STREAM, 0)) == -1)
     {
       fprintf(stderr, "socket creation failed\n");
@@ -59,5 +70,8 @@ int		clientLaunchTcpc(t_data *data)
   data->net.tcp.run = 1;
   data->net.playerIndexTcp = atoi(tmp);
   pthread_create(&data->net.tcp.thread, NULL, tcp_thread, (void *)data);
+#ifdef _WIN32
+  WSACleanup();
+#endif
   return (0);
 }

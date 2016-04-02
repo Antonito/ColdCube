@@ -5,20 +5,22 @@
 ** Login   <troncy_l@epitech.net>
 **
 ** Started on  Mon Mar 07 16:48:42 2016 Lucas Troncy
-// Last update Fri Apr 01 23:26:44 2016 Lucas Troncy
+// Last update Sat Apr 02 00:06:34 2016 Lucas Troncy
 */
 
 #ifdef _WIN32
-#include <windows.h>
+# include <windows.h>
+# include <winsock2.h>
+#pragma comment(lib,"ws2_32.lib")
 #else
-#include <stdlib.h>
-#include <stdio.h>
-#include <unistd.h>
-#include <sys/socket.h>
-#include <arpa/inet.h>
-#include <sys/types.h>
-#include <pthread.h>
-#include <sys/time.h>
+# include <stdlib.h>
+# include <stdio.h>
+# include <unistd.h>
+# include <sys/socket.h>
+# include <arpa/inet.h>
+# include <sys/types.h>
+# include <pthread.h>
+# include <sys/time.h>
 #endif
 #include "tools.hpp"
 #include "common_structs.hpp"
@@ -67,7 +69,15 @@ int		clientLaunchUdpc(t_data *data)
 {
   int		len;
   char		tmp[30];
+#if _WIN32
+  WSADATA		wsa;
 
+  if (WSAStartup(MAKEWORD(2,2),&wsa) != 0)
+    {
+        printf("Failed. Error Code : %d",WSAGetLastError());
+        exit(EXIT_FAILURE);
+    }
+#endif
   if ((data->net.udp.sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == -1)
     {
       fprintf(stderr, "socket creation failed\n");
@@ -92,5 +102,8 @@ int		clientLaunchUdpc(t_data *data)
   data->net.udp.run_send = 1;
   pthread_create(&data->net.udp.thread, NULL, udp_thread, (void *)data);
   pthread_create(&data->net.udp.thread_send, NULL, udp_send_thread, (void *)data);
+#if _WIN32
+  WSACleanup();
+#endif
   return (0);
 }
