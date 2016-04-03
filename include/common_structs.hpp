@@ -152,6 +152,20 @@ typedef struct		s_game
   SDL_Surface		*screen;
 }			t_game;
 
+typedef enum		e_keyboard
+  {
+    AZERTY_MODE,
+    QWERTY_MODE
+  }			e_ekeyboard;
+
+typedef struct		s_config
+{
+  bool			oculus;
+  int			keyboard;
+  unsigned char		musicVolume;
+  unsigned char		effectsVolume;
+}			t_config;
+
 typedef	struct		s_data
 {
   t_player		players[10];
@@ -160,6 +174,7 @@ typedef	struct		s_data
   t_interface		interface;
   t_game		game;
   t_network		net;
+  t_config		config;
   char			sounds[];
 }			t_data;
 

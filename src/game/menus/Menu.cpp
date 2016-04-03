@@ -135,7 +135,7 @@ void Menu::draw() {
   SDL_Color light = {243, 237, 211, 0};
   SDL_Color selected = {1, 4, 45, 0};
   SDL_Color selected_red = {213, 79, 88, 0};
-  SDL_Color selected2 = {191, 178, 175, 0};
+  //SDL_Color selected2 = {191, 178, 175, 0};
 
   sprintf(curr, "selected-%d", this->currentItem);
   sprintf(path, "assets/imgs/menu/%s.bmp", this->holded && this->currentItem ? curr : "base");

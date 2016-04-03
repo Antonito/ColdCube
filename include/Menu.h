@@ -13,6 +13,13 @@
 # define MENU_SLIDER 4
 #endif /* !MENU_TEXT */
 
+typedef enum	e_menuElem
+  {
+    RIGHT_MIDDLE	= 4,
+    LEFT_MIDDLE		= 5,
+    LEFT_BOTTOM		= 6
+  }		e_menuElem;
+
 typedef struct	s_Point
 {
   int	x;

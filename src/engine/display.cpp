@@ -243,57 +243,37 @@ void			Display::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
 	case SDL_MOUSEBUTTONUP:
 	  if (menu->holded)
 	    {
-	      if (menu->currentItem == 6 && !items[0].type)
+	      if (menu->currentItem == LEFT_BOTTOM && !items[0].type)
 		data->game.running = false;
-	      else if (menu->currentItem == 5 && !items[0].type)
+	      else if (menu->currentItem == LEFT_MIDDLE && !items[0].type)
 		optionMenu(items);
-	      else if (items[0].type && menu->currentItem == 6)
+	      else if (items[0].type && menu->currentItem == LEFT_BOTTOM)
 		loginMenu(items);
-	      else if (items[0].type && menu->currentItem == 4) {
+	      else if (items[0].type && menu->currentItem == RIGHT_MIDDLE) {
 		if (items[4].text == "AZERTY mode")
-		  items[4].text = "QWERTY mode";
+		  {
+		    items[4].text = "QWERTY mode";
+		    data->config.keyboard = QWERTY_MODE;
+		  }
 		else
-		  items[4].text = "AZERTY mode";
-	      } else if (items[0].type && menu->currentItem == 5) {
+		  {
+		    items[4].text = "AZERTY mode";
+		    data->config.keyboard = AZERTY_MODE;
+		  }
+	      } else if (items[0].type && menu->currentItem == LEFT_MIDDLE) {
 		if (items[5].text == " Set Oculus")
-		  items[5].text = "Unset Oculus";
+		  {
+		    items[5].text = "Unset Oculus";
+		    data->config.oculus = true;
+		  }
 		else
-		  items[5].text = " Set Oculus";
-	      } else if (menu->currentItem == 4 && !items[0].type) {
-		//Initilisation
-		data->net.port = atoi(items[3].text.c_str());
-		data->net.ip = (char *)items[2].text.c_str();
-		data->net.pseudo = (char *)items[1].text.c_str();
-		this->setClosed(false);
-
-		// Penser a checker IP + Pseudo + Port
-
-		if (data->net.port < 0)
 		  {
-		    std::cerr << "Incorrect port\n";
-		    break;
+		    items[5].text = " Set Oculus";
+		    data->config.oculus = false;
 		  }
-		if (strlen(data->net.pseudo) > 20)
-		  {
-		    std::cerr << "Pseudo is too long\n";
-		    break;
-		  }
-
-#ifdef	DEBUG
-		std::clog << "[Infos] Port = " << data->net.port << "\n";
-		std::clog << "[Infos] Ip = " << data->net.ip << "\n";
-		std::clog << "[Infos] Pseudo = " << data->net.pseudo << "\n";
-#endif
-
-		if (!clientLaunchTcpc(data) && !clientLaunchUdpc(data)) //TCP Start
-		  {
-		    engineMain(*this, data);
-		    write(data->net.tcp.sock, "/r", 2);
-		    data->net.tcp.run = 0;
-		    data->net.udp.run_send = 0;
-		    data->net.udp.run = 0;
-		    fprintf(stdout, "tcp fd closed\n");
-		  }
+	      } else if (menu->currentItem == RIGHT_MIDDLE && !items[0].type) {
+		if (startGame(data, items, *this))
+		  break;
 	      }
 	      menu->unhold();
 	    }
@@ -304,7 +284,7 @@ void			Display::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
 	case SDL_KEYUP:
 	  if (menu->holded)
 	    {
-	      if (menu->currentItem == 6 && !items[0].type)
+	      if (menu->currentItem == LEFT_BOTTOM && !items[0].type)
 		data->game.running = false;
 	      menu->unhold();
 	    }
@@ -341,26 +321,38 @@ void			Display::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
 	      else
 		items[menu->currentItem].text.erase(items[menu->currentItem].text.length() - 1);
 	    }
-	  else if (items[0].type && menu->currentItem == 6 && event.key.keysym.sym == SDLK_RETURN)
+	  else if (items[0].type && menu->currentItem == LEFT_BOTTOM && event.key.keysym.sym == SDLK_RETURN)
 	    loginMenu(items);
-	  else if (items[0].type && menu->currentItem == 4 && event.key.keysym.sym == SDLK_RETURN) {
+	  else if (items[0].type && menu->currentItem == RIGHT_MIDDLE && event.key.keysym.sym == SDLK_RETURN) {
 	    if (items[4].text == "AZERTY mode")
-	      items[4].text = "QWERTY mode";
+	      {
+		items[4].text = "QWERTY mode";
+		data->config.keyboard = QWERTY_MODE;
+	      }
 	    else
-	      items[4].text = "AZERTY mode";
-	  } else if (items[0].type && menu->currentItem == 5 && event.key.keysym.sym == SDLK_RETURN) {
+	      {
+		items[4].text = "AZERTY mode";
+		data->config.keyboard = AZERTY_MODE;
+	      }
+	  } else if (items[0].type && menu->currentItem == LEFT_MIDDLE && event.key.keysym.sym == SDLK_RETURN) {
 	    if (items[5].text == " Set Oculus")
-	      items[5].text = "Unset Oculus";
+	      {
+		items[5].text = "Unset Oculus";
+		data->config.oculus = false;
+	      }
 	    else
-	      items[5].text = " Set Oculus";
+	      {
+		items[5].text = " Set Oculus";
+		data->config.oculus = true;
+	      }
 	  } else if (event.key.keysym.sym == SDLK_RETURN &&
-	      !items[0].type && menu->currentItem == 5)
+	      !items[0].type && menu->currentItem == LEFT_MIDDLE)
 	    optionMenu(items);
 	  else if (event.key.keysym.sym == SDLK_RETURN &&
 	      items[menu->currentItem].type == MENU_TEXTINPUT)
 	    menu->hold();
 	  else if (event.key.keysym.sym == SDLK_RETURN &&
-	      (menu->currentItem == 3 || menu->currentItem == 4) &&
+	      (menu->currentItem == 3 || menu->currentItem == RIGHT_MIDDLE) &&
 	      !items[0].type)
 	    {
 	      menu->hold();
@@ -369,8 +361,14 @@ void			Display::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
 		break;
 	    }
 	  if (event.key.keysym.sym == SDLK_RETURN &&
-	      items[0].type && menu->currentItem == 6)
+	      items[0].type && menu->currentItem == LEFT_BOTTOM)
 	    loginMenu(items);
+	  if (event.key.keysym.sym == SDLK_RETURN &&
+	      !items[0].type && menu->currentItem == LEFT_BOTTOM)
+	    {
+	      data->game.running = false;
+	      break;
+	    }
 	  if (event.key.keysym.sym == SDLK_DOWN)
 	    {
 	      menu->moveDown();

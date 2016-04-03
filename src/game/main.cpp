@@ -9,6 +9,10 @@ void	initData(t_data *data)
 {
   memset(data, 0, sizeof(t_data));
   data->game.running = true;
+  data->config.oculus = false;
+  data->config.keyboard = AZERTY_MODE;
+  data->config.musicVolume = 50;
+  data->config.effectsVolume = 50;
 }
 
 int	game()
