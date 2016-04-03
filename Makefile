@@ -98,17 +98,17 @@ LIB=			-lstdc++			\
 OBJ=			$(GAME:.cpp=.o)
 
 OBJ+=			$(ENGINE_C:.c=.o)
+OBJSERV=		$(SERVER_CPP_FILES:.cpp=.o)
 
-OBJSERV=		$(SERVER:.c=.o)
+OBJSERV+=		$(SERVER:.c=.o)
 
-OBJSERV+=		$(SERVER_CPP_FILES:.cpp=.o)
 
-$(NAMESERV):	$(OBJSERV) $(NAME)
+$(NAMESERV):	$(OBJSERV) #$(NAME)
 	@echo -n "[ "
 	@echo -n -e "\e[1m\e[92mOK\e[0m"
 	@echo -n " ] "
 	@echo "Compiled server"
-	@$(CXX) $(OBJSERV) -o $(NAMESERV) $(LIB)
+	$(CXX) $(OBJSERV) -o $(NAMESERV) $(LIB)
 
 $(NAME):	$(OBJ)
 ifeq ($(DEBUG), yes)
@@ -141,7 +141,8 @@ endif
 	@echo "Compiling" $<
 	@$(CXX) $(CXXFLAGS) -c -o $@ $<
 
-all:	$(NAMESERV) $(NAME)
+all:	$(NAMESERV)
+#$(NAME)
 
 clean:
 	@echo -n "[ "
