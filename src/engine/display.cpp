@@ -210,8 +210,6 @@ int	startGame(t_data *data, std::vector<menuItem> &items, Display &disp)
 #endif
 	}
       write(data->net.tcp.sock, "/r", 2);
-      //set deco HERE in uint 32;
-      createUdpPacket(data, &data->players[data->net.playerIndexUdp]);
       fprintf(stdout, "tcp fd closed\n");
     }
   data->net.tcp.run = 0;
