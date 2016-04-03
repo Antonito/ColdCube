@@ -3,9 +3,6 @@
 
 # include <glm/glm.hpp>
 # include "common_structs.hpp"
-# include "engine/chunk.hpp"
-# include "engine/map.hpp"
-# include "engine/mesh.hpp"
 # include "engine/camera.hpp"
 
 using namespace glm;

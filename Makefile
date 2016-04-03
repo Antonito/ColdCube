@@ -4,6 +4,7 @@ GAME_PREFIX=		src/game/
 
 GAME_FILES=		main.cpp			\
 			free.cpp			\
+			score.cpp			\
 			menus/main_menu.cpp		\
 			menus/Menu.cpp
 
