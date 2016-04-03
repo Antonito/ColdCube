@@ -60,7 +60,7 @@ void		tcp_thread(t_tcps *tcp)
 				      (struct sockaddr *)&tcp->my_addr,
 				      (socklen_t *)&tcp->my_addrl)) == -1)
 	    {
-	      fprintf(stderr, "cannot accpet new client\n");
+	      fprintf(stderr, "error accpet new client\n");
 	    }
 	  fprintf(stderr, "new client connected\n");
 	  tcp->nb_actual += 1;

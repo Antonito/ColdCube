@@ -16,11 +16,11 @@
 # include <arpa/inet.h>
 # include <glm/glm.hpp>
 # include "events.hpp"
+# include "Score.hpp"
 
 /*
 ** Network
 */
-
 typedef	struct		s_udpc
 {
   int			sock;
@@ -55,7 +55,6 @@ typedef	struct		s_network
 /*
 ** Objects
 */
-
 typedef struct		s_objects
 {
   struct s_objects	*next;
@@ -65,7 +64,6 @@ typedef struct		s_objects
 /*
 ** Map
 */
-
 typedef glm::vec3	vector3;
 
 typedef	struct		s_cube
@@ -96,6 +94,12 @@ typedef	struct		s_map
 /*
 ** Weapons
 */
+typedef enum		e_weapon
+  {
+    RIFLE_WEAPON,
+    PISTOL_WEAPON,
+    KNIFE_WEAPON
+  }			t_eweapon;
 
 typedef struct		s_weapon
 {
@@ -111,7 +115,6 @@ typedef struct		s_weapon
 /*
 ** Interface
 */
-
 typedef	struct		s_interface
 {
   bool			chat_toggle;
@@ -120,7 +123,6 @@ typedef	struct		s_interface
 /*
 ** Player_Local eventuellement useless
 */
-
 typedef struct		s_player_local
 {
   vector3      		move;
@@ -142,9 +144,10 @@ typedef	struct		s_player
 /*
 ** Game structure, containing basics infos (such as "is the game running ?")
 */
-
 typedef struct		s_game
 {
+  Score			Team1;
+  Score			Team2;
   bool			running;
   SDL_Surface		*screen;
 }			t_game;

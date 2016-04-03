@@ -13,7 +13,9 @@ Menu::Menu(SDL_Surface *screen, std::vector<menuItem> *items) {
   this->currentItem = 0;
   TTF_Init();
   this->font = TTF_OpenFont("assets/fonts/menu.ttf", 50);
+#ifdef	DEBUG
   printf("Font = %p %s\n", this->font, TTF_GetError());
+#endif
   this->holded = false;
 }
 
@@ -90,15 +92,15 @@ void Menu::moveDown() {
 
 void Menu::moveRight() {
   switch (this->currentItem) {
-    case 1:
-      this->currentItem = 2;
-      break;
-    case 5:
-      this->currentItem = 4;
-      break;
-    case 6:
-      this->currentItem = 3;
-      break;
+  case 1:
+    this->currentItem = 2;
+    break;
+  case 5:
+    this->currentItem = 4;
+    break;
+  case 6:
+    this->currentItem = 3;
+    break;
   }
   if (!this->currentItem)
     this->currentItem = 1;

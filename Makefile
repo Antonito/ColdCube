@@ -4,6 +4,7 @@ GAME_PREFIX=		src/game/
 
 GAME_FILES=		main.cpp			\
 			free.cpp			\
+			score.cpp			\
 			menus/main_menu.cpp		\
 			menus/Menu.cpp
 
@@ -18,7 +19,6 @@ SERV_FILES=		main.c				\
 			tcp/server_tcp_msg.c		\
 			tcp/tcp_server_pseudo.c		\
 			events.c
-
 
 ENGINE_PREFIX=		src/engine/
 
