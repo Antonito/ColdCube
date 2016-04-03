@@ -1,17 +1,18 @@
 #include "common_structs.hpp"
 #include <iostream>
 
-void		setEvent(uint32_t value, int event, bool stat)
+void		setEvent(uint32_t *value, int event, bool stat)
 {
   t_uevent	set;
 
-  set.value = value;
+  set.value = *value;
   if (event == CONNECTED)
     set.event.connected = stat;
 #ifdef	DEBUG
   else
     std::cerr << "Event doesn't exist\n";
 #endif
+  *value = set.value;
 }
 
 bool		getEvent(uint32_t value, int event)

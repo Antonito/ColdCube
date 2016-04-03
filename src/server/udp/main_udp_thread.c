@@ -103,6 +103,7 @@ void		server_check_msg_udp(t_udps *udp)
       udp->cli_sock[i] = udp->tmp_sock;
       sprintf(tmp, "%d", udp->nb_actual);
       udp->timeout[udp->nb_actual] = 0;
+      udp->connected[udp->nb_actual] = 1;
       udp->nb_actual += 1;
       sendto(udp->main_sock, tmp, 1, 0,
 	     (struct sockaddr *)&udp->tmp_sock, udp->cli_addrl);

@@ -1,4 +1,5 @@
 #include <stdbool.h>
+#include "events.hpp"
 #include "server.hpp"
 
 void		udps_send_to_all(t_udps *udp)

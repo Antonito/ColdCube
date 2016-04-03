@@ -18,6 +18,8 @@ SERV_FILES=		main.c				\
 			tcp/server_tcp_msg.c		\
 			tcp/tcp_server_pseudo.c		\
 
+SERVER_CPP_FILES=	src/tools/events.cpp
+
 ENGINE_PREFIX=		src/engine/
 
 ENGINE_FILES=		chunk.cpp			\
@@ -57,8 +59,6 @@ TOOLS_C=		$(addprefix $(TOOLS_PREFIX),$(TOOLS_C_FILES))
 GAME+=			$(TOOLS)
 
 GAME+=			$(ENGINE)
-
-#SERVER+=		$(TOOLS)
 
 NAME=			coldcube
 
@@ -100,6 +100,8 @@ OBJ=			$(GAME:.cpp=.o)
 OBJ+=			$(ENGINE_C:.c=.o)
 
 OBJSERV=		$(SERVER:.c=.o)
+
+OBJSERV+=		$(SERVER_CPP_FILES:.cpp=.o);
 
 $(NAMESERV):	$(OBJSERV) $(NAME)
 	@echo -n "[ "
