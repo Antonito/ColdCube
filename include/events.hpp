@@ -21,7 +21,7 @@ typedef union			u_uevent
   uint32_t			value;
 }				t_uevent;
 
-void				setEvent(uint32_t, int, bool);
+void				setEvent(uint32_t *, int, bool);
 bool				getEvent(uint32_t, int);
 
 #endif //EVENTS_HPP
