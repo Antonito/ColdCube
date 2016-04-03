@@ -198,8 +198,10 @@ int	startGame(t_data *data, std::vector<menuItem> &items, Display &disp)
 
   if (!clientLaunchTcpc(data)) //TCP Start
     {
+      printf("TCP OK\n");
       if (!clientLaunchUdpc(data))
 	{
+	  printf("UDP OK\n");
 	  engineMain(disp, data);
 #ifdef _WIN32
 	  closesocket(data->net.udp.sock);

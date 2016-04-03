@@ -35,6 +35,7 @@ void		tcps_cli_add(t_tcps *tcp)
 	  tcp->cli_sock[i] = tcp->tmp_sock;
 	  tcp->addIndex = i;
 	  fprintf(stdout, "added on index = %d\n", tcp->addIndex);
+	  write(tcp->tmp_sock, "ok", 2);
 	  break;
 	}
     }

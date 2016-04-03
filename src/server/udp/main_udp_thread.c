@@ -103,13 +103,20 @@ void		server_check_msg_udp(t_udps *udp)
       while (udp->connected[++i] == 1);
       udp->connected[i] = 1;
       if (udp_server_add_pseudo(udp, &udp->buff[5], i) == -1)
-	return ;
+	{
+	  sendto(udp->main_sock, "/r", 2, 0,
+		(struct sockaddr *)&udp->tmp_sock, udp->cli_addrl);
+	  udp->connected[i] = 0;
+	  printf("PIPIPIPI\n");
+	  return ;
+	}
       sprintf(tmp, "%d", udp->nb_actual);
       sendto(udp->main_sock, tmp, 1, 0,
 	     (struct sockaddr *)&udp->tmp_sock, udp->cli_addrl);
       udp->cli_sock[i] = udp->tmp_sock;
       udp->timeout[i] = 0;
       udp->nb_actual += 1;
+      printf("POPOPOPOPO\n");
     }
   else
     {
