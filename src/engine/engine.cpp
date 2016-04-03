@@ -23,7 +23,7 @@ int	engineMain(Display &display, t_data *data)
 
   Map		map("map");
   Player	player(vec3(10, 5, 1), 90, &map, data->net.playerIndexUdp);
-  Camera camera(glm::vec3(0, 0, 10), 360.0f, (float)WIN_X / WIN_Y, 0.01f, 500.0f);
+  Camera camera(glm::vec3(0, 0, 10), 70.0f, (float)WIN_X / WIN_Y, 0.01f, 500.0f);
   Transform transform;
   int		fps = 0;
   int		t = time(NULL);
