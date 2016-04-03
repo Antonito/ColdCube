@@ -44,6 +44,8 @@ void		udps_check_timeout(t_udps *udp)
 	  udp->connected[i] = 0;
 	  udp->nb_actual -= 1;
 	}
+      else
+	udp->timeout[i] = 0;
     }
 }
 
@@ -66,6 +68,7 @@ void		udp_send_disconnect(t_udps *udp, char id)
       packet[n + i] = tmp[i];
       ++i;
     }
+  printf("SEND DISCONNECT\n");
   sendto(udp->main_sock, packet, 42, 0,
                  (struct sockaddr *)&udp->cli_sock[(int)id], udp->cli_addrl);
 }
