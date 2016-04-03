@@ -61,7 +61,7 @@ void Mesh::InitMesh(const IndexedModel& model)
   glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_vertexArrayBuffers[INDEX_VB]);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, model.positions.size() * sizeof(model.indices[0]), &model.indices[0], GL_STATIC_DRAW);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, model.indices.size() * sizeof(model.indices[0]), &model.indices[0], GL_STATIC_DRAW);
 
   glBindVertexArray(0);
 }

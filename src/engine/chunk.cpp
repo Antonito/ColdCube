@@ -117,7 +117,7 @@ static Texture SetTex(char *chunk, int height)
  Mesh SetPlanes(int height, vec3 pos)
 {
   int	i, j;
-  unsigned int	nbVertices = (((4 * 16)) + ((2 * height))) * 6;
+  unsigned int	nbVertices = (4 * 16 * 2 + 4 * height) * 2;
   unsigned int	nbIndices = nbVertices / 2 * 3;
   Vertex	*vertices = new Vertex[nbVertices];
   unsigned int	indices[nbIndices];

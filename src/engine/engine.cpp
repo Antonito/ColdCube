@@ -10,6 +10,7 @@
 #include "engine/transform.hpp"
 #include "engine/camera.hpp"
 #include "engine/map.hpp"
+#include "engine/animation_player.hpp"
 #include <time.h>
 
 using namespace glm;
@@ -22,33 +23,27 @@ int	engineMain(Display &display, t_data *data)
 
   Map		map("map");
   Player	player(vec3(10, 5, 1), 90, &map, data->net.playerIndexUdp);
-  Camera camera(glm::vec3(0, 0, 10), 70.0f, (float)WIN_X / WIN_Y, 0.01f, 500.0f);
+  Camera camera(glm::vec3(0, 0, 10), 360.0f, (float)WIN_X / WIN_Y, 0.01f, 500.0f);
   Transform transform;
   int		fps = 0;
   int		t = time(NULL);
-  Vertex v[] = {Vertex(vec3(0, 0, 0), vec2(0, 0)),
-		Vertex(vec3(0, 0, PLAYER_HEIGHT), vec2(0, 1)),
-		Vertex(vec3(0, PLAYER_SIZE, PLAYER_HEIGHT), vec2(1, 1)),
-		Vertex(vec3(0, PLAYER_SIZE, 0), vec2(0, 1)),
-		Vertex(vec3(PLAYER_SIZE, 0, 0), vec2(0, 1)),
-		Vertex(vec3(PLAYER_SIZE, 0, PLAYER_HEIGHT), vec2(1, 1)),
-		Vertex(vec3(PLAYER_SIZE, PLAYER_SIZE, PLAYER_HEIGHT), vec2(1, 0)),
-		Vertex(vec3(PLAYER_SIZE, PLAYER_SIZE, 0), vec2(0, 0))};
-  unsigned int index[] = {0, 2, 3,  0, 1, 2,
-		      0, 5, 1,  0, 4, 5,
-		      1, 6, 2,  1, 5, 6,
-		      2, 7, 3,  2, 6, 7,
-		      3, 4, 0,  3, 7, 4,
-		      5, 7, 6,  5, 4, 7};
-  Mesh playerModel(v, 36, index, 36);
   unsigned char	tt[] = {255, 255, 255, 255};
   Texture text(tt, 1, 1, false);
   int	i;
   int	count(1), tot(0);
+  vec2	lastPos[10] = {vec2(0, 0)};
 
   // float		lights[120] =
   //   {2, 0, 0, 0,  5, 7, 4, 400.0,
   //    30, 40, 5, 10};
+
+  i = 0;
+  while (i < 10)
+    {
+      data->players[i].position = vec3(0, 0, 1);
+      data->players[i].direction = vec3(0, 1, 0);
+      i++;
+    }
 
   while (!display.IsClosed())
     {
@@ -72,17 +67,18 @@ int	engineMain(Display &display, t_data *data)
       i = 0;
       while (i < 10)
       	{
-      	  // if (i != player.GetId())
-      	  //   {
-      	      transform.GetPos() = vec3(0, 1, 2);// data->players[i].position
-		;
-      	      shader.Bind();
-      	      shader.Update(transform, camera);
-      	      text.Bind(0);
-      	      playerModel.Draw();
-	      //  	    }
+      	  if (i != player.GetId() || player.GetThird())
+      	    {
+	      // transform.GetPos() = data->players[i].position;
+     	      // shader.Update(transform, camera);
+      	       text.Bind(0);
+      	      // playerModel.Draw();
+	       DrawPlayerModel(data->players[i].position, data->players[i].direction, length(vec2(data->players[i].position) - lastPos[i]) * 5, camera, shader);
+	       lastPos[i] = vec2(data->players[i].position);
+	    }
       	  i++;
-    }
+	}
+      transform.GetPos() = vec3(0, 0, 0);
       display.Update(camera, map, player, data);
       player.FillCPlayer(data->players + player.GetId(), camera.GetFor());
     }

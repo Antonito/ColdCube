@@ -41,7 +41,7 @@ int	main(int ac, char **av)
       write(fd, &temp, 4);
       total += 4;
       //      temp = rand() % 10;
-      temp = 1;
+      temp = 0;
       write(fd, &temp, 4);
       total += 4;
       j = 0;

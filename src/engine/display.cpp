@@ -98,7 +98,8 @@ void	Display::Update(Camera &cam, Map &map, Player &player,
 	      eventKey[KEY_S] = true;
 	      break ;
 	    case (SDLK_SPACE):
-	      eventKey[KEY_SPACE] = true;
+	      if (player.GetPos().z == 1.0)
+		eventKey[KEY_SPACE] = true;
 	      break ;
 	      // case (SDLK_q):
 	      //   player.GetPos() += normalize(vec3((cross(cam.GetFor(), vec3(0, 1, 0))).x, (cross(cam.GetFor(), vec3(0, 1, 0))).y, 0));
@@ -132,6 +133,9 @@ void	Display::Update(Camera &cam, Map &map, Player &player,
 	      break ;
 	    case (SDLK_v):
 	      map.Save();
+	      break ;
+	    case (SDLK_t):
+	      player.GetThird() = !player.GetThird();
 	      break ;
 	    }
 	  break ;
@@ -167,7 +171,7 @@ void	Display::Update(Camera &cam, Map &map, Player &player,
   if (eventKey[KEY_SPACE])
     player.Jump();
   player.Update(dTime);
-  player.SetCam(cam);
+  player.SetCam(cam, player.GetThird(), data->players + player.GetId());
 }
 
 int	startGame(t_data *data, std::vector<menuItem> &items, Display &disp)

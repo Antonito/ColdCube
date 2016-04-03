@@ -22,7 +22,8 @@ SERV_FILES=		main.c				\
 
 ENGINE_PREFIX=		src/engine/
 
-ENGINE_FILES=		chunk.cpp			\
+ENGINE_FILES=		animation_player.cpp		\
+			chunk.cpp			\
 			display.cpp			\
 			load_shader.cpp			\
 			map.cpp				\
