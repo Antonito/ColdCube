@@ -70,17 +70,17 @@ int	engineMain(Display &display, t_data *data)
       map.Draw();
       i = 0;
       while (i < 10)
-      	{
-      	  if (i != player.GetId())
-      	    {
-      	      transform.GetPos() = data->players[i].position;
-      	      shader.Bind();
-      	      shader.Update(transform, camera);
-      	      text.Bind(0);
-      	      playerModel.Draw();
-      	    }
-      	  i++;
-      	}
+	{
+	  if (i != player.GetId())
+	    {
+	      transform.GetPos() = data->players[i].position;
+	      shader.Bind();
+	      shader.Update(transform, camera);
+	      text.Bind(0);
+	      playerModel.Draw();
+	    }
+	  i++;
+	}
       player.FillCPlayer(data->players + player.GetId(), camera.GetFor());
       display.Update(camera, map, player, data);
     }

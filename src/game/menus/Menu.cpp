@@ -24,7 +24,6 @@ Menu::~Menu() {
 }
 
 void Menu::hover(int x, int y) {
-  std::cout << "Pos " << x << ";" << y << std::endl;
   if (y > 290 && y < 465) {
     if (x > 450 && x < 880)
       this->currentItem = 1;
@@ -133,11 +132,14 @@ void Menu::draw() {
   SDL_Color color = {8, 93, 163, 0};
   SDL_Color light = {243, 237, 211, 0};
   SDL_Color selected = {1, 4, 45, 0};
+  SDL_Color selected_red = {213, 79, 88, 0};
   SDL_Color selected2 = {191, 178, 175, 0};
 
   sprintf(curr, "selected-%d", this->currentItem);
   sprintf(path, "assets/imgs/menu/%s.bmp", this->holded && this->currentItem ? curr : "base");
   SDL_Surface *menu = IMG_Load(path);
+  SDL_Surface *slider_cur = IMG_Load("./assets/imgs/menu/slider-cursor.png");
+  SDL_Surface *slider_bar = IMG_Load("./assets/imgs/menu/slider-bar.png");
 
   if ((*this->items)[1].text == " " || (*this->items)[1].text == "|" || (*this->items)[1].text == "")
     (*this->items)[1].text = "   Pseudo";
@@ -150,34 +152,80 @@ void Menu::draw() {
   SDL_FillRect(this->screen, NULL, SDL_MapRGB(this->screen->format, 143, 45, 42));
   SDL_BlitSurface(menu, NULL, this->screen, &pos);
   pos.y += 60;
-  pos.x += 260;
-  text = TTF_RenderUTF8_Blended(this->font, (*this->items)[1].text.c_str(), color);
+  pos.x += 230;
+  text = TTF_RenderUTF8_Blended(this->font, (*this->items)[1].text.c_str(), this->currentItem == 1 ? selected : color);
+  SDL_BlitSurface(text, NULL, this->screen, &pos);
+  if ((*this->items)[1].type == MENU_SLIDER)
+    {
+      pos.y += 75;
+      SDL_BlitSurface(slider_bar, NULL, this->screen, &pos);
+      pos.y -= 12;
+      pos.x += (float)(slider_bar->w - slider_cur->w) * (float)(*this->items)[1].value / 100.0;
+      SDL_BlitSurface(slider_cur, NULL, this->screen, &pos);
+      pos.x -= (float)(slider_bar->w - slider_cur->w) * (float)(*this->items)[1].value / 100.0;
+      pos.y -= 75 - 12;
+    }
+
+  SDL_FreeSurface(text);
+  pos.x += 660 + (7 - (*this->items)[2].text.length()) * 15;
+  text = TTF_RenderUTF8_Blended(this->font, (*this->items)[2].text.c_str(), this->currentItem == 2 ? selected : color);
   SDL_BlitSurface(text, NULL, this->screen, &pos);
   SDL_FreeSurface(text);
-  pos.x += 630 + (7 - (*this->items)[2].text.length()) * 15;
-  text = TTF_RenderUTF8_Blended(this->font, (*this->items)[2].text.c_str(), color);
-  SDL_BlitSurface(text, NULL, this->screen, &pos);
-  SDL_FreeSurface(text);
+  if ((*this->items)[2].type == MENU_SLIDER)
+    {
+      pos.y += 75;
+      SDL_BlitSurface(slider_bar, NULL, this->screen, &pos);
+      pos.y -= 12;
+      pos.x += (float)(slider_bar->w - slider_cur->w) * (float)(*this->items)[2].value / 100.0;
+      SDL_BlitSurface(slider_cur, NULL, this->screen, &pos);
+      pos.x -= (float)(slider_bar->w - slider_cur->w) * (float)(*this->items)[2].value / 100.0;
+      pos.y -= 75 - 12;
+    }
+
   pos.x -= (7 - (*this->items)[2].text.length()) * 15 - (7 - (*this->items)[3].text.length()) * 15;
   pos.y += 350;
-  text = TTF_RenderUTF8_Blended(this->font, (*this->items)[3].text.c_str(), color);
+  text = TTF_RenderUTF8_Blended(this->font, (*this->items)[3].text.c_str(), this->currentItem == 3 ? selected : color);
   SDL_BlitSurface(text, NULL, this->screen, &pos);
   SDL_FreeSurface(text);
-  pos.x -= (7 - (*this->items)[3].text.length()) * 15 - 50;
+  if ((*this->items)[3].type == MENU_SLIDER)
+    {
+      pos.y += 75;
+      SDL_BlitSurface(slider_bar, NULL, this->screen, &pos);
+      pos.y -= 12;
+      pos.x += (float)(slider_bar->w - slider_cur->w) * (float)(*this->items)[3].value / 100.0;
+      SDL_BlitSurface(slider_cur, NULL, this->screen, &pos);
+      pos.x -= (float)(slider_bar->w - slider_cur->w) * (float)(*this->items)[3].value / 100.0;
+      pos.y -= 75 - 12;
+    }
+
+  pos.x -= (7 - (*this->items)[3].text.length()) * 15 - 20;
   pos.y -= 170;
-  text = TTF_RenderUTF8_Blended(this->font, "Play !", this->currentItem == 4 ? selected : light);
+  text = TTF_RenderUTF8_Blended(this->font, (*this->items)[4].text.c_str(), this->currentItem == 4 ? selected_red : light);
   SDL_BlitSurface(text, NULL, this->screen, &pos);
   SDL_FreeSurface(text);
-  pos.x -= 700;
-  text = TTF_RenderUTF8_Blended(this->font, "Options", this->currentItem == 5 ? selected : light);
+  if ((*this->items)[4].type == MENU_SLIDER)
+    {
+      pos.y += 75;
+      SDL_BlitSurface(slider_bar, NULL, this->screen, &pos);
+      pos.y -= 12;
+      pos.x += (float)(slider_bar->w - slider_cur->w) * (float)(*this->items)[4].value / 100.0;
+      SDL_BlitSurface(slider_cur, NULL, this->screen, &pos);
+      pos.x -= (float)(slider_bar->w - slider_cur->w) * (float)(*this->items)[4].value / 100.0;
+      pos.y -= 75 - 12;
+    }
+
+  pos.x -= 700 + (*this->items)[0].type * 50;
+  text = TTF_RenderUTF8_Blended(this->font, (*this->items)[5].text.c_str(), this->currentItem == 5 ? selected_red : light);
   SDL_BlitSurface(text, NULL, this->screen, &pos);
   SDL_FreeSurface(text);
-  pos.x += 100;
+  pos.x += 130 + (*this->items)[0].type * 50;
   pos.y += 170;
-  text = TTF_RenderUTF8_Blended(this->font, "Quit", this->currentItem == 6 ? selected2 : color);
+  text = TTF_RenderUTF8_Blended(this->font, (*this->items)[6].text.c_str(), this->currentItem == 6 ? selected : color);
   SDL_BlitSurface(text, NULL, this->screen, &pos);
   SDL_FreeSurface(text);
   SDL_FreeSurface(menu);
+  SDL_FreeSurface(slider_cur);
+  SDL_FreeSurface(slider_bar);
   if ((*this->items)[1].text == "   Pseudo")
     (*this->items)[1].text = " ";
   if ((*this->items)[2].text == "Server IP")

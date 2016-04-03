@@ -6,6 +6,13 @@
 #include <vector>
 #include <string>
 
+#ifndef MENU_TEXT
+# define MENU_TEXT 0
+# define MENU_TEXTINPUT 1
+# define MENU_CHECKBOX 3
+# define MENU_SLIDER 4
+#endif /* !MENU_TEXT */
+
 typedef struct	s_Point
 {
   int	x;
@@ -15,7 +22,8 @@ typedef struct	s_Point
 struct menuItem
 {
   std::string text;
-  Point box[4];
+  int type;
+  short value;
   void (*ptToFunc)();
 };
 

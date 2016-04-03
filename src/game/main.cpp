@@ -15,13 +15,14 @@ int	game()
 {
   t_data		*data = new t_data;
   Display		display(WIN_X, WIN_Y, "ColdCube");
-  std::vector<menuItem>	items(6);
+  std::vector<menuItem>	items(14);
   std::string		inputText = "Some text";
   SDL_Rect		pos;
   SDL_Surface		*screen = SDL_GetWindowSurface(display.GetWin());
   SDL_Surface		*surface = NULL;
   Menu			*menu = new Menu(screen, &items);
 
+  loginMenu(items);
   surface = IMG_Load("assets/imgs/cursor.bmp");
   pos.x = (screen->w >> 1)- (surface->w >> 1);
   pos.y = (screen->h >> 1)- (surface->h >> 1);

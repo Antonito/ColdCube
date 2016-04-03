@@ -9,6 +9,7 @@
 #include "common_structs.hpp"
 #include "game.hpp"
 #include "tools.hpp"
+#include "Menu.h"
 
 Display::Display(int width, int height, const std::string& title)
 {
@@ -166,15 +167,29 @@ void			Display::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
       switch(event.type)
 	{
 	case SDL_MOUSEBUTTONDOWN:
-	  menu->hover(event.button.x, event.button.y);
+	  menu->hover(pos->x, pos->y);
 	  menu->hold();
 	  break;
 	case SDL_MOUSEBUTTONUP:
 	  if (menu->holded)
 	    {
-	      if (menu->currentItem == 6)
+	      if (menu->currentItem == 6 && !items[0].type)
 		data->game.running = false;
-	      else if (menu->currentItem == 4) {
+	      else if (menu->currentItem == 5 && !items[0].type)
+		optionMenu(items);
+	      else if (items[0].type && menu->currentItem == 6)
+		loginMenu(items);
+	      else if (items[0].type && menu->currentItem == 4) {
+		if (items[4].text == "AZERTY mode")
+		  items[4].text = "QWERTY mode";
+		else
+		  items[4].text = "AZERTY mode";
+	      } else if (items[0].type && menu->currentItem == 5) {
+		if (items[5].text == " Set Oculus")
+		  items[5].text = "Unset Oculus";
+		else
+		  items[5].text = " Set Oculus";
+	      } else if (menu->currentItem == 4 && !items[0].type) {
 		//Initilisation
 		data->net.port = atoi(items[3].text.c_str());
 		data->net.ip = (char *)items[2].text.c_str();
@@ -219,7 +234,7 @@ void			Display::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
 	case SDL_KEYUP:
 	  if (menu->holded)
 	    {
-	      if (menu->currentItem == 6)
+	      if (menu->currentItem == 6 && !items[0].type)
 		data->game.running = false;
 	      menu->unhold();
 	    }
@@ -233,21 +248,21 @@ void			Display::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
 	  if (event.key.keysym.sym == SDLK_LEFT)
 	    {
 	      menu->moveLeft();
-	      if (menu->currentItem < 4)
+	      if (items[menu->currentItem].type == MENU_TEXTINPUT)
 		menu->hold();
 	    }
 	  if (event.key.keysym.sym == SDLK_RIGHT)
 	    {
 	      menu->moveRight();
-	      if (menu->currentItem < 4)
+	      if (items[menu->currentItem].type == MENU_TEXTINPUT)
 		menu->hold();
 	    }
 	  if (event.key.keysym.sym == SDLK_UP)
 	    {
 	      menu->moveUp();
-	      if (menu->currentItem < 4)
+	      if (items[menu->currentItem].type == MENU_TEXTINPUT)
 		menu->hold();
-	    }
+	  }
 	  if (event.key.keysym.sym == SDLK_BACKSPACE &&
 	      items[menu->currentItem].text.length())
 	    {
@@ -256,13 +271,27 @@ void			Display::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
 	      else
 		items[menu->currentItem].text.erase(items[menu->currentItem].text.length() - 1);
 	    }
-	  if (event.key.keysym.sym == SDLK_RETURN &&
-	      (menu->currentItem == 5 || menu->currentItem == 6))
-	    {
-	      menu->hold();
-	    }
-	  if (event.key.keysym.sym == SDLK_RETURN &&
-	      (menu->currentItem == 3 || menu->currentItem == 4))
+	  else if (items[0].type && menu->currentItem == 6 && event.key.keysym.sym == SDLK_RETURN)
+	    loginMenu(items);
+	  else if (items[0].type && menu->currentItem == 4 && event.key.keysym.sym == SDLK_RETURN) {
+	    if (items[4].text == "AZERTY mode")
+	      items[4].text = "QWERTY mode";
+	    else
+	      items[4].text = "AZERTY mode";
+	  } else if (items[0].type && menu->currentItem == 5 && event.key.keysym.sym == SDLK_RETURN) {
+	    if (items[5].text == " Set Oculus")
+	      items[5].text = "Unset Oculus";
+	    else
+	      items[5].text = " Set Oculus";
+	  } else if (event.key.keysym.sym == SDLK_RETURN &&
+	      !items[0].type && menu->currentItem == 5)
+	    optionMenu(items);
+	  else if (event.key.keysym.sym == SDLK_RETURN &&
+	      items[menu->currentItem].type == MENU_TEXTINPUT)
+	    menu->hold();
+	  else if (event.key.keysym.sym == SDLK_RETURN &&
+	      (menu->currentItem == 3 || menu->currentItem == 4) &&
+	      !items[0].type)
 	    {
 	      menu->hold();
 	      //Initilisation
@@ -300,40 +329,66 @@ void			Display::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
 		  fprintf(stdout, "tcp fd closed\n");
 		}
 	    }
+	  if (event.key.keysym.sym == SDLK_RETURN &&
+	      items[0].type && menu->currentItem == 6)
+	    loginMenu(items);
 	  if (event.key.keysym.sym == SDLK_DOWN)
 	    {
 	      menu->moveDown();
-	      if (menu->currentItem < 4)
+	      if (items[menu->currentItem].type == MENU_TEXTINPUT)
 		menu->hold();
 	    }
 	  if ((event.key.keysym.sym == SDLK_RETURN
 	       || event.key.keysym.sym == SDLK_TAB)
-	      && menu->currentItem < 4)
+	      && (items[menu->currentItem].type == MENU_TEXTINPUT
+		  || menu->currentItem == 0))
 	    {
 	      menu->moveNext();
-	      if (menu->currentItem < 4)
+	      if (items[menu->currentItem].type == MENU_TEXTINPUT)
 		menu->hold();
 	    }
 	  break;
 	case SDL_MOUSEMOTION:
-	  pos->x = event.motion.x;
-	  pos->y = event.motion.y;
+	  if (event.motion.x)
+	    event.motion.x -= event.motion.xrel / 3;
+	  if (event.motion.y)
+	    event.motion.y -= event.motion.yrel / 3;
+	  if (items[menu->currentItem].type != MENU_SLIDER ||
+	      !menu->holded) {
+	    pos->x += event.motion.xrel / 2;
+	    pos->y += event.motion.yrel / 2;
+	    if (pos->x > WIN_X)
+	      pos->x = WIN_X;
+	    else if (pos->x < 0)
+	      pos->x = 0;
+	    if (pos->y > WIN_Y)
+	      pos->y = WIN_Y;
+	    else if (pos->y < 0)
+	      pos->y = 0;
+	  }
 	  if (menu->holded)
-	    menu->hover(event.motion.x, event.motion.y);
+	    menu->hover(pos->x, pos->y);
+	  if (items[menu->currentItem].type == MENU_SLIDER && menu->holded) {
+	    items[menu->currentItem].value += event.motion.xrel / 20 + ((event.motion.xrel > 0) * 2 - 1);
+	    if (items[menu->currentItem].value < 0)
+	      items[menu->currentItem].value = 0;
+	    else if (items[menu->currentItem].value > 100)
+	      items[menu->currentItem].value = 100;
+	  }
 	  break;
 	case SDL_TEXTINPUT:
-	  if (menu->currentItem < 4 &&
-	      items[menu->currentItem].text.length() < 14)
-	  {
-	    if (items[menu->currentItem].text == " ")
-	      items[menu->currentItem].text = "";
-	    items[menu->currentItem].text += event.text.text;
-	  }
+	  if (items[menu->currentItem].type == MENU_TEXTINPUT &&
+	      items[menu->currentItem].text.length() < 15)
+	    {
+	      if (items[menu->currentItem].text == " ")
+		items[menu->currentItem].text = "";
+	      items[menu->currentItem].text += event.text.text;
+	    }
 	  break;
 	}
       SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 255, 255, 255));
     }
-  if (menu->currentItem < 4)
+  if (items[menu->currentItem].type == MENU_TEXTINPUT)
     {
       gettimeofday(&tv, NULL);
       if (tv.tv_usec / 500000 % 2)
@@ -344,6 +399,6 @@ void			Display::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
   menu->draw();
   SDL_BlitSurface(surface, NULL, screen, pos);
   SDL_UpdateWindowSurface(m_window);
-  if (menu->currentItem < 4)
+  if (items[menu->currentItem].type == MENU_TEXTINPUT)
     items[menu->currentItem].text.erase(items[menu->currentItem].text.length() - 1);
 }
