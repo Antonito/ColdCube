@@ -125,6 +125,23 @@ typedef struct		s_player_local
   vector3      		move;
 }			t_player_local;
 
+typedef enum			e_event
+  {
+    CONNECTED			= 1
+  }				e_event;
+
+typedef	struct		s_event
+{
+  unsigned int		connected : 1;
+  unsigned int		other : 31;
+}			t_event;
+
+typedef union		u_uevent
+{
+  t_event		event;
+  uint32_t		value;
+}			t_uevent;
+
 typedef	struct		s_player
 {
   int			id; /* Le serveur defini l'id du joueur*/
