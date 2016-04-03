@@ -25,6 +25,9 @@ void		*main_udp_thread(void *data)
       fprintf(stderr, "Cannot bind on main socket\n");
       return ((void *)0);
     }
+  port = -1;
+  while (++port < 10)
+    udp.connected[port] = 0;
   udp_thread(&udp);
   return ((void *)0);
 }
@@ -34,6 +37,7 @@ void			udp_thread(t_udps *udp)
   int			len;
   int			go;
   time_t		z1, z2;
+  time_t		diffout;
   struct timeval	t1;
 
   udp->action = 1;
@@ -50,7 +54,7 @@ void			udp_thread(t_udps *udp)
     FD_ZERO(&udp->readfds);
     FD_SET(udp->main_sock, &udp->readfds);
     z2 = time(NULL);
-    /* diffout = z2 - z1; */
+    diffout = z2 - z1;
     go = select(udp->main_sock + 1, &udp->readfds, NULL, NULL, NULL);
     if (go == -1)
       {
@@ -62,11 +66,11 @@ void			udp_thread(t_udps *udp)
 	udps_send_to_all(udp);
 	gettimeofday(&t1, NULL);
       }
-    /*if (diffout >= 10)
+    if (diffout >= 5)
       {
 	udps_check_timeout(udp);
 	z1 = time(NULL);
-	}*/
+      }
     if (FD_ISSET(udp->main_sock, &udp->readfds))
       {
 	FD_CLR(udp->main_sock, &udp->readfds);

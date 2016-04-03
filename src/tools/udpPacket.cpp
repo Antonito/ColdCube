@@ -69,6 +69,8 @@ int		createUdpPacket(t_data *data, t_player *player)
     }
   n += i + 1;
   i = 0;
+  printf("i = %d\n", n);
+  exit(1);
   tmp = (char *)&player->events;
   while (i < 4)
     {
