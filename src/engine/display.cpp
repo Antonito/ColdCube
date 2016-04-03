@@ -93,14 +93,14 @@ void	Display::Update(Camera &cam, Map &map, Player &player,
 	  switch (e.key.keysym.sym)
 	    {
 	    case (SDLK_z):
-	      eventKey[KEY_Z] = true;
+	      eventKey[FORWARD] = true;
 	      break ;
 	    case (SDLK_s):
-	      eventKey[KEY_S] = true;
+	      eventKey[BACKWARD] = true;
 	      break ;
 	    case (SDLK_SPACE):
 	      if (player.GetPos().z == 1.0)
-		eventKey[KEY_SPACE] = true;
+		eventKey[JUMP] = true;
 	      break ;
 	      // case (SDLK_q):
 	      //   player.GetPos() += normalize(vec3((cross(cam.GetFor(), vec3(0, 1, 0))).x, (cross(cam.GetFor(), vec3(0, 1, 0))).y, 0));
@@ -111,6 +111,7 @@ void	Display::Update(Camera &cam, Map &map, Player &player,
 	    case (SDLK_ESCAPE):
 	      m_isClosed = true;
 	      break ;
+#ifdef	DEBUG
 	    case (SDLK_F1):
 	      map.PutCube(1, ivec3(cam.GetPos() + cam.GetFor() * 2.0f));
 	      break ;
@@ -138,19 +139,20 @@ void	Display::Update(Camera &cam, Map &map, Player &player,
 	    case (SDLK_t):
 	      player.GetThird() = !player.GetThird();
 	      break ;
+#endif
 	    }
 	  break ;
 	case (SDL_KEYUP):
 	  switch (e.key.keysym.sym)
 	    {
 	    case (SDLK_z):
-	      eventKey[KEY_Z] = false;
+	      eventKey[FORWARD] = false;
 	      break ;
 	    case (SDLK_s):
-	      eventKey[KEY_S] = false;
+	      eventKey[BACKWARD] = false;
 	      break ;
 	    case (SDLK_SPACE):
-	      eventKey[KEY_SPACE] = false;
+	      eventKey[JUMP] = false;
 	      break ;
 	    }
 	  break;
@@ -165,11 +167,11 @@ void	Display::Update(Camera &cam, Map &map, Player &player,
 	  break ;
 	}
     }
-  if (eventKey[KEY_Z])
+  if (eventKey[FORWARD])
     player.Move(vec2(cam.GetFor().x, cam.GetFor().y));
-  else if (eventKey[KEY_S])
+  else if (eventKey[BACKWARD])
     player.Move(-vec2(cam.GetFor().x, cam.GetFor().y));
-  if (eventKey[KEY_SPACE])
+  if (eventKey[JUMP])
     player.Jump();
   player.Update(dTime);
   player.SetCam(cam, player.GetThird(), data->players + player.GetId());
@@ -178,6 +180,10 @@ void	Display::Update(Camera &cam, Map &map, Player &player,
 int	startGame(t_data *data, std::vector<menuItem> &items, Display &disp)
 {
   //Initilisation
+  if (data->config.keyboard == QWERTY_MODE)
+    setQwerty(&data->config.keys);
+  else if (data->config.keyboard == AZERTY_MODE)
+    setAzerty(&data->config.keys);
   data->net.port = atoi(items[3].text.c_str());
   data->net.ip = (char *)items[2].text.c_str();
   data->net.pseudo = (char *)items[1].text.c_str();

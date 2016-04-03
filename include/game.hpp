@@ -61,6 +61,8 @@
 # include "common_structs.hpp"
 
 int	engineMain(Display &, t_data *);
+void	setAzerty(t_keys *);
+void	setQwerty(t_keys *);
 void	free_game(t_data *);
 
 #endif	/* !GAME_H_ */

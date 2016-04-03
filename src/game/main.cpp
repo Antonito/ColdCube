@@ -5,6 +5,24 @@
 #include <GL/glut.h>
 #include "SDL2/SDL_image.h"
 
+void	setAzerty(t_keys *keys)
+{
+  keys->forward = SDLK_z;
+  keys->backward = SDLK_s;
+  keys->left = SDLK_q;
+  keys->right = SDLK_d;
+  keys->jump = SDLK_SPACE;
+}
+
+void	setQwerty(t_keys *keys)
+{
+  keys->forward = SDLK_w;
+  keys->backward = SDLK_s;
+  keys->left = SDLK_a;
+  keys->right = SDLK_d;
+  keys->jump = SDLK_SPACE;
+}
+
 void	initData(t_data *data)
 {
   memset(data, 0, sizeof(t_data));
@@ -13,6 +31,7 @@ void	initData(t_data *data)
   data->config.keyboard = AZERTY_MODE;
   data->config.musicVolume = 50;
   data->config.effectsVolume = 50;
+  setAzerty(&data->config.keys);
 }
 
 int	game()

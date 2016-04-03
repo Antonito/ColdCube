@@ -32,9 +32,11 @@ class Display
 
 enum e_eventKey
   {
-    KEY_Z,
-    KEY_S,
-    KEY_SPACE,
+    FORWARD,
+    BACKWARD,
+    LEFT,
+    RIGHT,
+    JUMP,
     NB_KEY_EVENT
   };
 

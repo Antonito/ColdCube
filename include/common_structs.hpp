@@ -158,12 +158,22 @@ typedef enum		e_keyboard
     QWERTY_MODE
   }			e_ekeyboard;
 
+typedef struct		s_keys
+{
+  unsigned int		forward;
+  unsigned int		backward;
+  unsigned int		left;
+  unsigned int		right;
+  unsigned int		jump;
+}			t_keys;
+
 typedef struct		s_config
 {
   bool			oculus;
   int			keyboard;
   unsigned char		musicVolume;
   unsigned char		effectsVolume;
+  t_keys		keys;
 }			t_config;
 
 typedef	struct		s_data
