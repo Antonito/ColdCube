@@ -57,6 +57,7 @@ void		tcps_check_received(t_tcps *tcp, int i)
 	    {
 	      fprintf(stdout, ":%s:\n", &tcp->buff[3]);
 	      fprintf(stdout, "pseudo: OK, client added, synced\n");
+	      write(tcp->tmp_sock, "ok", 2);
 	      tcps_sync_all(tcp);
 	    }
 	}
