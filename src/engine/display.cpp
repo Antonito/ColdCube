@@ -27,6 +27,7 @@ Display::Display(int width, int height, const std::string& title)
   SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
   SDL_SetRelativeMouseMode(SDL_TRUE);
+  SDL_ShowCursor(SDL_DISABLE);
   m_window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN);
   m_glContext = SDL_GL_CreateContext(m_window);
 
@@ -66,13 +67,14 @@ void	Display::Update(Camera &cam, Map &map, Player &player,
 			t_data *data)
 {
   SDL_GL_SwapWindow(m_window);
+  usleep(16650);
   static		int cur(0), old(0), tot(0), nb(0);
   cur = SDL_GetTicks();
   int			t = cur - old + 1;
   float			dTime = t / 1000.0f;
   old = cur;
   SDL_Event	e;
-  struct timeval	t1;
+  static bool		eventKey[NB_KEY_EVENT];
 
   tot += 1000 / t;
   nb++;
@@ -91,21 +93,21 @@ void	Display::Update(Camera &cam, Map &map, Player &player,
 	  switch (e.key.keysym.sym)
 	    {
 	    case (SDLK_z):
-	      player.Move(vec2(cam.GetFor().x, cam.GetFor().y));
+	      eventKey[KEY_Z] = true;
 	      break ;
 	    case (SDLK_s):
-	      player.Move(-vec2(cam.GetFor().x, cam.GetFor().y));
+	      eventKey[KEY_S] = true;
 	      break ;
 	    case (SDLK_SPACE):
-	      player.Jump();
+	      if (player.GetPos().z == 1.0)
+		eventKey[KEY_SPACE] = true;
 	      break ;
-	    // case (SDLK_q):
-	    //   player.GetPos() += normalize(vec3((cross(cam.GetFor(), vec3(0, 1, 0))).x, (cross(cam.GetFor(), vec3(0, 1, 0))).y, 0));
-	    //   break ;
-	    // case (SDLK_d):
-	    //   player.GetPos() -= normalize(vec3((cross(cam.GetFor(), vec3(0, 1, 0))).x, (cross(cam.GetFor(), vec3(0, 1, 0))).y, 0));
-	    //   break ;
-	      break ;
+	      // case (SDLK_q):
+	      //   player.GetPos() += normalize(vec3((cross(cam.GetFor(), vec3(0, 1, 0))).x, (cross(cam.GetFor(), vec3(0, 1, 0))).y, 0));
+	      //   break ;
+	      // case (SDLK_d):
+	      //   player.GetPos() -= normalize(vec3((cross(cam.GetFor(), vec3(0, 1, 0))).x, (cross(cam.GetFor(), vec3(0, 1, 0))).y, 0));
+	      //   break ;
 	    case (SDLK_ESCAPE):
 	      m_isClosed = true;
 	      break ;
@@ -133,8 +135,25 @@ void	Display::Update(Camera &cam, Map &map, Player &player,
 	    case (SDLK_v):
 	      map.Save();
 	      break ;
+	    case (SDLK_t):
+	      player.GetThird() = !player.GetThird();
+	      break ;
 	    }
 	  break ;
+	case (SDL_KEYUP):
+	  switch (e.key.keysym.sym)
+	    {
+	    case (SDLK_z):
+	      eventKey[KEY_Z] = false;
+	      break ;
+	    case (SDLK_s):
+	      eventKey[KEY_S] = false;
+	      break ;
+	    case (SDLK_SPACE):
+	      eventKey[KEY_SPACE] = false;
+	      break ;
+	    }
+	  break;
 	case (SDL_MOUSEMOTION):
 	  player.GetRot().y -= e.motion.xrel / 20.0f;
 	  player.GetRot().x -= e.motion.yrel / 20.0f;
@@ -146,13 +165,64 @@ void	Display::Update(Camera &cam, Map &map, Player &player,
 	  break ;
 	}
     }
-  gettimeofday(&t1, NULL);
-  if (t1.tv_usec % 3000)
-    {
-      createUdpPacket(data, &data->players[data->net.playerIndexUdp]);
-    }
+  if (eventKey[KEY_Z])
+    player.Move(vec2(cam.GetFor().x, cam.GetFor().y));
+  else if (eventKey[KEY_S])
+    player.Move(-vec2(cam.GetFor().x, cam.GetFor().y));
+  if (eventKey[KEY_SPACE])
+    player.Jump();
   player.Update(dTime);
-  player.SetCam(cam);
+  player.SetCam(cam, player.GetThird(), data->players + player.GetId());
+}
+
+int	startGame(t_data *data, std::vector<menuItem> &items, Display &disp)
+{
+  //Initilisation
+  data->net.port = atoi(items[3].text.c_str());
+  data->net.ip = (char *)items[2].text.c_str();
+  data->net.pseudo = (char *)items[1].text.c_str();
+  disp.setClosed(false);
+
+  // Penser a checker IP + Pseudo + Port
+  if (data->net.port < 0)
+    {
+      std::cerr << "Incorrect port\n";
+      return (1);
+    }
+  if (strlen(data->net.pseudo) > 20)
+    {
+      std::cerr << "Pseudo is too long\n";
+      return (1);
+    }
+
+#ifdef	DEBUG
+  std::clog << "[Infos] Port = " << data->net.port << "\n";
+  std::clog << "[Infos] Ip = " << data->net.ip << "\n";
+  std::clog << "[Infos] Pseudo = " << data->net.pseudo << "\n";
+#endif
+
+  if (!clientLaunchTcpc(data)) //TCP Start
+    {
+      printf("TCP OK\n");
+      if (!clientLaunchUdpc(data))
+	{
+	  printf("UDP OK\n");
+	  engineMain(disp, data);
+#ifdef _WIN32
+	  closesocket(data->net.udp.sock);
+	  closesocket(data->net.tcp.sock);
+#else
+	  close(data->net.udp.sock);
+	  close(data->net.tcp.sock);
+#endif
+	}
+      write(data->net.tcp.sock, "/r", 2);
+      fprintf(stdout, "tcp fd closed\n");
+    }
+  data->net.tcp.run = 0;
+  data->net.udp.run_send = 0;
+  data->net.udp.run = 0;
+  return (0);
 }
 
 void			Display::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
@@ -295,39 +365,8 @@ void			Display::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
 	    {
 	      menu->hold();
 	      //Initilisation
-	      data->net.port = atoi(items[3].text.c_str());
-	      data->net.ip = (char *)items[2].text.c_str();
-	      data->net.pseudo = (char *)items[1].text.c_str();
-	      this->setClosed(false);
-
-	      // Penser a checker IP + Pseudo + Port
-
-	      if (data->net.port < 0)
-		{
-		  std::cerr << "Incorrect port\n";
-		  break;
-		}
-	      if (strlen(data->net.pseudo) > 20)
-		{
-		  std::cerr << "Pseudo is too long\n";
-		  break;
-		}
-
-#ifdef	DEBUG
-	      std::clog << "[Infos] Port = " << data->net.port << "\n";
-	      std::clog << "[Infos] Ip = " << data->net.ip << "\n";
-	      std::clog << "[Infos] Pseudo = " << data->net.pseudo << "\n";
-#endif
-
-	      if (!clientLaunchTcpc(data) && !clientLaunchUdpc(data)) //TCP Start
-		{
-		  engineMain(*this, data);
-		  write(data->net.tcp.sock, "/r", 2);
-		  data->net.tcp.run = 0;
-		  data->net.udp.run_send = 0;
-		  data->net.udp.run = 0;
-		  fprintf(stdout, "tcp fd closed\n");
-		}
+	      if (startGame(data, items, *this))
+		break;
 	    }
 	  if (event.key.keysym.sym == SDLK_RETURN &&
 	      items[0].type && menu->currentItem == 6)

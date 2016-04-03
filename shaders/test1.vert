@@ -13,10 +13,12 @@ varying float z0;
 // varying float lum;
 
 uniform mat4 transform;
+uniform mat4 shadow_mat;
 //uniform vec4 lights[30];
 
 void	main()
 {
+vec4	temp;
 	// lum = 0;
 	// int i = 1;
 	// vec3 v;
@@ -33,6 +35,7 @@ void	main()
 	// v = vec3(gl_Position);
 	// N = normal;
 	texCoord0 = texCoord;
-	normal0 = normal;
+	temp = shadow_mat * vec4(normal, 0.0);
+	normal0 = vec3(temp.x, temp.y, temp.z);
 	z0 = gl_Position.z;
 }

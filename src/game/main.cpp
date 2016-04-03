@@ -31,7 +31,6 @@ int	game()
   while (data->game.running)
     {
       display.UpdateMenu(menu, items, &pos, screen, surface, data);
-      usleep(1000);
     }
   delete data;
   return (0);

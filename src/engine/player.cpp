@@ -24,6 +24,7 @@ Player::Player(vec3 pos, float rot, Map *map, int id)
   m_fall = 0.0f;
   m_map = map;
   m_id = id;
+  m_third = false;
 }
 
 Player::~Player()
@@ -32,7 +33,7 @@ Player::~Player()
 
 void Player::Move(vec2 dir)
 {
-  m_move += normalize(dir);
+  m_move += normalize(dir) * (GLfloat)((m_pos.z == 1.0) ? 1 : 0.2);
   if (m_move.length() > 3.0)
     {
       m_move = normalize(m_move);
@@ -118,7 +119,10 @@ void Player::Update(float time)
 
   vec3 move(m_move * m_speed * time, m_fall * time);
   m_pos = GetCollisionMove(m_pos, move);
-  m_move *= 0.93;
+  if (m_pos.z == 1.0)
+    m_move *= 0.81;
+  else
+    m_move *= 0.994;
   // printf("(%.2f, %.2f, %.2f)             ", m_pos.x, m_pos.y, m_pos.z);
   // fflush(stdout);
 }
@@ -136,10 +140,12 @@ static bool IsColinear(vec3 u, vec3 v)
   return (k.x == k.y && k.y == k.z);
 }
 
-void	Player::SetCam(Camera &cam)
+void	Player::SetCam(Camera &cam, bool third, t_player *p)
 {
-      cam.GetPos() = m_pos + vec3(0, 0, 2.5);
+  cam.GetPos() = m_pos + vec3(0.4, 0.6, 1.6);
   cam.GetRot() = m_rot;
+  if (third)
+    cam.GetPos() -= p->direction * (GLfloat)3.0;
 }
 
 void	Player::Draw()

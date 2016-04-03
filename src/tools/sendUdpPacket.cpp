@@ -1,6 +1,9 @@
 #include "common_structs.hpp"
-#include <stdio.h>
-#include <unistd.h>
+#ifdef _WIN32
+#else
+# include <stdio.h>
+# include <unistd.h>
+#endif
 
 int		sendUdpPacket(t_data *data, char packet[42])
 {

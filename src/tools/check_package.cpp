@@ -1,6 +1,9 @@
 #include <GL/gl.h>
-#include <stdbool.h>
-#include <stdint.h>
+#ifdef _WIN32
+#else
+# include <stdbool.h>
+# include <stdint.h>
+#endif
 
 bool	checkPacket(char *str)
 {

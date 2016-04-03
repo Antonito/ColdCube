@@ -6,17 +6,22 @@
 # ifndef UDP_READ
 #  define UDP_READ (70)
 # endif /* !UDP_READ */
-# include <stdio.h>
-# include <stdlib.h>
-# include <unistd.h>
+
+# ifdef _WIN32
+# else
+#  include <stdio.h>
+#  include <stdlib.h>
+#  include <unistd.h>
+#  include <sys/time.h>
+#  include <sys/types.h>
+# endif
+
 # include <string.h>
 # include <pthread.h>
 # include <arpa/inet.h>
-# include <sys/types.h>
 # include <sys/socket.h>
 # include <sys/select.h>
 # include <netinet/in.h>
-# include <sys/time.h>
 
 /*
 ** s_tcps pour le server, il gere le tchate est la sync des clients
@@ -60,6 +65,7 @@ typedef struct		s_udps
   char			cli_buff[8][200];
   char			buff[UDP_READ + 1];
   int			timeout[10];
+  int			connected[10];
   struct sockaddr_in	my_addr;
   fd_set		readfds;
   struct timeval	ms;
@@ -69,10 +75,11 @@ typedef struct		s_udps
 void		udps_send_to_all(t_udps *);
 void		set_cli_buff(t_udps *, int);
 void		udps_check_timeout(t_udps *);
+void		udp_send_disconnect(t_udps *, char);
 
 /* src/server/udp/udp_server_pseudo.c */
 void		udp_init_zero_pseudo(t_udps *);
-int		udp_server_add_pseudo(t_udps *, char *);
+int		udp_server_add_pseudo(t_udps *, char *, int);
 int		udp_server_check_pseudo(t_udps *, char *);
 void		udp_server_remove_pseudo_str(t_udps *, char *);
 int		udp_get_pseudo_index(t_udps *, char *);

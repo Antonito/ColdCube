@@ -27,6 +27,7 @@ Shader::Shader(const std::string& fileName)
   CheckShaderError(m_program, GL_VALIDATE_STATUS, true, "Error: Program is invalid: ");
 
   m_uniforms[0] = glGetUniformLocation(m_program, "transform");
+  m_uniforms[1] = glGetUniformLocation(m_program, "shadow_mat");
   //  m_uniforms[1] = glGetUniformLocation(m_program, "lights");
 }
 
@@ -51,6 +52,15 @@ void	Shader::Update(const Transform& transform, Camera& camera)
   glm::mat4 model = camera.GetViewProjection() * transform.GetModel();
 
   glUniformMatrix4fv(m_uniforms[TRANSFORM_U], 1, GL_FALSE, &model[0][0]);
+  //  glUniform4fv(m_uniforms[1], 120, lights);
+}
+
+void	Shader::Update(const glm::mat4& transform, Camera& camera)
+{
+  glm::mat4 model = camera.GetViewProjection() * transform;
+
+  glUniformMatrix4fv(m_uniforms[TRANSFORM_U], 1, GL_FALSE, &model[0][0]);
+  glUniformMatrix4fv(m_uniforms[SHADOW_MAT_U], 1, GL_FALSE, &transform[0][0]);
   //  glUniform4fv(m_uniforms[1], 120, lights);
 }
 

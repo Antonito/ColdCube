@@ -4,6 +4,7 @@ GAME_PREFIX=		src/game/
 
 GAME_FILES=		main.cpp			\
 			free.cpp			\
+			score.cpp			\
 			menus/main_menu.cpp		\
 			menus/Menu.cpp
 
@@ -17,10 +18,12 @@ SERV_FILES=		main.c				\
 			tcp/server_tcp_functions.c	\
 			tcp/server_tcp_msg.c		\
 			tcp/tcp_server_pseudo.c		\
+			events.c
 
 ENGINE_PREFIX=		src/engine/
 
-ENGINE_FILES=		chunk.cpp			\
+ENGINE_FILES=		animation_player.cpp		\
+			chunk.cpp			\
 			display.cpp			\
 			load_shader.cpp			\
 			map.cpp				\
@@ -39,7 +42,8 @@ TOOLS_FILES=		text.cpp			\
 			sendUdpPacket.cpp		\
 			udp_client.cpp			\
 			check_package.cpp		\
-			tcp_client.cpp
+			tcp_client.cpp			\
+			events.cpp
 
 GAME=			$(addprefix $(GAME_PREFIX),$(GAME_FILES))
 
@@ -57,17 +61,15 @@ GAME+=			$(TOOLS)
 
 GAME+=			$(ENGINE)
 
-#SERVER+=		$(TOOLS)
-
 NAME=			coldcube
 
 NAMESERV=		server_game
 
 HEAD=			-Iinclude
 
-CXXFLAGS= $(HEAD) -W -Wall -Wextra -O3
+CXXFLAGS= $(HEAD) -W -Wall -Wextra
 
-CFLAGS= $(HEAD) -W -Wall -Wextra -O3
+CFLAGS= $(HEAD) -W -Wall -Wextra
 
 ifeq ($(DEBUG), yes)
 
@@ -97,8 +99,9 @@ LIB=			-lstdc++			\
 OBJ=			$(GAME:.cpp=.o)
 
 OBJ+=			$(ENGINE_C:.c=.o)
+OBJSERV=		$(SERVER_CPP_FILES:.cpp=.o)
 
-OBJSERV=		$(SERVER:.c=.o)
+OBJSERV+=		$(SERVER:.c=.o)
 
 $(NAMESERV):	$(OBJSERV) $(NAME)
 	@echo -n "[ "
@@ -138,7 +141,8 @@ endif
 	@echo "Compiling" $<
 	@$(CXX) $(CXXFLAGS) -c -o $@ $<
 
-all:	$(NAMESERV) $(NAME)
+all:	$(NAMESERV)
+#$(NAME)
 
 clean:
 	@echo -n "[ "

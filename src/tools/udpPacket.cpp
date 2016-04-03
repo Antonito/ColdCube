@@ -94,6 +94,8 @@ int		readUdpPacket(t_data *data)
       fflush(stderr);*/
       return (1);
     }
+  if (data->net.playerIndexUdp == data->net.udp.buff[0])
+    return (0);
   i = 0;
   flo = 0.0f;
   all = 2;

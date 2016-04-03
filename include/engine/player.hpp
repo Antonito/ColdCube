@@ -3,9 +3,6 @@
 
 # include <glm/glm.hpp>
 # include "common_structs.hpp"
-# include "engine/chunk.hpp"
-# include "engine/map.hpp"
-# include "engine/mesh.hpp"
 # include "engine/camera.hpp"
 
 using namespace glm;
@@ -19,7 +16,7 @@ class Player
   void Jump();
   void Fall(float time);
   void Update(float time);
-  void	SetCam(Camera &cam);
+  void	SetCam(Camera &cam, bool third, t_player *p);
   void Draw();
   ~Player();
   vec3 GetCollisionMove(vec3 pos, vec3 move);
@@ -28,7 +25,7 @@ class Player
 
   int	GetId() {return m_id;};
   void	FillCPlayer(t_player *p, vec3 dir);
-
+  bool	&GetThird() {return m_third;};
  private:
   vec3		m_pos;
   vec2		m_rot;
@@ -38,6 +35,7 @@ class Player
   Map		*m_map;
   Mesh		m_model;
   int		m_id;
+  bool		m_third;
 };
 
 #endif // !PLAYER_HPP_

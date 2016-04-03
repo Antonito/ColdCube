@@ -1,8 +1,11 @@
-#include <fcntl.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <unistd.h>
+#ifdef _WIN32
+#else
+# include <fcntl.h>
+# include <stdlib.h>
+# include <stdio.h>
+# include <string.h>
+# include <unistd.h>
+#endif
 
 char	*LoadChunk(char *dir, int chunk, int *height, int *pos)
 {

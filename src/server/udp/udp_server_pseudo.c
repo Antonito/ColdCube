@@ -14,11 +14,11 @@ void		udp_init_zero_pseudo(t_udps *udp)
     }
 }
 
-int		udp_server_add_pseudo(t_udps *udp, char *str)
+int		udp_server_add_pseudo(t_udps *udp, char *str, int i)
 {
   if (udp_server_check_pseudo(udp, str) == -1)
     return (-1);
-  strncpy(udp->pseudo[udp->nb_actual], str, strlen(str));
+  strncpy(udp->pseudo[i], str, strlen(str));
   return (0);
 }
 
@@ -29,7 +29,7 @@ int		udp_server_check_pseudo(t_udps *udp, char *str)
   i = -1;
   while (++i < 10)
     {
-      if (strncmp(udp->pseudo[i], str, 20) == 0)
+      if (strncmp(udp->pseudo[i], str, 20) == 0 && udp->connected[i] == 1)
 	return (-1);
     }
   return (0);
@@ -48,7 +48,6 @@ void		udp_server_remove_pseudo_str(t_udps *udp, char *str)
       strncpy(udp->pseudo[i], udp->pseudo[i + 1], 20);
       ++i;
     }
-  udp->nb_actual += 1;
 }
 
 int		udp_get_pseudo_index(t_udps *udp, char *str)
@@ -58,7 +57,7 @@ int		udp_get_pseudo_index(t_udps *udp, char *str)
   i = -1;
   while (++i < 10)
     {
-      if (strncmp(udp->pseudo[i], str, strlen(str)) == 0)
+      if (strncmp(udp->pseudo[i], str, strlen(str)) == 0 && udp->connected[i] == 1)
 	return (i);
     }
   return (-1);

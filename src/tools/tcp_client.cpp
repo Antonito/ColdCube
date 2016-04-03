@@ -1,10 +1,16 @@
-#include <stdlib.h>
-#include <stdio.h>
-#include <arpa/inet.h>
-#include <sys/socket.h>
-#include <unistd.h>
-#include <pthread.h>
-#include <string.h>
+#ifdef _WIN32
+# include <windows.h>
+# include <winsock2.h>
+# pragma comment(lib,"ws2_32.lib")
+#else
+# include <stdlib.h>
+# include <stdio.h>
+# include <arpa/inet.h>
+# include <sys/socket.h>
+# include <unistd.h>
+# include <pthread.h>
+# include <string.h>
+#endif
 #include <iostream>
 #include "common_structs.hpp"
 
@@ -32,7 +38,15 @@ void		*tcp_thread(void *data)
 int		clientLaunchTcpc(t_data *data)
 {
   char		tmp[30];
+#ifdef _WIN32
+  WSADATA	wsa;
 
+    if (WSAStartup(MAKEWORD(2,2),&wsa) != 0)
+    {
+        printf("Failed. Error Code : %d",WSAGetLastError());
+        return 1;
+    }
+#endif
   if ((data->net.tcp.sock = socket(AF_INET, SOCK_STREAM, 0)) == -1)
     {
       fprintf(stderr, "socket creation failed\n");
@@ -53,8 +67,14 @@ int		clientLaunchTcpc(t_data *data)
       fprintf(stderr, "error sending pseudo\n");
       return (-1);
     }
+  read(data->net.tcp.sock, tmp, 29);
+  if (strncmp("sorry", tmp, 5) == 0)
+    return (1);
   data->net.tcp.run = 1;
   data->net.playerIndexTcp = atoi(tmp);
   pthread_create(&data->net.tcp.thread, NULL, tcp_thread, (void *)data);
+#ifdef _WIN32
+  WSACleanup();
+#endif
   return (0);
 }

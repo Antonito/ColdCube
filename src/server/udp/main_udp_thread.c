@@ -25,6 +25,12 @@ void		*main_udp_thread(void *data)
       fprintf(stderr, "Cannot bind on main socket\n");
       return ((void *)0);
     }
+  port = -1;
+  while (++port < 10)
+    {
+      udp.connected[port] = 0;
+      udp.timeout[port] = 0;
+    }
   udp_thread(&udp);
   return ((void *)0);
 }
@@ -33,7 +39,8 @@ void			udp_thread(t_udps *udp)
 {
   int			len;
   int			go;
-  time_t		diffout, z1, z2;
+  time_t		z1, z2;
+  time_t		diffout;
   struct timeval	t1;
 
   udp->action = 1;
@@ -62,7 +69,7 @@ void			udp_thread(t_udps *udp)
 	udps_send_to_all(udp);
 	gettimeofday(&t1, NULL);
       }
-    if (diffout >= 10)
+    if (diffout >= 5)
       {
 	udps_check_timeout(udp);
 	z1 = time(NULL);
@@ -92,16 +99,24 @@ void		server_check_msg_udp(t_udps *udp)
 
   if (strncmp(udp->buff, "/add", 4) == 0)
     {
-      if (udp_server_add_pseudo(udp, &udp->buff[5]) == -1)
-	return ;
-      if ((i = udp_get_pseudo_index(udp, &udp->buff[5])) == -1)
-	return ;
-      udp->cli_sock[i] = udp->tmp_sock;
+      i = -1;
+      while (udp->connected[++i] == 1);
+      udp->connected[i] = 1;
+      if (udp_server_add_pseudo(udp, &udp->buff[5], i) == -1)
+	{
+	  sendto(udp->main_sock, "/r", 2, 0,
+		(struct sockaddr *)&udp->tmp_sock, udp->cli_addrl);
+	  udp->connected[i] = 0;
+	  printf("PIPIPIPI\n");
+	  return ;
+	}
       sprintf(tmp, "%d", udp->nb_actual);
-      udp->timeout[udp->nb_actual] = 0;
-      udp->nb_actual += 1;
       sendto(udp->main_sock, tmp, 1, 0,
 	     (struct sockaddr *)&udp->tmp_sock, udp->cli_addrl);
+      udp->cli_sock[i] = udp->tmp_sock;
+      udp->timeout[i] = 1;
+      udp->nb_actual += 1;
+      printf("POPOPOPOPO\n");
     }
   else
     {
