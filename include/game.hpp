@@ -25,6 +25,8 @@
 # define FAR_RIFLE			5
 # define FAR_PISTOL			7
 
+# define FAR_DIST			100.0
+
 # define BEGIN_TIMER			1
 # define MIDDLE_TIMER			2
 # define END_TIMER			3
@@ -58,30 +60,24 @@
 # include "engine/display.hpp"
 # include "common_structs.hpp"
 
-// class	Team
-// {
-// public:
-//   Team();
-//   ~Team();
-// private:
-//   int	m_score;
-// };
+class Score
+{
+public:
+  Score();
+  ~Score();
+  void		updateScore(int weapon, bool headshot, double dist);
+  void		updateTime(void);
+  void		resetStreak(void);
+  void		updateStreakMult(int weapon);
 
-// class	Game
-// {
-// public:
-//   Game();
-//   ~Game();
+  int		getScore(void);
 
-//   Team	team1;
-//   Team	team2;
-
-//   bool	isOver();
-//   int	getScore();
-
-// private:
-//   int	m_score;
-// };
+private:
+  double	m_streakMult;
+  int		m_timeMult;
+  int		m_score;
+  time_t	m_begin;
+};
 
 int	engineMain(Display &, t_data *);
 void	free_game(t_data *);

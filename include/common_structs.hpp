@@ -97,6 +97,13 @@ typedef	struct		s_map
 ** Weapons
 */
 
+typedef enum		e_weapon
+  {
+    RIFLE_WEAPON,
+    PISTOL_WEAPON,
+    KNIFE_WEAPON
+  }			t_eweapon;
+
 typedef struct		s_weapon
 {
   int			id; /* Id de l'arme */
