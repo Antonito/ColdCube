@@ -79,7 +79,7 @@ void		udp_send_disconnect(t_udps *, char);
 
 /* src/server/udp/udp_server_pseudo.c */
 void		udp_init_zero_pseudo(t_udps *);
-int		udp_server_add_pseudo(t_udps *, char *);
+int		udp_server_add_pseudo(t_udps *, char *, int);
 int		udp_server_check_pseudo(t_udps *, char *);
 void		udp_server_remove_pseudo_str(t_udps *, char *);
 int		udp_get_pseudo_index(t_udps *, char *);

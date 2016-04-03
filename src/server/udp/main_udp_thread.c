@@ -27,7 +27,10 @@ void		*main_udp_thread(void *data)
     }
   port = -1;
   while (++port < 10)
-    udp.connected[port] = 0;
+    {
+      udp.connected[port] = 0;
+      udp.timeout[port] = 0;
+    }
   udp_thread(&udp);
   return ((void *)0);
 }
@@ -96,17 +99,17 @@ void		server_check_msg_udp(t_udps *udp)
 
   if (strncmp(udp->buff, "/add", 4) == 0)
     {
-      if (udp_server_add_pseudo(udp, &udp->buff[5]) == -1)
+      i = -1;
+      while (udp->connected[++i] == 1);
+      udp->connected[i] = 1;
+      if (udp_server_add_pseudo(udp, &udp->buff[5], i) == -1)
 	return ;
-      if ((i = udp_get_pseudo_index(udp, &udp->buff[5])) == -1)
-	return ;
-      udp->cli_sock[i] = udp->tmp_sock;
       sprintf(tmp, "%d", udp->nb_actual);
-      udp->timeout[udp->nb_actual] = 0;
-      udp->connected[udp->nb_actual] = 1;
-      udp->nb_actual += 1;
       sendto(udp->main_sock, tmp, 1, 0,
 	     (struct sockaddr *)&udp->tmp_sock, udp->cli_addrl);
+      udp->cli_sock[i] = udp->tmp_sock;
+      udp->timeout[i] = 0;
+      udp->nb_actual += 1;
     }
   else
     {

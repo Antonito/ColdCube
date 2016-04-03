@@ -5,7 +5,7 @@
 ** Login   <troncy_l@epitech.net>
 **
 ** Started on  Mon Mar 07 16:48:42 2016 Lucas Troncy
-// Last update Sat Apr 02 00:06:34 2016 Lucas Troncy
+// Last update Sun Apr 03 04:00:27 2016 Lucas Troncy
 */
 
 #ifdef _WIN32
@@ -94,14 +94,18 @@ int		clientLaunchUdpc(t_data *data)
       fprintf(stderr, "error sending pseudo (udp)\n");
       return (-1);
     }
+  printf("before recv ID\n");
   recvfrom(data->net.udp.sock, tmp, 10, 0,
 	  (struct sockaddr *)&data->net.tcp.to_serv, (socklen_t *)&len);
+  printf("After recv ID\n");
   data->net.playerIndexUdp = atoi(tmp);
   printf("Id = %d\n", data->net.playerIndexUdp);
   data->net.udp.run = 1;
   data->net.udp.run_send = 1;
+  printf("creating thread UDP\n");
   pthread_create(&data->net.udp.thread, NULL, udp_thread, (void *)data);
   pthread_create(&data->net.udp.thread_send, NULL, udp_send_thread, (void *)data);
+  printf("thread created\n");
 #if _WIN32
   WSACleanup();
 #endif
