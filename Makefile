@@ -39,7 +39,8 @@ TOOLS_FILES=		text.cpp			\
 			sendUdpPacket.cpp		\
 			udp_client.cpp			\
 			check_package.cpp		\
-			tcp_client.cpp
+			tcp_client.cpp			\
+			events.cpp
 
 GAME=			$(addprefix $(GAME_PREFIX),$(GAME_FILES))
 
