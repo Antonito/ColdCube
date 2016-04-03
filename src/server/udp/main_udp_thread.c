@@ -114,7 +114,7 @@ void		server_check_msg_udp(t_udps *udp)
       sendto(udp->main_sock, tmp, 1, 0,
 	     (struct sockaddr *)&udp->tmp_sock, udp->cli_addrl);
       udp->cli_sock[i] = udp->tmp_sock;
-      udp->timeout[i] = 0;
+      udp->timeout[i] = 1;
       udp->nb_actual += 1;
       printf("POPOPOPOPO\n");
     }
