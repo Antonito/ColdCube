@@ -16,9 +16,13 @@ void		udp_init_zero_pseudo(t_udps *udp)
 
 int		udp_server_add_pseudo(t_udps *udp, char *str)
 {
+  int		i;
+
+  i = -1;
   if (udp_server_check_pseudo(udp, str) == -1)
     return (-1);
-  strncpy(udp->pseudo[udp->nb_actual], str, strlen(str));
+  while (udp->connected[++i] != 0);
+  strncpy(udp->pseudo[i - 1], str, strlen(str));
   return (0);
 }
 
@@ -48,7 +52,6 @@ void		udp_server_remove_pseudo_str(t_udps *udp, char *str)
       strncpy(udp->pseudo[i], udp->pseudo[i + 1], 20);
       ++i;
     }
-  udp->nb_actual += 1;
 }
 
 int		udp_get_pseudo_index(t_udps *udp, char *str)

@@ -81,8 +81,8 @@ int	engineMain(Display &display, t_data *data)
       	    }
       	  i++;
       	}
-      player.FillCPlayer(data->players + player.GetId(), camera.GetFor());
       display.Update(camera, map, player, data);
+      player.FillCPlayer(data->players + player.GetId(), camera.GetFor());
     }
   return (0);
 }

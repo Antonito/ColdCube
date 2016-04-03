@@ -65,6 +65,7 @@ typedef struct		s_udps
   char			cli_buff[8][200];
   char			buff[UDP_READ + 1];
   int			timeout[10];
+  int			connected[10];
   struct sockaddr_in	my_addr;
   fd_set		readfds;
   struct timeval	ms;
@@ -74,6 +75,7 @@ typedef struct		s_udps
 void		udps_send_to_all(t_udps *);
 void		set_cli_buff(t_udps *, int);
 void		udps_check_timeout(t_udps *);
+void		udp_send_disconnect(t_udps *, char);
 
 /* src/server/udp/udp_server_pseudo.c */
 void		udp_init_zero_pseudo(t_udps *);
