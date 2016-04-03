@@ -67,20 +67,22 @@ int	engineMain(Display &display, t_data *data)
 
       shader.Update(transform, camera);
       display.Clear(0.0f, 0.3f, 0.8f, 1.0f);
+      transform.GetPos() = vec3(0, 0, 0);
       map.Draw();
       i = 0;
       while (i < 10)
       	{
-      	  if (i != player.GetId())
-      	    {
-      	      transform.GetPos() = data->players[i].position;
+      	  // if (i != player.GetId())
+      	  //   {
+      	      transform.GetPos() = vec3(0, 1, 2);// data->players[i].position
+		;
       	      shader.Bind();
       	      shader.Update(transform, camera);
       	      text.Bind(0);
       	      playerModel.Draw();
       	    }
       	  i++;
-      	}
+      	// }
       display.Update(camera, map, player, data);
       player.FillCPlayer(data->players + player.GetId(), camera.GetFor());
     }

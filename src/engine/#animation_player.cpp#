@@ -55,4 +55,6 @@ void	DrawPlayerModel(t_player *player, double speed)
   Mesh	head = GetHead();
   Mesh	arm = GetArm();
   Mesh	leg = GetLeg();
+
+  
 }
