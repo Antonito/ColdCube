@@ -16,7 +16,7 @@ SERV_FILES=		main.c				\
 			tcp/main_tcp_thread.c		\
 			tcp/server_tcp_functions.c	\
 			tcp/server_tcp_msg.c		\
-			tcp/tcp_server_pseudo.c		\
+			tcp/tcp_server_pseudo.c
 
 SERVER_CPP_FILES=	src/tools/events.cpp
 
@@ -101,14 +101,14 @@ OBJ+=			$(ENGINE_C:.c=.o)
 
 OBJSERV=		$(SERVER:.c=.o)
 
-OBJSERV+=		$(SERVER_CPP_FILES:.cpp=.o);
+OBJSERV+=		$(SERVER_CPP_FILES:.cpp=.o)
 
 $(NAMESERV):	$(OBJSERV) $(NAME)
 	@echo -n "[ "
 	@echo -n -e "\e[1m\e[92mOK\e[0m"
 	@echo -n " ] "
 	@echo "Compiled server"
-	@$(CC) $(OBJSERV) -o $(NAMESERV) $(LIB)
+	@$(CXX) $(OBJSERV) -o $(NAMESERV) $(LIB)
 
 $(NAME):	$(OBJ)
 ifeq ($(DEBUG), yes)
