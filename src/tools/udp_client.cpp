@@ -5,7 +5,7 @@
 ** Login   <troncy_l@epitech.net>
 **
 ** Started on  Mon Mar 07 16:48:42 2016 Lucas Troncy
-// Last update Sun Apr 03 04:00:27 2016 Lucas Troncy
+// Last update Sun Apr 03 04:53:16 2016 Lucas Troncy
 */
 
 #ifdef _WIN32
@@ -28,7 +28,6 @@
 void			*udp_send_thread(void *data)
 {
   t_data		*_data;
-  int			len;
   struct timeval	t1;
 
   _data = (t_data *)data;
