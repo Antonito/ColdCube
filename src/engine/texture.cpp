@@ -10,6 +10,11 @@ Texture::Texture()
 
 Texture::Texture(const unsigned char *imgData, int width, int height, bool temp)
 {
+  if (imgData == NULL)
+    {
+      std::cerr << "Invalid image data: aborting" << std::endl;
+      exit(1);
+    }
   m_temp = temp;
   glGenTextures(1, &m_texture);
   glBindTexture(GL_TEXTURE_2D, m_texture);
