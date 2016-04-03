@@ -16,6 +16,7 @@
 # include <arpa/inet.h>
 # include <glm/glm.hpp>
 # include "events.hpp"
+# include "Score.hpp"
 
 /*
 ** Network
@@ -152,6 +153,8 @@ typedef	struct		s_player
 
 typedef struct		s_game
 {
+  Score			Team1;
+  Score			Team2;
   bool			running;
   SDL_Surface		*screen;
 }			t_game;

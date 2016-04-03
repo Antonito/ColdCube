@@ -1,3 +1,4 @@
+#include "Score.hpp"
 #include "game.hpp"
 #include "common_structs.hpp"
 
@@ -21,6 +22,8 @@ void		Score::updateScore(int weapon, bool headShot, double dist)
     m_score += PISTOL_DMG * m_timeMult * m_streakMult * ((headShot) ? HEAD_PISTOL : 1) * ((dist >= FAR_DIST) ? FAR_PISTOL : 1);
   else if (weapon == KNIFE_WEAPON)
     m_score += KNIFE_DMG * m_timeMult * m_streakMult * ((headShot) ? HEAD_KNIFE : 1);
+  if (m_score > TOTAL_PTS)
+    m_score = TOTAL_PTS;
 };
 
 void		Score::updateTime(void)

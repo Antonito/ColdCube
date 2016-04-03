@@ -60,25 +60,6 @@
 # include "engine/display.hpp"
 # include "common_structs.hpp"
 
-class Score
-{
-public:
-  Score();
-  ~Score();
-  void		updateScore(int weapon, bool headshot, double dist);
-  void		updateTime(void);
-  void		resetStreak(void);
-  void		updateStreakMult(int weapon);
-
-  int		getScore(void);
-
-private:
-  double	m_streakMult;
-  int		m_timeMult;
-  int		m_score;
-  time_t	m_begin;
-};
-
 int	engineMain(Display &, t_data *);
 void	free_game(t_data *);
 
