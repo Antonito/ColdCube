@@ -80,9 +80,9 @@ int	engineMain(Display &display, t_data *data)
       	      shader.Update(transform, camera);
       	      text.Bind(0);
       	      playerModel.Draw();
-      	    }
+	      //  	    }
       	  i++;
-      	// }
+    }
       display.Update(camera, map, player, data);
       player.FillCPlayer(data->players + player.GetId(), camera.GetFor());
     }
