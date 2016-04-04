@@ -8,13 +8,17 @@ void		udps_send_to_all(t_all *all)
   int		j;
 
   i = -1;
-  while (++i < 10 && all->connected[i] == 1)
+  while (++i < 10)
     {
+      if (all->connected[i] == 0)
+	continue;
       j = -1;
-      while (++j < 10 && all->connected[j] == 1)
+      while (++j < 10)
 	{
-	  sendto(all->udp->main_sock, all->udp->cli_buff[j], 42, 0,
-		 (struct sockaddr *)&all->udp->cli_sock[i], all->udp->cli_addrl);
+	  if (all->connected[j] == 0)
+	    continue;
+	  sendto(all->udp->main_sock, all->udp->cli_buff[i], 42, 0,
+		 (struct sockaddr *)&all->udp->cli_sock[j], all->udp->cli_addrl);
 	}
     }
 }
@@ -68,6 +72,6 @@ void		udp_send_disconnect(t_udps *udp, char id)
       ++i;
     }
   printf("SEND DISCONNECT\n");
-  sendto(udp->main_sock, packet, 42, 0,
-                 (struct sockaddr *)&udp->cli_sock[(int)id], udp->cli_addrl);
+  /*sendto(udp->main_sock, packet, 42, 0,
+                 (struct sockaddr *)&udp->cli_sock[(int)id], udp->cli_addrl);*/
 }

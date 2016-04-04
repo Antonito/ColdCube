@@ -213,6 +213,8 @@ int	startGame(t_data *data, std::vector<menuItem> &items, Display &disp)
 	{
 	  printf("UDP OK\n");
 	  engineMain(disp, data);
+	  write(data->net.tcp.sock, "/r", 2);
+	  fprintf(stdout, "tcp fd closed\n");
 #ifdef _WIN32
 	  closesocket(data->net.udp.sock);
 	  closesocket(data->net.tcp.sock);
@@ -221,8 +223,6 @@ int	startGame(t_data *data, std::vector<menuItem> &items, Display &disp)
 	  close(data->net.tcp.sock);
 #endif
 	}
-      write(data->net.tcp.sock, "/r", 2);
-      fprintf(stdout, "tcp fd closed\n");
     }
   data->net.tcp.run = 0;
   data->net.udp.run_send = 0;
