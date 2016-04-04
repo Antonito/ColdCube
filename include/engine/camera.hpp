@@ -3,7 +3,7 @@
 
 # include <math.h>
 # include <stdio.h>
- # include "engine/misc.hpp"
+# include "engine/misc.hpp"
 
 using namespace glm;
 
@@ -12,7 +12,7 @@ class Camera
  public:
   Camera(const vec3& pos, float fov, float aspect, float zNear, float zFar)
     {
-      m_perspective = perspective(fov, aspect, zNear, zFar);
+      m_perspective = glm::perspective(fov, aspect, zNear, zFar);
       m_position = pos;
       m_rotation = vec2(0, 0);
       m_up = vec3(0, 0, 1);

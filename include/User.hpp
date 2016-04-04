@@ -9,6 +9,9 @@ public:
   User(t_player *player);
   ~User();
 
+  void		getDamage();
+  void		shoot();
+
 private:
   t_player	*m_player;
 };

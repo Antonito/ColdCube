@@ -64,14 +64,14 @@
 # ifdef _WIN32
 #  include <windows.h>
 # else
-# include <unistd.h>
-# include <stdio.h>
-# include <stdlib.h>
-# include <sys/types.h>
-# include <sys/stat.h>
-# include <stdint.h>
+#  include <unistd.h>
+#  include <sys/types.h>
+#  include <sys/stat.h>
 # endif
 
+# include <stdio.h>
+# include <stdlib.h>
+# include <stdint.h>
 # include <iostream>
 # include <istream>
 # include <math.h>
@@ -82,9 +82,10 @@
 # include "engine/display.hpp"
 # include "common_structs.hpp"
 
-int	engineMain(Display &, t_data *);
-void	setAzerty(t_keys *);
-void	setQwerty(t_keys *);
-void	free_game(t_data *);
+unsigned int	getDamage(int, int);
+int		engineMain(Display &, t_data *);
+void		setAzerty(t_keys *);
+void		setQwerty(t_keys *);
+void		free_game(t_data *);
 
 #endif	/* !GAME_H_ */

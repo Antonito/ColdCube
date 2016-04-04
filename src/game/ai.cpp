@@ -10,6 +10,10 @@ AI::~AI()
 {
 }
 
+void		AI::shootPlayer(void)
+{
+}
+
 void		AI::findPlayer(t_player *player)
 {
   glm::vec3	tmp3;
@@ -21,7 +25,8 @@ void		AI::findPlayer(t_player *player)
   while (++i < 10)
     {
       tmp3 = player[i].position;
-      if (glm::length(tmp3) <= glm::length(m_closestPlayer) && getEvent(player[i].events, CONNECTED))
+      if (glm::length(tmp3) <= glm::length(m_closestPlayer) &&
+	  getEvent(player[i].events, CONNECTED))
 	m_closestPlayer = tmp3;
     }
 }
@@ -34,5 +39,8 @@ void		AI::moveToPlayer()
 void		AI::updateAI(t_player *player)
 {
   findPlayer(player);
+  //Si joueur visible -> tirer
+  //shootPlayer();
+  //Sinon
   moveToPlayer();
 }

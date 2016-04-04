@@ -18,6 +18,14 @@
 # include "events.hpp"
 # include "Score.hpp"
 
+typedef enum		e_bodyHit
+  {
+    HEAD_HIT,
+    BODY_HIT,
+    ARM_HIT,
+    LEG_HIT
+  }			t_bodyHit;
+
 /*
 ** Network
 */

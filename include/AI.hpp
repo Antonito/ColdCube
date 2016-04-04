@@ -1,7 +1,6 @@
 #ifndef	AI_H_
 # define AI_H_
 
-# include "common_structs.hpp"
 # include "engine/player.hpp"
 
 class AI
@@ -10,8 +9,9 @@ public:
   AI(t_player *player);
   ~AI();
 
+  void		shootPlayer(void);
   void		findPlayer(t_player *player);
-  void		moveToPlayer();
+  void		moveToPlayer(void);
   void		updateAI(t_player *player);
 
 private:
