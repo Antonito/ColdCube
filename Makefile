@@ -28,6 +28,7 @@ ENGINE_FILES=		animation_player.cpp		\
 			load_shader.cpp			\
 			map.cpp				\
 			mesh.cpp			\
+			physic.cpp			\
 			player.cpp			\
 			shader.cpp			\
 			texture.cpp			\

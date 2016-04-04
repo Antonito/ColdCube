@@ -113,12 +113,12 @@ vec3 Player::GetCollisionMove(vec3 pos, vec3 move)
   return (pos);
 }
 
-void Player::Update(float time)
+void Player::Update(Map &map, float time)
 {
   this->Fall(time);
 
   vec3 move(m_move * m_speed * time, m_fall * time);
-  m_pos = GetCollisionMove(m_pos, move);
+  m_pos = GetFullCollision(map, m_pos, move);
   if (m_pos.z == 1.0)
     m_move *= 0.81;
   else

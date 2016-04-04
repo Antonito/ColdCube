@@ -24,9 +24,9 @@ Display::Display(int width, int height, const std::string& title)
   SDL_GL_SetAttribute(SDL_GL_BUFFER_SIZE, 32);
   SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
   SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-
+  //  SDL_GL_SetSwapInterval(1);
+  SDL_ShowCursor(0);
   SDL_SetRelativeMouseMode(SDL_TRUE);
-  SDL_ShowCursor(SDL_DISABLE);
   m_window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN);
   m_glContext = SDL_GL_CreateContext(m_window);
 
@@ -42,6 +42,14 @@ Display::Display(int width, int height, const std::string& title)
   // glEnable(LIGHTING);
   // glEnable(LIGHT0);
   glCullFace(GL_BACK);
+    SDL_DisplayMode d;
+  // SDL_GetCurrentDisplayMode(0, &d);
+  // // d.format = SDL_PIXELFORMAT_ARGB8888;
+  // // d.w = 1920;
+  // // d.h = 1080;
+  // d.refresh_rate = 40;
+  // // d.driverdata = 0;
+  // SDL_SetWindowDisplayMode(m_window, &d);
 }
 
 Display::~Display()
@@ -66,7 +74,7 @@ void	Display::Update(Camera &cam, Map &map, Player &player,
 			t_data *data)
 {
   SDL_GL_SwapWindow(m_window);
-  usleep(16650);
+  usleep(15800);
   static		int cur(0), old(0), tot(0), nb(0);
   cur = SDL_GetTicks();
   int			t = cur - old + 1;
@@ -98,7 +106,6 @@ void	Display::Update(Camera &cam, Map &map, Player &player,
 	      eventKey[KEY_S] = true;
 	      break ;
 	    case (SDLK_SPACE):
-	      if (player.GetPos().z == 1.0)
 		eventKey[KEY_SPACE] = true;
 	      break ;
 	      // case (SDLK_q):
@@ -109,6 +116,9 @@ void	Display::Update(Camera &cam, Map &map, Player &player,
 	      //   break ;
 	    case (SDLK_ESCAPE):
 	      m_isClosed = true;
+	      break ;
+	    case (SDLK_p):
+	      player.Jump();
 	      break ;
 	    case (SDLK_F1):
 	      map.PutCube(1, ivec3(cam.GetPos() + cam.GetFor() * 2.0f));
@@ -168,9 +178,9 @@ void	Display::Update(Camera &cam, Map &map, Player &player,
     player.Move(vec2(cam.GetFor().x, cam.GetFor().y));
   else if (eventKey[KEY_S])
     player.Move(-vec2(cam.GetFor().x, cam.GetFor().y));
-  if (eventKey[KEY_SPACE])
+  if (eventKexy[KEY_SPACE])
     player.Jump();
-  player.Update(dTime);
+  player.Update(map, dTime);
   player.SetCam(cam, player.GetThird(), data->players + player.GetId());
 }
 

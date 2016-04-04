@@ -22,8 +22,8 @@ int	engineMain(Display &display, t_data *data)
   Shader	shader("shaders/test1");
 
   Map		map("map");
-  Player	player(vec3(10, 5, 1), 90, &map, data->net.playerIndexUdp);
-  Camera camera(glm::vec3(0, 0, 10), 70.0f, (float)WIN_X / WIN_Y, 0.01f, 500.0f);
+  Player	player(vec3(10, 5, 2), 90, &map, data->net.playerIndexUdp);
+  Camera camera(glm::vec3(10, 5, 10), 70.0f, (float)WIN_X / WIN_Y, 0.01f, 500.0f);
   Transform transform;
   int		fps = 0;
   int		t = time(NULL);
@@ -33,14 +33,12 @@ int	engineMain(Display &display, t_data *data)
   int	count(1), tot(0);
   vec2	lastPos[10] = {vec2(0, 0)};
 
-  // float		lights[120] =
-  //   {2, 0, 0, 0,  5, 7, 4, 400.0,
-  //    30, 40, 5, 10};
+  vec3		light(10, 10, 5);
 
   i = 0;
   while (i < 10)
     {
-      data->players[i].position = vec3(0, 0, 1);
+      data->players[i].position = vec3(0, -1, 2);
       data->players[i].direction = vec3(0, 1, 0);
       i++;
     }
@@ -60,7 +58,7 @@ int	engineMain(Display &display, t_data *data)
 
       shader.Bind();
 
-      shader.Update(transform, camera);
+      shader.Update(transform, camera, &light);
       display.Clear(0.0f, 0.3f, 0.8f, 1.0f);
       transform.GetPos() = vec3(0, 0, 0);
       map.Draw();
