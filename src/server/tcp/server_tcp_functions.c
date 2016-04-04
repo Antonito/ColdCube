@@ -34,6 +34,7 @@ void		tcps_cli_add(t_all *all)
 	{
 	  all->tcp->cli_sock[i] = all->tcp->tmp_sock;
 	  all->connected[i] = 1;
+	  all->timeout[i] = 1;
 	  write(all->tcp->tmp_sock, "ok", 2);
 	  fprintf(stdout, "tcp client tmp_sock added");
 	  break;
