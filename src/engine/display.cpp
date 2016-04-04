@@ -25,14 +25,12 @@ Display::Display(int width, int height, const std::string& title)
   SDL_GL_SetAttribute(SDL_GL_BUFFER_SIZE, 32);
   SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
   SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-  //  SDL_GL_SetSwapInterval(1);
 
   m_window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN);
   m_glContext = SDL_GL_CreateContext(m_window);
-  // while (SDL_ShowCursor(-1))
-  //   SDL_ShowCursor(0);
   SDL_SetRelativeMouseMode(SDL_TRUE);
- GLenum status = glewInit();
+
+  GLenum status = glewInit();
   if (status != GLEW_OK)
     {
       std::cerr << "Glew failed to init!" << std::endl;
@@ -41,8 +39,6 @@ Display::Display(int width, int height, const std::string& title)
   m_isClosed = false;
   glEnable(GL_DEPTH_TEST);
   glEnable(GL_CULL_FACE);
-  // glEnable(LIGHTING);
-  // glEnable(LIGHT0);
   glCullFace(GL_BACK);
 }
 
@@ -212,6 +208,8 @@ int	startGame(t_data *data, std::vector<menuItem> &items, Display &disp)
     setQwerty(&data->config.keys);
   else if (data->config.keyboard == AZERTY_MODE)
     setAzerty(&data->config.keys);
+  data->config.musicVolume = items[8].value;
+  data->config.effectsVolume = items[9].value;
   data->net.port = atoi(items[3].text.c_str());
   data->net.ip = (char *)items[2].text.c_str();
   data->net.pseudo = (char *)items[1].text.c_str();
@@ -242,6 +240,8 @@ int	startGame(t_data *data, std::vector<menuItem> &items, Display &disp)
 	{
 	  printf("UDP OK\n");
 	  engineMain(disp, data);
+	  write(data->net.tcp.sock, "/r", 2);
+	  fprintf(stdout, "tcp fd closed\n");
 #ifdef _WIN32
 	  closesocket(data->net.udp.sock);
 	  closesocket(data->net.tcp.sock);
@@ -250,8 +250,6 @@ int	startGame(t_data *data, std::vector<menuItem> &items, Display &disp)
 	  close(data->net.tcp.sock);
 #endif
 	}
-      write(data->net.tcp.sock, "/r", 2);
-      fprintf(stdout, "tcp fd closed\n");
     }
   data->net.tcp.run = 0;
   data->net.udp.run_send = 0;
@@ -356,7 +354,13 @@ void			Display::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
 		items[menu->currentItem].text.erase(items[menu->currentItem].text.length() - 1);
 	    }
 	  else if (items[0].type && menu->currentItem == LEFT_BOTTOM && event.key.keysym.sym == SDLK_RETURN)
-	    loginMenu(items);
+	    {
+	      loginMenu(items);
+	    }
+	  else if (!items[0].type && menu->currentItem == LEFT_BOTTOM && event.key.keysym.sym == SDLK_RETURN)
+	    {
+	      data->game.running = false;
+	    }
 	  else if (items[0].type && menu->currentItem == RIGHT_MIDDLE && event.key.keysym.sym == SDLK_RETURN) {
 	    if (items[4].text == "AZERTY mode")
 	      {
@@ -380,14 +384,14 @@ void			Display::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
 		data->config.oculus = true;
 	      }
 	  } else if (event.key.keysym.sym == SDLK_RETURN &&
-	      !items[0].type && menu->currentItem == LEFT_MIDDLE)
+		     !items[0].type && menu->currentItem == LEFT_MIDDLE)
 	    optionMenu(items);
 	  else if (event.key.keysym.sym == SDLK_RETURN &&
-	      items[menu->currentItem].type == MENU_TEXTINPUT)
+		   items[menu->currentItem].type == MENU_TEXTINPUT)
 	    menu->hold();
 	  else if (event.key.keysym.sym == SDLK_RETURN &&
-	      (menu->currentItem == 3 || menu->currentItem == RIGHT_MIDDLE) &&
-	      !items[0].type)
+		   (menu->currentItem == 3 || menu->currentItem == RIGHT_MIDDLE) &&
+		   !items[0].type)
 	    {
 	      menu->hold();
 	      //Initilisation
@@ -396,12 +400,8 @@ void			Display::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
 	    }
 	  if (event.key.keysym.sym == SDLK_RETURN &&
 	      items[0].type && menu->currentItem == LEFT_BOTTOM)
-	    loginMenu(items);
-	  if (event.key.keysym.sym == SDLK_RETURN &&
-	      !items[0].type && menu->currentItem == LEFT_BOTTOM)
 	    {
-	      data->game.running = false;
-	      break;
+	      loginMenu(items);
 	    }
 	  if (event.key.keysym.sym == SDLK_DOWN)
 	    {

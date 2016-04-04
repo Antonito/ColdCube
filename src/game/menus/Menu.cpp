@@ -12,7 +12,7 @@ Menu::Menu(SDL_Surface *screen, std::vector<menuItem> *items) {
   this->screen = screen;
   this->currentItem = 0;
   TTF_Init();
-  this->font = TTF_OpenFont("assets/fonts/menu.ttf", 50 / WIN_RATIO);
+  this->font = TTF_OpenFont(FONT_PATH, (int)(50 / WIN_RATIO - 1));
 #ifdef	DEBUG
   printf("Font = %p %s\n", this->font, TTF_GetError());
 #endif
@@ -128,6 +128,8 @@ void Menu::moveNext() {
 
 static void	updateSlider(SDL_Rect *pos, SDL_Surface *slider_bar, SDL_Surface *slider_cur, SDL_Surface *screen, std::vector<menuItem> &items, int index)
 {
+  SDL_Rect	origin = *pos;
+
   pos->y += 75 / WIN_RATIO;
   SDL_BlitSurface(slider_bar, NULL, screen, pos);
   pos->y -= 12 / WIN_RATIO;
@@ -135,6 +137,7 @@ static void	updateSlider(SDL_Rect *pos, SDL_Surface *slider_bar, SDL_Surface *sl
   SDL_BlitSurface(slider_cur, NULL, screen, pos);
   pos->x -= (float)(slider_bar->w - slider_cur->w) * (float)(items)[index].value / 100.0;
   pos->y -= (75 - 12) / WIN_RATIO;
+  *pos = origin;
 }
 
 void Menu::draw() {
@@ -175,7 +178,7 @@ void Menu::draw() {
     }
 
   SDL_FreeSurface(text);
-  pos.x += (int)(660 / WIN_RATIO) + ((7 - (*this->items)[2].text.length()) * 15);
+  pos.x += (int)(660 / WIN_RATIO) + ((7 - (*this->items)[2].text.length()) * (int)(15 / WIN_RATIO));
   text = TTF_RenderUTF8_Blended(this->font, (*this->items)[2].text.c_str(), this->currentItem == 2 ? selected : color);
   SDL_BlitSurface(text, NULL, this->screen, &pos);
   SDL_FreeSurface(text);
@@ -184,7 +187,7 @@ void Menu::draw() {
       updateSlider(&pos, slider_bar, slider_cur, this->screen, *this->items, 2);
     }
 
-  pos.x -= (7 - (*this->items)[2].text.length()) * 15 - (7 - (*this->items)[3].text.length()) * 15;
+  pos.x -= (7 - (*this->items)[2].text.length()) * (int)(15 / WIN_RATIO) - (7 - (*this->items)[3].text.length()) * (int)(15 / WIN_RATIO);
   pos.y += 350 / WIN_RATIO;
   text = TTF_RenderUTF8_Blended(this->font, (*this->items)[3].text.c_str(), this->currentItem == 3 ? selected : color);
   SDL_BlitSurface(text, NULL, this->screen, &pos);
@@ -194,7 +197,7 @@ void Menu::draw() {
       updateSlider(&pos, slider_bar, slider_cur, this->screen, *this->items, 3);
     }
 
-  pos.x -= ((7 - (*this->items)[3].text.length()) * 15 - 20);
+  pos.x -= ((7 - (*this->items)[3].text.length()) * (int)(15 / WIN_RATIO) - 20);
   pos.y -= 170 / WIN_RATIO;
   text = TTF_RenderUTF8_Blended(this->font, (*this->items)[4].text.c_str(), this->currentItem == 4 ? selected_red : light);
   SDL_BlitSurface(text, NULL, this->screen, &pos);
@@ -208,7 +211,7 @@ void Menu::draw() {
   text = TTF_RenderUTF8_Blended(this->font, (*this->items)[5].text.c_str(), this->currentItem == 5 ? selected_red : light);
   SDL_BlitSurface(text, NULL, this->screen, &pos);
   SDL_FreeSurface(text);
-  pos.x += 130 + (*this->items)[0].type * (50 / WIN_RATIO);
+  pos.x += (int)(130 / WIN_RATIO) + (*this->items)[0].type * (50 / WIN_RATIO);
   pos.y += 170 / WIN_RATIO;
   text = TTF_RenderUTF8_Blended(this->font, (*this->items)[6].text.c_str(), this->currentItem == 6 ? selected : color);
   SDL_BlitSurface(text, NULL, this->screen, &pos);
