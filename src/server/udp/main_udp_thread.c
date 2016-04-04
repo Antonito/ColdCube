@@ -3,39 +3,33 @@
 
 void		*main_udp_thread(void *data)
 {
-  t_udps	udp;
-  int		port;
+  t_all		*all;
 
-  udp_init_zero_pseudo(&udp);
-  udp.nb_actual = 0;
-  if ((port = *(int *)data) < 1024)
+  all = (t_all *)data;
+  if ((all->udp = malloc(sizeof(t_udps))) == NULL)
+    return (NULL);
+  if ((all->udp->port = all->port + 1) < 1024)
     return ((void *)0);
-  if ((udp.main_sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == -1)
+  if ((all->udp->main_sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == -1)
     {
       fprintf(stderr, "Cannot create socket\n");
       return ((void *)0);
     }
-  udp.my_addr.sin_family = AF_INET;
-  printf("The port used = %d\n", port);
-  udp.my_addr.sin_port = htons(port);
-  udp.my_addr.sin_addr.s_addr = htonl(INADDR_ANY);
-  udp.my_addrl = sizeof(udp.my_addr);
-  if (bind(udp.main_sock, (struct sockaddr *)&udp.my_addr, udp.my_addrl) == -1)
+  all->udp->my_addr.sin_family = AF_INET;
+  printf("The port used = %d\n", all->udp->port);
+  all->udp->my_addr.sin_port = htons(all->udp->port);
+  all->udp->my_addr.sin_addr.s_addr = htonl(INADDR_ANY);
+  all->udp->my_addrl = sizeof(all->udp->my_addr);
+  if (bind(all->udp->main_sock, (struct sockaddr *)&all->udp->my_addr, all->udp->my_addrl) == -1)
     {
       fprintf(stderr, "Cannot bind on main socket\n");
       return ((void *)0);
     }
-  port = -1;
-  while (++port < 10)
-    {
-      udp.connected[port] = 0;
-      udp.timeout[port] = 0;
-    }
-  udp_thread(&udp);
+  udp_thread(all);
   return ((void *)0);
 }
 
-void			udp_thread(t_udps *udp)
+void			udp_thread(t_all *all)
 {
   int			len;
   int			go;
@@ -43,22 +37,16 @@ void			udp_thread(t_udps *udp)
   time_t		diffout;
   struct timeval	t1;
 
-  udp->action = 1;
-  udp->cli_addrl = sizeof(udp->tmp_sock);
-  udp->nb_actual = 0;
+  all->udp->action = 1;
+  all->udp->cli_addrl = sizeof(all->udp->tmp_sock);
   z1 = time(NULL);
-  while (udp->action)
+  while (all->udp->action)
   {
-    if (udp->ms.tv_usec == 0)
-      {
-	udp->ms.tv_sec = 0;
-	udp->ms.tv_usec = 1700;
-      }
-    FD_ZERO(&udp->readfds);
-    FD_SET(udp->main_sock, &udp->readfds);
+    FD_ZERO(&all->udp->readfds);
+    FD_SET(all->udp->main_sock, &all->udp->readfds);
     z2 = time(NULL);
     diffout = z2 - z1;
-    go = select(udp->main_sock + 1, &udp->readfds, NULL, NULL, NULL);
+    go = select(all->udp->main_sock + 1, &all->udp->readfds, NULL, NULL, NULL);
     if (go == -1)
       {
 	fprintf(stderr, "Error select\n");
@@ -66,22 +54,22 @@ void			udp_thread(t_udps *udp)
     gettimeofday(&t1, NULL);
     if (t1.tv_usec % 15000)
       {
-	udps_send_to_all(udp);
+	udps_send_to_all(all);
 	gettimeofday(&t1, NULL);
       }
     if (diffout >= 5)
       {
-	udps_check_timeout(udp);
+	udps_check_timeout(all);
 	z1 = time(NULL);
       }
-    if (FD_ISSET(udp->main_sock, &udp->readfds))
+    if (FD_ISSET(all->udp->main_sock, &all->udp->readfds))
       {
-	FD_CLR(udp->main_sock, &udp->readfds);
-	if ((len = recvfrom(udp->main_sock,
-			    udp->buff, 42, 0,
-			    (struct sockaddr *)&udp->tmp_sock, (socklen_t *)&udp->cli_addrl)) > 0)
+	FD_CLR(all->udp->main_sock, &all->udp->readfds);
+	if ((len = recvfrom(all->udp->main_sock,
+			    all->udp->buff, 42, 0,
+			    (struct sockaddr *)&all->udp->tmp_sock, (socklen_t *)&all->udp->cli_addrl)) > 0)
 	  {
-	    server_check_msg_udp(udp);
+	    server_check_msg_udp(all);
 	  }
 	else
 	  {
@@ -92,35 +80,31 @@ void			udp_thread(t_udps *udp)
   write(1, "CLOSED\n", 7);
 }
 
-void		server_check_msg_udp(t_udps *udp)
+void		server_check_msg_udp(t_all *all)
 {
   int		i;
   char		tmp[2];
 
-  if (strncmp(udp->buff, "/add", 4) == 0)
+  if (strncmp(all->udp->buff, "/add", 4) == 0)
     {
-      i = -1;
-      while (udp->connected[++i] == 1);
-      udp->connected[i] = 1;
-      if (udp_server_add_pseudo(udp, &udp->buff[5], i) == -1)
+      if ((i = tcp_get_pseudo_index(all, &all->udp->buff[5])) == -1)
 	{
-	  sendto(udp->main_sock, "/r", 2, 0,
-		(struct sockaddr *)&udp->tmp_sock, udp->cli_addrl);
-	  udp->connected[i] = 0;
-	  printf("PIPIPIPI\n");
+	  sendto(all->udp->main_sock, "/r", 2, 0,
+		(struct sockaddr *)&all->udp->tmp_sock, all->udp->cli_addrl);
+	  printf("\nwe cannot find him to pseudo DB\nwith %s\n", &all->udp->buff[5]);
 	  return ;
 	}
-      sprintf(tmp, "%d", udp->nb_actual);
-      sendto(udp->main_sock, tmp, 1, 0,
-	     (struct sockaddr *)&udp->tmp_sock, udp->cli_addrl);
-      udp->cli_sock[i] = udp->tmp_sock;
-      udp->timeout[i] = 1;
-      udp->nb_actual += 1;
-      printf("POPOPOPOPO\n");
+      tmp[0] = (char)i;
+      tmp[1] = 0;
+      sendto(all->udp->main_sock, tmp, 1, 0,
+	     (struct sockaddr *)&all->udp->tmp_sock, all->udp->cli_addrl);
+      all->udp->cli_sock[i] = all->udp->tmp_sock;
+      all->timeout[i] = 1;
+      printf("all functionnal\n");
     }
   else
     {
-      i = udp->buff[0];
-      set_cli_buff(udp, i);
+      i = all->udp->buff[0];
+      set_cli_buff(all, i);
     }
 }
