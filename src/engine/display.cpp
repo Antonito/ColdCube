@@ -327,7 +327,13 @@ void			Display::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
 		items[menu->currentItem].text.erase(items[menu->currentItem].text.length() - 1);
 	    }
 	  else if (items[0].type && menu->currentItem == LEFT_BOTTOM && event.key.keysym.sym == SDLK_RETURN)
-	    loginMenu(items);
+	    {
+	      loginMenu(items);
+	    }
+	  else if (!items[0].type && menu->currentItem == LEFT_BOTTOM && event.key.keysym.sym == SDLK_RETURN)
+	    {
+	      data->game.running = false;
+	    }
 	  else if (items[0].type && menu->currentItem == RIGHT_MIDDLE && event.key.keysym.sym == SDLK_RETURN) {
 	    if (items[4].text == "AZERTY mode")
 	      {
@@ -351,14 +357,14 @@ void			Display::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
 		data->config.oculus = true;
 	      }
 	  } else if (event.key.keysym.sym == SDLK_RETURN &&
-	      !items[0].type && menu->currentItem == LEFT_MIDDLE)
+		     !items[0].type && menu->currentItem == LEFT_MIDDLE)
 	    optionMenu(items);
 	  else if (event.key.keysym.sym == SDLK_RETURN &&
-	      items[menu->currentItem].type == MENU_TEXTINPUT)
+		   items[menu->currentItem].type == MENU_TEXTINPUT)
 	    menu->hold();
 	  else if (event.key.keysym.sym == SDLK_RETURN &&
-	      (menu->currentItem == 3 || menu->currentItem == RIGHT_MIDDLE) &&
-	      !items[0].type)
+		   (menu->currentItem == 3 || menu->currentItem == RIGHT_MIDDLE) &&
+		   !items[0].type)
 	    {
 	      menu->hold();
 	      //Initilisation
@@ -367,12 +373,8 @@ void			Display::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
 	    }
 	  if (event.key.keysym.sym == SDLK_RETURN &&
 	      items[0].type && menu->currentItem == LEFT_BOTTOM)
-	    loginMenu(items);
-	  if (event.key.keysym.sym == SDLK_RETURN &&
-	      !items[0].type && menu->currentItem == LEFT_BOTTOM)
 	    {
-	      data->game.running = false;
-	      break;
+	      loginMenu(items);
 	    }
 	  if (event.key.keysym.sym == SDLK_DOWN)
 	    {
