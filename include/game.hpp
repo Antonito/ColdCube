@@ -11,6 +11,7 @@
 # endif
 
 # define WIN_TITLE			"ColdCube"
+# define FONT_PATH			"assets/fonts/menu.ttf"
 
 # if (WIN_X == 1280)
 #  define WIN_RATIO			1.50

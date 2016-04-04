@@ -12,7 +12,7 @@ Menu::Menu(SDL_Surface *screen, std::vector<menuItem> *items) {
   this->screen = screen;
   this->currentItem = 0;
   TTF_Init();
-  this->font = TTF_OpenFont("assets/fonts/menu.ttf", (int)(50 / WIN_RATIO - 1));
+  this->font = TTF_OpenFont(FONT_PATH, (int)(50 / WIN_RATIO - 1));
 #ifdef	DEBUG
   printf("Font = %p %s\n", this->font, TTF_GetError());
 #endif
