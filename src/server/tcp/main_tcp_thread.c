@@ -2,101 +2,106 @@
 
 void		*main_tcp_thread(void *data)
 {
-  t_tcps	tcp;
+  t_all		*all;
   int		i;
 
-  memset(&tcp, 0, sizeof(t_tcps));
+  all = (t_all *)data;
+  if ((all->tcp = malloc(sizeof(t_tcps))) == NULL)
+    return (NULL);
+  memset(all->tcp, 0, sizeof(t_tcps));
   i = 1;
-  if ((tcp.main_sock = socket(AF_INET, SOCK_STREAM, 0)) < 1)
+  if ((all->tcp->main_sock = socket(AF_INET, SOCK_STREAM, 0)) < 1)
     {
       fprintf(stderr, "cannot create socket\n");
       return ((void *)0);
     }
-  if (setsockopt(tcp.main_sock, SOL_SOCKET, SO_REUSEADDR, (char *)&i, sizeof(i)) != 0)
+  if (setsockopt(all->tcp->main_sock, SOL_SOCKET, SO_REUSEADDR, (char *)&i, sizeof(i)) != 0)
     {
       fprintf(stderr, "cannot handle multiple client at the same time\n");
       return ((void *)0);
     }
-  tcp.my_addr.sin_family = AF_INET;
-  tcp.my_addr.sin_addr.s_addr = INADDR_ANY;
-  if ((tcp.port = *(int *)data) < 1024)
+  all->tcp->my_addr.sin_family = AF_INET;
+  all->tcp->my_addr.sin_addr.s_addr = INADDR_ANY;
+  if ((all->tcp->port = all->port) < 1024)
     return ((void *)0);
-  tcp.my_addr.sin_port = htons(tcp.port);
-  if (bind(tcp.main_sock, (struct sockaddr *)&tcp.my_addr, sizeof(tcp.my_addr)) != 0)
+  all->tcp->my_addr.sin_port = htons(all->tcp->port);
+  if (bind(all->tcp->main_sock, (struct sockaddr *)&all->tcp->my_addr, sizeof(all->tcp->my_addr)) != 0)
     {
       fprintf(stderr, "Cannot bind socket :(\n");
       return ((void *)0);
     }
-  if (listen(tcp.main_sock, 2) != 0)
+  if (listen(all->tcp->main_sock, 2) != 0)
     {
       fprintf(stderr, "error pending 2 client at the same time\n");
       return ((void *)0);
     }
-  tcp.my_addrl = sizeof(tcp.my_addr);
-  tcp.run = 1;
-  init_tcps_cli(&tcp);
-  tcp.nb_actual = 0;
-  tcp_thread(&tcp);
+  all->tcp->my_addrl = sizeof(all->tcp->my_addr);
+  all->tcp->run = 1;
+  init_tcps_cli(all->tcp);
+  all->nb_actual = 0;
+  tcp_thread(all);
   return ((void *)0);
 }
 
-void		tcp_thread(t_tcps *tcp)
+void		tcp_thread(t_all *all)
 {
-  fprintf(stdin, "init server done, waiting for client...\n");
-  while (tcp->run)
+  fprintf(stdout, "init server done, waiting for client...\n");
+  while (all->tcp->run)
     {
-      FD_ZERO(&tcp->readfds);
-      FD_SET(tcp->main_sock, &tcp->readfds);
-      tcp->max_fd = tcp->main_sock;
-      set_max_fd(tcp);
-      if ((tcp->action = select(tcp->max_fd + 1, &tcp->readfds, NULL, NULL, NULL)) == -1)
+      FD_ZERO(&all->tcp->readfds);
+      FD_SET(all->tcp->main_sock, &all->tcp->readfds);
+      all->tcp->max_fd = all->tcp->main_sock;
+      set_max_fd(all->tcp);
+      if ((all->tcp->action = select(all->tcp->max_fd + 1, &all->tcp->readfds, NULL, NULL, NULL)) == -1)
 	{
 	  fprintf(stderr, "error with select:(\n");
 	  return ;
 	}
-      if (FD_ISSET(tcp->main_sock, &tcp->readfds))
+      if (FD_ISSET(all->tcp->main_sock, &all->tcp->readfds))
 	{
-	  if ((tcp->tmp_sock = accept(tcp->main_sock,
-				      (struct sockaddr *)&tcp->my_addr,
-				      (socklen_t *)&tcp->my_addrl)) == -1)
+	  if ((all->tcp->tmp_sock = accept(all->tcp->main_sock,
+				      (struct sockaddr *)&all->tcp->my_addr,
+				      (socklen_t *)&all->tcp->my_addrl)) == -1)
 	    {
 	      fprintf(stderr, "error accpet new client\n");
+	      continue;
 	    }
-	  fprintf(stderr, "new client connected\n");
-	  tcp->nb_actual += 1;
-	  tcps_cli_add(tcp);
+	  fprintf(stderr, "new client incomming\n");
+	  tcps_cli_add(all);
 	}
-      server_check_msg_tcp(tcp);
-      memset(tcp->buff, 0, 210);
+      server_check_msg_tcp(all);
+      memset(all->tcp->buff, 0, 210);
     }
   fprintf(stdout, "QUITTING\n");
 }
 
-void		server_check_msg_tcp(t_tcps *tcp)
+void		server_check_msg_tcp(t_all *all)
 {
   int		i;
   int		len;
 
   i = -1;
-  while (++i < tcp->nb_actual)
+  while (++i < 10)
     {
-      if (FD_ISSET(tcp->cli_sock[i], &tcp->readfds))
+      if (all->connected[i] == 0)
+	continue;
+      if (FD_ISSET(all->tcp->cli_sock[i], &all->tcp->readfds))
 	  {
-	    if ((len = read(tcp->cli_sock[i], tcp->buff, TCP_READ)) == 0)
+	    if ((len = read(all->tcp->cli_sock[i], all->tcp->buff, TCP_READ)) == 0)
 	      {
 		fprintf(stdout, "client disconnected\n");
-		close(tcp->cli_sock[i]);
-		tcps_remove_sock(tcp, i);
-		tcp_server_remove_pseudo_str(tcp, tcp->pseudo[i]);
-		tcp->nb_actual -= 1;
+		close(all->tcp->cli_sock[i]);
+		all->tcp->cli_sock[i] = 0;
+		all->nb_actual -= 1;
+		all->connected[i] = 0;
 	      }
 	    else
 	      {
 		/*we got a MSG here */
-		fprintf(stdout, "we got a massage here\n");
-		tcp->buff[len] = '\0';
-		fprintf(stdout, ":%s:\n", tcp->buff);
-		tcps_check_received(tcp, i);
+		fprintf(stdout, "we got a message here\n");
+		all->tcp->buff[len] = '\0';
+		fprintf(stdout, ":%s:\n", all->tcp->buff);
+		tcps_check_received(all, i);
 	      }
 	  }
     }
