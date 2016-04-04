@@ -18,6 +18,12 @@
 # include "events.hpp"
 # include "Score.hpp"
 
+typedef enum		e_state
+  {
+    PRESSED,
+    UNPRESSED
+  }			e_state;
+
 typedef enum		e_bodyHit
   {
     HEAD_HIT,
@@ -61,43 +67,9 @@ typedef	struct		s_network
 }			t_network;
 
 /*
-** Objects
-*/
-typedef struct		s_objects
-{
-  struct s_objects	*next;
-  struct s_objects	*prev;
-}			t_objects;
-
-/*
 ** Map
 */
 typedef glm::vec3	vector3;
-
-typedef	struct		s_cube
-{
-  unsigned int		r : 2;
-  unsigned int		g : 2;
-  unsigned int		b : 2;
-  unsigned int		a : 2;
-}			t_cube ;
-
-typedef struct		s_block
-{
-  t_cube		cube;
-  unsigned char		byte;
-}			t_block;
-
-typedef	struct		s_chunk
-{
-  t_block		block[16 * 16 * 16];
-}			t_chunk;
-
-typedef	struct		s_map
-{
-  t_chunk		chunks[256];
-  vector3		spawn[16];
-}			t_map;
 
 /*
 ** Weapons
@@ -123,19 +95,6 @@ typedef struct		s_weapon
 /*
 ** Interface
 */
-typedef	struct		s_interface
-{
-  bool			chat_toggle;
-}			t_interface;
-
-/*
-** Player_Local eventuellement useless
-*/
-typedef struct		s_player_local
-{
-  vector3      		move;
-}			t_player_local;
-
 typedef	struct		s_player
 {
   int			id; /* Le serveur defini l'id du joueur*/
@@ -146,7 +105,6 @@ typedef	struct		s_player
   vector3		position;
   vector3		direction;
   uint32_t		events;
-  t_player_local	local;
 }			t_player;
 
 /*
@@ -187,13 +145,10 @@ typedef struct		s_config
 typedef	struct		s_data
 {
   t_player		players[10];
-  t_map			map;
-  t_objects		*obj;
-  t_interface		interface;
   t_game		game;
   t_network		net;
   t_config		config;
   char			sounds[];
 }			t_data;
 
-#endif /* !COMMON_STRUCTS_H_ */
+#endif // !COMMON_STRUCTS_H_

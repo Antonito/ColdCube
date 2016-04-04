@@ -183,6 +183,8 @@ int	startGame(t_data *data, std::vector<menuItem> &items, Display &disp)
     setQwerty(&data->config.keys);
   else if (data->config.keyboard == AZERTY_MODE)
     setAzerty(&data->config.keys);
+  data->config.musicVolume = items[8].value;
+  data->config.effectsVolume = items[9].value;
   data->net.port = atoi(items[3].text.c_str());
   data->net.ip = (char *)items[2].text.c_str();
   data->net.pseudo = (char *)items[1].text.c_str();

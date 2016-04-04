@@ -2,6 +2,7 @@
 # define AI_H_
 
 # include "engine/player.hpp"
+# include "events.hpp"
 
 class AI
 {
@@ -9,6 +10,7 @@ public:
   AI(t_player *player);
   ~AI();
 
+  bool		isBot(uint32_t events) {return (!getEvent(events, CONNECTED));};
   void		shootPlayer(void);
   void		findPlayer(t_player *player);
   void		moveToPlayer(void);

@@ -1,5 +1,7 @@
 #include "AI.hpp"
 
+//Retarded AI version 1.0
+
 AI::AI(t_player *player)
 {
   m_player = player;
@@ -31,7 +33,7 @@ void		AI::findPlayer(t_player *player)
     }
 }
 
-void		AI::moveToPlayer()
+void		AI::moveToPlayer(void)
 {
   m_model.Move(glm::normalize(glm::vec2(m_closestPlayer.x, m_closestPlayer.y)));
 }
