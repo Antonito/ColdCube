@@ -26,10 +26,9 @@ Display::Display(int width, int height, const std::string& title)
   SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
   SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
-  SDL_SetRelativeMouseMode(SDL_TRUE);
-  SDL_ShowCursor(SDL_DISABLE);
   m_window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN);
   m_glContext = SDL_GL_CreateContext(m_window);
+  SDL_SetRelativeMouseMode(SDL_TRUE);
 
   GLenum status = glewInit();
   if (status != GLEW_OK)
