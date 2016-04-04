@@ -83,7 +83,7 @@ typedef struct		s_all
 void		udps_send_to_all(t_all *);
 void		set_cli_buff(t_all *, int);
 void		udps_check_timeout(t_all *);
-void		udp_send_disconnect(t_udps *, char);
+void		udp_send_disconnect(t_all *, char);
 
 /* src/server/udp/udp_server_pseudo.c */
 void		udp_init_zero_pseudo(t_udps *);

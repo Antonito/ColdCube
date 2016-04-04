@@ -5,7 +5,7 @@
 ** Login   <troncy_l@epitech.net>
 **
 ** Started on  Mon Mar 07 16:48:42 2016 Lucas Troncy
-// Last update Mon Apr 04 22:55:44 2016 Lucas Troncy
+// Last update Mon Apr 04 23:44:54 2016 Lucas Troncy
 */
 
 #ifdef _WIN32
@@ -94,7 +94,7 @@ int		clientLaunchUdpc(t_data *data)
       return (-1);
     }
   printf("before recv ID\n");
-  recvfrom(data->net.udp.sock, tmp, 1, 0,
+  recvfrom(data->net.udp.sock, tmp, 3, 0,
 	  (struct sockaddr *)&data->net.udp.to_serv, (socklen_t *)&len);
   printf("After recv ID\n");
   data->net.playerIndexUdp = atoi(tmp);

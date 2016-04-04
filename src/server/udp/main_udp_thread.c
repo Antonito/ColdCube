@@ -84,7 +84,7 @@ void			udp_thread(t_all *all)
 void		server_check_msg_udp(t_all *all)
 {
   int		i;
-  char		tmp[2];
+  char		tmp[30] = {0};
 
   if (strncmp(all->udp->buff, "/add", 4) == 0)
     {
@@ -95,8 +95,7 @@ void		server_check_msg_udp(t_all *all)
 	  printf("\nwe cannot find him to pseudo DB\nwith %s\n", &all->udp->buff[5]);
 	  return ;
 	}
-      tmp[0] = (char)i;
-      tmp[1] = 0;
+      sprintf(tmp, "%c", (char)i);
       sendto(all->udp->main_sock, tmp, 1, 0,
 	     (struct sockaddr *)&all->udp->tmp_sock, all->udp->cli_addrl);
       all->udp->cli_sock[i] = all->udp->tmp_sock;

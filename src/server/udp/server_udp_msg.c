@@ -43,7 +43,7 @@ void		udps_check_timeout(t_all *all)
       if (all->timeout[i] == 0 && all->connected[i] == 1)
 	{
 	  fprintf(stdout, "client %s timedout !\n", all->pseudo[i]);
-	  udp_send_disconnect(all->udp, (char)i);
+	  udp_send_disconnect(all, (char)i);
 	  all->connected[i] = 0;
 	  all->nb_actual -= 1;
 	}
@@ -52,11 +52,12 @@ void		udps_check_timeout(t_all *all)
     }
 }
 
-void		udp_send_disconnect(t_udps *udp, char id)
+void		udp_send_disconnect(t_all *all, char id)
 {
   uint32_t	events;
   char		packet[42];
   int		i;
+  int		j;
   int		n;
   char		*tmp;
 
@@ -72,6 +73,18 @@ void		udp_send_disconnect(t_udps *udp, char id)
       ++i;
     }
   printf("SEND DISCONNECT\n");
-  /*sendto(udp->main_sock, packet, 42, 0,
-                 (struct sockaddr *)&udp->cli_sock[(int)id], udp->cli_addrl);*/
+  i = -1;
+  while (++i < 10)
+    {
+      if (all->connected[i] == 0)
+	continue;
+      j = -1;
+      while (++j < 10)
+	{
+	  if (all->connected[j] == 0)
+	    continue;
+	  sendto(all->udp->main_sock, packet, 42, 0,
+		(struct sockaddr *)&all->udp->cli_sock[(int)id], all->udp->cli_addrl);
+	}
+    }
 }
