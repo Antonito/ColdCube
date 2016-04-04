@@ -96,7 +96,9 @@ LIB=			-lstdc++			\
 			-lm				\
 			-lGLEW				\
 			-lglut				\
-			-lX11
+			-lX11				\
+			-lOVR				\
+			-ldl
 
 OBJ=			$(GAME:.cpp=.o)
 
