@@ -1,7 +1,7 @@
 #ifndef	GAME_H_
 # define GAME_H_
 
-# define RES				720
+# define RES				108
 # if (RES == 1080)
 #  define WIN_X				1920
 #  define WIN_Y				1080

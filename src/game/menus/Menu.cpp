@@ -161,7 +161,7 @@ void Menu::draw() {
     (*this->items)[2].text = "Server IP";
   if ((*this->items)[3].text == " " || (*this->items)[3].text == "|" || (*this->items)[3].text == "")
     (*this->items)[3].text = "Port";
-  pos.x = (WIN_X - (1408 / WIN_RATIO)) / 2;
+  pos.x = (WIN_X - (1408 / WIN_RATIO - 1)) / 2;
   pos.y = (WIN_Y - (540 / WIN_RATIO)) / 2;
   SDL_FillRect(this->screen, NULL, SDL_MapRGB(this->screen->format, 143, 45, 42));
   SDL_BlitSurface(menu, NULL, this->screen, &pos);
@@ -175,7 +175,7 @@ void Menu::draw() {
     }
 
   SDL_FreeSurface(text);
-  pos.x += (660 + (7 - (*this->items)[2].text.length()) * 15);
+  pos.x += (int)(660 / WIN_RATIO) + ((7 - (*this->items)[2].text.length()) * 15);
   text = TTF_RenderUTF8_Blended(this->font, (*this->items)[2].text.c_str(), this->currentItem == 2 ? selected : color);
   SDL_BlitSurface(text, NULL, this->screen, &pos);
   SDL_FreeSurface(text);
@@ -204,7 +204,7 @@ void Menu::draw() {
       updateSlider(&pos, slider_bar, slider_cur, this->screen, *this->items, 4);
     }
 
-  pos.x -= 700 + (*this->items)[0].type * (50 / WIN_RATIO);
+  pos.x -= (int)(700 / WIN_RATIO) + (*this->items)[0].type * (50 / WIN_RATIO);
   text = TTF_RenderUTF8_Blended(this->font, (*this->items)[5].text.c_str(), this->currentItem == 5 ? selected_red : light);
   SDL_BlitSurface(text, NULL, this->screen, &pos);
   SDL_FreeSurface(text);
