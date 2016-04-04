@@ -6,6 +6,20 @@
 #include <vector>
 #include <string>
 
+#ifndef MENU_TEXT
+# define MENU_TEXT 0
+# define MENU_TEXTINPUT 1
+# define MENU_CHECKBOX 3
+# define MENU_SLIDER 4
+#endif /* !MENU_TEXT */
+
+typedef enum	e_menuElem
+  {
+    RIGHT_MIDDLE	= 4,
+    LEFT_MIDDLE		= 5,
+    LEFT_BOTTOM		= 6
+  }		e_menuElem;
+
 typedef struct	s_Point
 {
   int	x;
@@ -15,7 +29,8 @@ typedef struct	s_Point
 struct menuItem
 {
   std::string text;
-  Point box[4];
+  int type;
+  short value;
   void (*ptToFunc)();
 };
 

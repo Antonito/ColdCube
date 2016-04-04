@@ -56,17 +56,20 @@ void Map::PutCube(unsigned char cube, ivec3 pos)
 
 unsigned char	Map::GetBlock(vec3 pos)
 {
-  ivec3 p((int)pos.x, (int)pos.y, (int)pos.z);
+  ivec3 p(pos);
   int	x;
   int	y;
   int	c;
 
+  if (p.x < 0 || p.y < 0)
+    return (0);
   x = p.x / 16;
   y = p.y / 16;
-  if (x < 0 || x > 7 || y < 0 || y > 7 || p.z < 1.0f || p.z > 16.0f)
+  if (x < 0 || x > 7 || y < 0 || y > 7 || p.z < 0.0f || p.z > 16.0f)
     return (0);
   c = x + 8 * y;
-  return (m_chunks[c].GetBlock(p.x % 16, p.y % 16, p.z));
+  unsigned char a = m_chunks[c].GetBlock(p.x % 16, p.y % 16, p.z);
+  return (a);
 }
 
 void Map::Save()

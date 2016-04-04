@@ -1,9 +1,31 @@
 #ifndef	GAME_H_
 # define GAME_H_
 
-# define WIN_X				1280
-# define WIN_Y				720
+# define RES				108
+# if (RES == 1080)
+#  define WIN_X				1920
+#  define WIN_Y				1080
+# else
+#  define WIN_X				1280
+#  define WIN_Y				720
+# endif
+
 # define WIN_TITLE			"ColdCube"
+
+# if (WIN_X == 1280)
+#  define WIN_RATIO			1.50
+#  define SLIDER_CURSOR			"./assets/imgs/menu/720/slider-cursor.png"
+#  define SLIDER_BAR			"./assets/imgs/menu/720/slider-bar.png"
+#  define MENU_BACKGROUND		"assets/imgs/menu/720/%s.bmp"
+#  define CURSOR_IMG			"assets/imgs/cursor720.bmp"
+# else
+#  define WIN_RATIO			1
+#  define SLIDER_CURSOR			"./assets/imgs/menu/slider-cursor.png"
+#  define SLIDER_BAR			"./assets/imgs/menu/slider-bar.png"
+#  define MENU_BACKGROUND		"assets/imgs/menu/%s.bmp"
+#  define CURSOR_IMG			"assets/imgs/cursor.bmp"
+# endif
+
 # define PLAYER_SIZE			0.9
 # define PLAYER_HEIGHT			1.8
 # define MAX_PSEUDO			20
@@ -61,6 +83,8 @@
 # include "common_structs.hpp"
 
 int	engineMain(Display &, t_data *);
+void	setAzerty(t_keys *);
+void	setQwerty(t_keys *);
 void	free_game(t_data *);
 
 #endif	/* !GAME_H_ */

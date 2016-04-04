@@ -23,6 +23,7 @@ class Player
   vec3 &GetPos() {return m_pos;};
   vec2 &GetRot() {return m_rot;};
 
+  bool	IsOnBlock();
   int	GetId() {return m_id;};
   void	FillCPlayer(t_player *p, vec3 dir);
   bool	&GetThird() {return m_third;};

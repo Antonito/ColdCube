@@ -30,7 +30,7 @@ int	main(int ac, char **av)
 	  return (1);
 	}
       /* height = rand() % 20 + 12; */
-      height = 10;
+      height = 16;
       printf("%s %d\n", filename, height);
       write(fd, &height, 4);
       total += 4;

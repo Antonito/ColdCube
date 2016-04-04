@@ -9,6 +9,7 @@
 #include "common_structs.hpp"
 #include "game.hpp"
 #include "tools.hpp"
+#include "Menu.h"
 
 Display::Display(int width, int height, const std::string& title)
 {
@@ -25,12 +26,13 @@ Display::Display(int width, int height, const std::string& title)
   SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
   SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
   //  SDL_GL_SetSwapInterval(1);
-  SDL_ShowCursor(0);
-  SDL_SetRelativeMouseMode(SDL_TRUE);
+
   m_window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN);
   m_glContext = SDL_GL_CreateContext(m_window);
-
-  GLenum status = glewInit();
+  // while (SDL_ShowCursor(-1))
+  //   SDL_ShowCursor(0);
+  SDL_SetRelativeMouseMode(SDL_TRUE);
+ GLenum status = glewInit();
   if (status != GLEW_OK)
     {
       std::cerr << "Glew failed to init!" << std::endl;
@@ -42,14 +44,6 @@ Display::Display(int width, int height, const std::string& title)
   // glEnable(LIGHTING);
   // glEnable(LIGHT0);
   glCullFace(GL_BACK);
-    SDL_DisplayMode d;
-  // SDL_GetCurrentDisplayMode(0, &d);
-  // // d.format = SDL_PIXELFORMAT_ARGB8888;
-  // // d.w = 1920;
-  // // d.h = 1080;
-  // d.refresh_rate = 40;
-  // // d.driverdata = 0;
-  // SDL_SetWindowDisplayMode(m_window, &d);
 }
 
 Display::~Display()
@@ -74,7 +68,7 @@ void	Display::Update(Camera &cam, Map &map, Player &player,
 			t_data *data)
 {
   SDL_GL_SwapWindow(m_window);
-  usleep(15800);
+   usleep(15800);
   static		int cur(0), old(0), tot(0), nb(0);
   cur = SDL_GetTicks();
   int			t = cur - old + 1;
@@ -105,8 +99,20 @@ void	Display::Update(Camera &cam, Map &map, Player &player,
 	    case (SDLK_s):
 	      eventKey[KEY_S] = true;
 	      break ;
+	    case (SDLK_q):
+	      eventKey[KEY_Q] = true;
+	      break ;
+	    case (SDLK_d):
+	      eventKey[KEY_D] = true;
+	      break ;
+	    case (SDLK_a):
+	      eventKey[KEY_A] = true;
+	      break ;
+	    case (SDLK_w):
+	      eventKey[KEY_W] = true;
+	      break ;
 	    case (SDLK_SPACE):
-		eventKey[KEY_SPACE] = true;
+	      eventKey[KEY_SPACE] = true;
 	      break ;
 	      // case (SDLK_q):
 	      //   player.GetPos() += normalize(vec3((cross(cam.GetFor(), vec3(0, 1, 0))).x, (cross(cam.GetFor(), vec3(0, 1, 0))).y, 0));
@@ -120,6 +126,8 @@ void	Display::Update(Camera &cam, Map &map, Player &player,
 	    case (SDLK_p):
 	      player.Jump();
 	      break ;
+#ifdef	DEBUG
+
 	    case (SDLK_F1):
 	      map.PutCube(1, ivec3(cam.GetPos() + cam.GetFor() * 2.0f));
 	      break ;
@@ -147,6 +155,7 @@ void	Display::Update(Camera &cam, Map &map, Player &player,
 	    case (SDLK_t):
 	      player.GetThird() = !player.GetThird();
 	      break ;
+#endif
 	    }
 	  break ;
 	case (SDL_KEYUP):
@@ -157,6 +166,18 @@ void	Display::Update(Camera &cam, Map &map, Player &player,
 	      break ;
 	    case (SDLK_s):
 	      eventKey[KEY_S] = false;
+	      break ;
+	    case (SDLK_q):
+	      eventKey[KEY_Q] = false;
+	      break ;
+	    case (SDLK_d):
+	      eventKey[KEY_D] = false;
+	      break ;
+	    case (SDLK_a):
+	      eventKey[KEY_A] = false;
+	      break ;
+	    case (SDLK_w):
+	      eventKey[KEY_W] = false;
 	      break ;
 	    case (SDLK_SPACE):
 	      eventKey[KEY_SPACE] = false;
@@ -174,11 +195,11 @@ void	Display::Update(Camera &cam, Map &map, Player &player,
 	  break ;
 	}
     }
-  if (eventKey[KEY_Z])
+  if (eventKey[data->config.keys.forward])
     player.Move(vec2(cam.GetFor().x, cam.GetFor().y));
-  else if (eventKey[KEY_S])
+  else if (eventKey[data->config.keys.backward])
     player.Move(-vec2(cam.GetFor().x, cam.GetFor().y));
-  if (eventKexy[KEY_SPACE])
+  if (eventKey[data->config.keys.jump])
     player.Jump();
   player.Update(map, dTime);
   player.SetCam(cam, player.GetThird(), data->players + player.GetId());
@@ -187,6 +208,10 @@ void	Display::Update(Camera &cam, Map &map, Player &player,
 int	startGame(t_data *data, std::vector<menuItem> &items, Display &disp)
 {
   //Initilisation
+  if (data->config.keyboard == QWERTY_MODE)
+    setQwerty(&data->config.keys);
+  else if (data->config.keyboard == AZERTY_MODE)
+    setAzerty(&data->config.keys);
   data->net.port = atoi(items[3].text.c_str());
   data->net.ip = (char *)items[2].text.c_str();
   data->net.pseudo = (char *)items[1].text.c_str();
@@ -246,15 +271,41 @@ void			Display::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
       switch(event.type)
 	{
 	case SDL_MOUSEBUTTONDOWN:
-	  menu->hover(event.button.x, event.button.y);
+	  menu->hover(pos->x, pos->y);
 	  menu->hold();
 	  break;
 	case SDL_MOUSEBUTTONUP:
 	  if (menu->holded)
 	    {
-	      if (menu->currentItem == 6)
+	      if (menu->currentItem == LEFT_BOTTOM && !items[0].type)
 		data->game.running = false;
-	      else if (menu->currentItem == 4) {
+	      else if (menu->currentItem == LEFT_MIDDLE && !items[0].type)
+		optionMenu(items);
+	      else if (items[0].type && menu->currentItem == LEFT_BOTTOM)
+		loginMenu(items);
+	      else if (items[0].type && menu->currentItem == RIGHT_MIDDLE) {
+		if (items[4].text == "AZERTY mode")
+		  {
+		    items[4].text = "QWERTY mode";
+		    data->config.keyboard = QWERTY_MODE;
+		  }
+		else
+		  {
+		    items[4].text = "AZERTY mode";
+		    data->config.keyboard = AZERTY_MODE;
+		  }
+	      } else if (items[0].type && menu->currentItem == LEFT_MIDDLE) {
+		if (items[5].text == " Set Oculus")
+		  {
+		    items[5].text = "Unset Oculus";
+		    data->config.oculus = true;
+		  }
+		else
+		  {
+		    items[5].text = " Set Oculus";
+		    data->config.oculus = false;
+		  }
+	      } else if (menu->currentItem == RIGHT_MIDDLE && !items[0].type) {
 		if (startGame(data, items, *this))
 		  break;
 	      }
@@ -267,7 +318,7 @@ void			Display::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
 	case SDL_KEYUP:
 	  if (menu->holded)
 	    {
-	      if (menu->currentItem == 6)
+	      if (menu->currentItem == LEFT_BOTTOM && !items[0].type)
 		data->game.running = false;
 	      menu->unhold();
 	    }
@@ -281,21 +332,21 @@ void			Display::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
 	  if (event.key.keysym.sym == SDLK_LEFT)
 	    {
 	      menu->moveLeft();
-	      if (menu->currentItem < 4)
+	      if (items[menu->currentItem].type == MENU_TEXTINPUT)
 		menu->hold();
 	    }
 	  if (event.key.keysym.sym == SDLK_RIGHT)
 	    {
 	      menu->moveRight();
-	      if (menu->currentItem < 4)
+	      if (items[menu->currentItem].type == MENU_TEXTINPUT)
 		menu->hold();
 	    }
 	  if (event.key.keysym.sym == SDLK_UP)
 	    {
 	      menu->moveUp();
-	      if (menu->currentItem < 4)
+	      if (items[menu->currentItem].type == MENU_TEXTINPUT)
 		menu->hold();
-	    }
+	  }
 	  if (event.key.keysym.sym == SDLK_BACKSPACE &&
 	      items[menu->currentItem].text.length())
 	    {
@@ -304,53 +355,111 @@ void			Display::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
 	      else
 		items[menu->currentItem].text.erase(items[menu->currentItem].text.length() - 1);
 	    }
-	  if (event.key.keysym.sym == SDLK_RETURN &&
-	      (menu->currentItem == 5 || menu->currentItem == 6))
-	    {
-	      menu->hold();
-	    }
-	  if (event.key.keysym.sym == SDLK_RETURN &&
-	      (menu->currentItem == 3 || menu->currentItem == 4))
+	  else if (items[0].type && menu->currentItem == LEFT_BOTTOM && event.key.keysym.sym == SDLK_RETURN)
+	    loginMenu(items);
+	  else if (items[0].type && menu->currentItem == RIGHT_MIDDLE && event.key.keysym.sym == SDLK_RETURN) {
+	    if (items[4].text == "AZERTY mode")
+	      {
+		items[4].text = "QWERTY mode";
+		data->config.keyboard = QWERTY_MODE;
+	      }
+	    else
+	      {
+		items[4].text = "AZERTY mode";
+		data->config.keyboard = AZERTY_MODE;
+	      }
+	  } else if (items[0].type && menu->currentItem == LEFT_MIDDLE && event.key.keysym.sym == SDLK_RETURN) {
+	    if (items[5].text == " Set Oculus")
+	      {
+		items[5].text = "Unset Oculus";
+		data->config.oculus = false;
+	      }
+	    else
+	      {
+		items[5].text = " Set Oculus";
+		data->config.oculus = true;
+	      }
+	  } else if (event.key.keysym.sym == SDLK_RETURN &&
+	      !items[0].type && menu->currentItem == LEFT_MIDDLE)
+	    optionMenu(items);
+	  else if (event.key.keysym.sym == SDLK_RETURN &&
+	      items[menu->currentItem].type == MENU_TEXTINPUT)
+	    menu->hold();
+	  else if (event.key.keysym.sym == SDLK_RETURN &&
+	      (menu->currentItem == 3 || menu->currentItem == RIGHT_MIDDLE) &&
+	      !items[0].type)
 	    {
 	      menu->hold();
 	      //Initilisation
 	      if (startGame(data, items, *this))
 		break;
 	    }
+	  if (event.key.keysym.sym == SDLK_RETURN &&
+	      items[0].type && menu->currentItem == LEFT_BOTTOM)
+	    loginMenu(items);
+	  if (event.key.keysym.sym == SDLK_RETURN &&
+	      !items[0].type && menu->currentItem == LEFT_BOTTOM)
+	    {
+	      data->game.running = false;
+	      break;
+	    }
 	  if (event.key.keysym.sym == SDLK_DOWN)
 	    {
 	      menu->moveDown();
-	      if (menu->currentItem < 4)
+	      if (items[menu->currentItem].type == MENU_TEXTINPUT)
 		menu->hold();
 	    }
 	  if ((event.key.keysym.sym == SDLK_RETURN
 	       || event.key.keysym.sym == SDLK_TAB)
-	      && menu->currentItem < 4)
+	      && (items[menu->currentItem].type == MENU_TEXTINPUT
+		  || menu->currentItem == 0))
 	    {
 	      menu->moveNext();
-	      if (menu->currentItem < 4)
+	      if (items[menu->currentItem].type == MENU_TEXTINPUT)
 		menu->hold();
 	    }
 	  break;
 	case SDL_MOUSEMOTION:
-	  pos->x = event.motion.x;
-	  pos->y = event.motion.y;
+	  if (event.motion.x)
+	    event.motion.x -= (event.motion.xrel / 3) / WIN_RATIO;
+	  if (event.motion.y)
+	    event.motion.y -= (event.motion.yrel / 3) / WIN_RATIO;
+	  if (items[menu->currentItem].type != MENU_SLIDER ||
+	      !menu->holded) {
+	    pos->x += (event.motion.xrel / 2) / WIN_RATIO;
+	    pos->y += (event.motion.yrel / 2) / WIN_RATIO;
+	    if (pos->x > WIN_X)
+	      pos->x = WIN_X;
+	    else if (pos->x < 0)
+	      pos->x = 0;
+	    if (pos->y > WIN_Y)
+	      pos->y = WIN_Y;
+	    else if (pos->y < 0)
+	      pos->y = 0;
+	  }
 	  if (menu->holded)
-	    menu->hover(event.motion.x, event.motion.y);
+	    menu->hover(pos->x, pos->y);
+	  if (items[menu->currentItem].type == MENU_SLIDER && menu->holded) {
+	    items[menu->currentItem].value += event.motion.xrel / 20 + ((event.motion.xrel > 0) * 2 - 1);
+	    if (items[menu->currentItem].value < 0)
+	      items[menu->currentItem].value = 0;
+	    else if (items[menu->currentItem].value > 100)
+	      items[menu->currentItem].value = 100;
+	  }
 	  break;
 	case SDL_TEXTINPUT:
-	  if (menu->currentItem < 4 &&
-	      items[menu->currentItem].text.length() < 14)
-	  {
-	    if (items[menu->currentItem].text == " ")
-	      items[menu->currentItem].text = "";
-	    items[menu->currentItem].text += event.text.text;
-	  }
+	  if (items[menu->currentItem].type == MENU_TEXTINPUT &&
+	      items[menu->currentItem].text.length() < 15)
+	    {
+	      if (items[menu->currentItem].text == " ")
+		items[menu->currentItem].text = "";
+	      items[menu->currentItem].text += event.text.text;
+	    }
 	  break;
 	}
       SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 255, 255, 255));
     }
-  if (menu->currentItem < 4)
+  if (items[menu->currentItem].type == MENU_TEXTINPUT)
     {
       gettimeofday(&tv, NULL);
       if (tv.tv_usec / 500000 % 2)
@@ -361,6 +470,6 @@ void			Display::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
   menu->draw();
   SDL_BlitSurface(surface, NULL, screen, pos);
   SDL_UpdateWindowSurface(m_window);
-  if (menu->currentItem < 4)
+  if (items[menu->currentItem].type == MENU_TEXTINPUT)
     items[menu->currentItem].text.erase(items[menu->currentItem].text.length() - 1);
 }

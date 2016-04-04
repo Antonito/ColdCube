@@ -30,12 +30,4 @@ class Display
   bool		m_isClosed;
 };
 
-enum e_eventKey
-  {
-    KEY_Z,
-    KEY_S,
-    KEY_SPACE,
-    NB_KEY_EVENT
-  };
-
 #endif // !DISPLAY_HPP_

@@ -17,6 +17,7 @@
 # include <glm/glm.hpp>
 # include "events.hpp"
 # include "Score.hpp"
+# include "engine/keys.hpp"
 
 /*
 ** Network
@@ -152,6 +153,24 @@ typedef struct		s_game
   SDL_Surface		*screen;
 }			t_game;
 
+typedef struct		s_keys
+{
+  e_eventKey		forward;
+  e_eventKey		backward;
+  e_eventKey		left;
+  e_eventKey		right;
+  e_eventKey		jump;
+}			t_keys;
+
+typedef struct		s_config
+{
+  bool			oculus;
+  int			keyboard;
+  unsigned char		musicVolume;
+  unsigned char		effectsVolume;
+  t_keys		keys;
+}			t_config;
+
 typedef	struct		s_data
 {
   t_player		players[10];
@@ -160,6 +179,7 @@ typedef	struct		s_data
   t_interface		interface;
   t_game		game;
   t_network		net;
+  t_config		config;
   char			sounds[];
 }			t_data;
 
