@@ -46,7 +46,8 @@ int	game()
   Menu			*menu = new Menu(screen, &items);
 
   loginMenu(items);
-  surface = IMG_Load("assets/imgs/cursor.bmp");
+  //Macro definie dans game.hpp
+  surface = IMG_Load(CURSOR_IMG);
   pos.x = (screen->w >> 1)- (surface->w >> 1);
   pos.y = (screen->h >> 1)- (surface->h >> 1);
   SDL_StartTextInput();

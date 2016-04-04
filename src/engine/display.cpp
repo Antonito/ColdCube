@@ -393,13 +393,13 @@ void			Display::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
 	  break;
 	case SDL_MOUSEMOTION:
 	  if (event.motion.x)
-	    event.motion.x -= event.motion.xrel / 3;
+	    event.motion.x -= (event.motion.xrel / 3) / WIN_RATIO;
 	  if (event.motion.y)
-	    event.motion.y -= event.motion.yrel / 3;
+	    event.motion.y -= (event.motion.yrel / 3) / WIN_RATIO;
 	  if (items[menu->currentItem].type != MENU_SLIDER ||
 	      !menu->holded) {
-	    pos->x += event.motion.xrel / 2;
-	    pos->y += event.motion.yrel / 2;
+	    pos->x += (event.motion.xrel / 2) / WIN_RATIO;
+	    pos->y += (event.motion.yrel / 2) / WIN_RATIO;
 	    if (pos->x > WIN_X)
 	      pos->x = WIN_X;
 	    else if (pos->x < 0)
