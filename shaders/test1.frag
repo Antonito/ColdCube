@@ -1,9 +1,9 @@
-#version 120
+#version 130
 
 varying vec2 texCoord0;
 varying vec3 normal0;
 varying float z0;
-// varying float lum;
+varying float lum;
 // varying	vec3 v;
 // varying vec3 N;
 
@@ -30,7 +30,7 @@ void	main()
   // write Total Color:
   // gl_FragColor = texture2D(diffuse, texcoord0) * gl_FrontLightModelProduct.sceneColor + Iamb + Idiff + Ispec;
 
-  gl_FragColor = texture2D(diffuse, texCoord0) * clamp(dot(normalize(-vec3(0.3, 0.5, 0.6)), normal0), 0.2, 1.0);
+  gl_FragColor = texture2D(diffuse, texCoord0) * clamp(dot(normalize(-vec3(0.3, 0.5, 0.6)), normal0) * lum, 0.2, 1.0);
 
   if (gl_FragColor.a == 0.0)
     discard ;

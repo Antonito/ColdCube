@@ -28,7 +28,7 @@ Shader::Shader(const std::string& fileName)
 
   m_uniforms[0] = glGetUniformLocation(m_program, "transform");
   m_uniforms[1] = glGetUniformLocation(m_program, "shadow_mat");
-  //  m_uniforms[1] = glGetUniformLocation(m_program, "lights");
+  m_uniforms[2] = glGetUniformLocation(m_program, "light");
 }
 
 Shader::~Shader()
@@ -50,8 +50,18 @@ void	Shader::Bind()
 void	Shader::Update(const Transform& transform, Camera& camera)
 {
   glm::mat4 model = camera.GetViewProjection() * transform.GetModel();
+  glUniformMatrix4fv(m_uniforms[SHADOW_MAT_U], 1, GL_FALSE, &transform.GetModel()[0][0]);
+  glUniformMatrix4fv(m_uniforms[TRANSFORM_U], 1, GL_FALSE, &model[0][0]);
+  //  glUniform4fv(m_uniforms[1], 120, lights);
+}
+
+void	Shader::Update(const Transform& transform, Camera& camera, vec3 *light)
+{
+  glm::mat4 model = camera.GetViewProjection() * transform.GetModel();
 
   glUniformMatrix4fv(m_uniforms[TRANSFORM_U], 1, GL_FALSE, &model[0][0]);
+  glUniformMatrix4fv(m_uniforms[SHADOW_MAT_U], 1, GL_FALSE, &transform.GetModel()[0][0]);
+  glUniform3fv(m_uniforms[LIGHT_U], 3, &light->x);
   //  glUniform4fv(m_uniforms[1], 120, lights);
 }
 

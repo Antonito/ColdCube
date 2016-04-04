@@ -17,6 +17,7 @@
 # include <glm/glm.hpp>
 # include "events.hpp"
 # include "Score.hpp"
+# include "engine/keys.hpp"
 
 typedef enum		e_state
   {
@@ -118,19 +119,13 @@ typedef struct		s_game
   SDL_Surface		*screen;
 }			t_game;
 
-typedef enum		e_keyboard
-  {
-    AZERTY_MODE,
-    QWERTY_MODE
-  }			e_ekeyboard;
-
 typedef struct		s_keys
 {
-  unsigned int		forward;
-  unsigned int		backward;
-  unsigned int		left;
-  unsigned int		right;
-  unsigned int		jump;
+  e_eventKey		forward;
+  e_eventKey		backward;
+  e_eventKey		left;
+  e_eventKey		right;
+  e_eventKey		jump;
 }			t_keys;
 
 typedef struct		s_config

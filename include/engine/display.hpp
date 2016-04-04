@@ -30,14 +30,4 @@ class Display
   bool		m_isClosed;
 };
 
-enum e_eventKey
-  {
-    FORWARD,
-    BACKWARD,
-    LEFT,
-    RIGHT,
-    JUMP,
-    NB_KEY_EVENT
-  };
-
 #endif // !DISPLAY_HPP_

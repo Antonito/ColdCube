@@ -39,8 +39,6 @@ Display::Display(int width, int height, const std::string& title)
   m_isClosed = false;
   glEnable(GL_DEPTH_TEST);
   glEnable(GL_CULL_FACE);
-  // glEnable(LIGHTING);
-  // glEnable(LIGHT0);
   glCullFace(GL_BACK);
 }
 
@@ -66,7 +64,7 @@ void	Display::Update(Camera &cam, Map &map, Player &player,
 			t_data *data)
 {
   SDL_GL_SwapWindow(m_window);
-  usleep(16650);
+   usleep(15800);
   static		int cur(0), old(0), tot(0), nb(0);
   cur = SDL_GetTicks();
   int			t = cur - old + 1;
@@ -92,14 +90,25 @@ void	Display::Update(Camera &cam, Map &map, Player &player,
 	  switch (e.key.keysym.sym)
 	    {
 	    case (SDLK_z):
-	      eventKey[FORWARD] = true;
+	      eventKey[KEY_Z] = true;
 	      break ;
 	    case (SDLK_s):
-	      eventKey[BACKWARD] = true;
+	      eventKey[KEY_S] = true;
+	      break ;
+	    case (SDLK_q):
+	      eventKey[KEY_Q] = true;
+	      break ;
+	    case (SDLK_d):
+	      eventKey[KEY_D] = true;
+	      break ;
+	    case (SDLK_a):
+	      eventKey[KEY_A] = true;
+	      break ;
+	    case (SDLK_w):
+	      eventKey[KEY_W] = true;
 	      break ;
 	    case (SDLK_SPACE):
-	      if (player.GetPos().z == 1.0)
-		eventKey[JUMP] = true;
+	      eventKey[KEY_SPACE] = true;
 	      break ;
 	      // case (SDLK_q):
 	      //   player.GetPos() += normalize(vec3((cross(cam.GetFor(), vec3(0, 1, 0))).x, (cross(cam.GetFor(), vec3(0, 1, 0))).y, 0));
@@ -110,7 +119,11 @@ void	Display::Update(Camera &cam, Map &map, Player &player,
 	    case (SDLK_ESCAPE):
 	      m_isClosed = true;
 	      break ;
+	    case (SDLK_p):
+	      player.Jump();
+	      break ;
 #ifdef	DEBUG
+
 	    case (SDLK_F1):
 	      map.PutCube(1, ivec3(cam.GetPos() + cam.GetFor() * 2.0f));
 	      break ;
@@ -145,13 +158,25 @@ void	Display::Update(Camera &cam, Map &map, Player &player,
 	  switch (e.key.keysym.sym)
 	    {
 	    case (SDLK_z):
-	      eventKey[FORWARD] = false;
+	      eventKey[KEY_Z] = false;
 	      break ;
 	    case (SDLK_s):
-	      eventKey[BACKWARD] = false;
+	      eventKey[KEY_S] = false;
+	      break ;
+	    case (SDLK_q):
+	      eventKey[KEY_Q] = false;
+	      break ;
+	    case (SDLK_d):
+	      eventKey[KEY_D] = false;
+	      break ;
+	    case (SDLK_a):
+	      eventKey[KEY_A] = false;
+	      break ;
+	    case (SDLK_w):
+	      eventKey[KEY_W] = false;
 	      break ;
 	    case (SDLK_SPACE):
-	      eventKey[JUMP] = false;
+	      eventKey[KEY_SPACE] = false;
 	      break ;
 	    }
 	  break;
@@ -166,13 +191,13 @@ void	Display::Update(Camera &cam, Map &map, Player &player,
 	  break ;
 	}
     }
-  if (eventKey[FORWARD])
+  if (eventKey[data->config.keys.forward])
     player.Move(vec2(cam.GetFor().x, cam.GetFor().y));
-  else if (eventKey[BACKWARD])
+  else if (eventKey[data->config.keys.backward])
     player.Move(-vec2(cam.GetFor().x, cam.GetFor().y));
-  if (eventKey[JUMP])
+  if (eventKey[data->config.keys.jump])
     player.Jump();
-  player.Update(dTime);
+  player.Update(map, dTime);
   player.SetCam(cam, player.GetThird(), data->players + player.GetId());
 }
 

@@ -15,7 +15,7 @@ class Player
   void Move(vec2 dir);
   void Jump();
   void Fall(float time);
-  void Update(float time);
+  void Update(Map &map, float time);
   void	SetCam(Camera &cam, bool third, t_player *p);
   void Draw();
   ~Player();
@@ -23,6 +23,7 @@ class Player
   vec3 &GetPos() {return m_pos;};
   vec2 &GetRot() {return m_rot;};
 
+  bool	IsOnBlock();
   int	GetId() {return m_id;};
   void	FillCPlayer(t_player *p, vec3 dir);
   bool	&GetThird() {return m_third;};
@@ -37,5 +38,7 @@ class Player
   int		m_id;
   bool		m_third;
 };
+
+vec3	GetFullCollision(Map &map, vec3 pos, vec3 move);
 
 #endif // !PLAYER_HPP_
