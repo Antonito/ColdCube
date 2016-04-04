@@ -5,7 +5,7 @@
 ** Login   <troncy_l@epitech.net>
 **
 ** Started on  Mon Mar 07 16:48:42 2016 Lucas Troncy
-// Last update Sun Apr 03 05:11:22 2016 Lucas Troncy
+// Last update Mon Apr 04 22:55:44 2016 Lucas Troncy
 */
 
 #ifdef _WIN32
@@ -67,7 +67,7 @@ void			*udp_thread(void *data)
 int		clientLaunchUdpc(t_data *data)
 {
   int		len;
-  char		tmp[30];
+  char		tmp[30] = {0};
 #if _WIN32
   WSADATA		wsa;
 
@@ -94,8 +94,8 @@ int		clientLaunchUdpc(t_data *data)
       return (-1);
     }
   printf("before recv ID\n");
-  recvfrom(data->net.udp.sock, tmp, 10, 0,
-	  (struct sockaddr *)&data->net.tcp.to_serv, (socklen_t *)&len);
+  recvfrom(data->net.udp.sock, tmp, 1, 0,
+	  (struct sockaddr *)&data->net.udp.to_serv, (socklen_t *)&len);
   printf("After recv ID\n");
   data->net.playerIndexUdp = atoi(tmp);
   printf("Id = %d\n", data->net.playerIndexUdp);

@@ -65,6 +65,7 @@ void			udp_thread(t_all *all)
     if (FD_ISSET(all->udp->main_sock, &all->udp->readfds))
       {
 	FD_CLR(all->udp->main_sock, &all->udp->readfds);
+	memset(all->udp->buff, 0, 42);
 	if ((len = recvfrom(all->udp->main_sock,
 			    all->udp->buff, 42, 0,
 			    (struct sockaddr *)&all->udp->tmp_sock, (socklen_t *)&all->udp->cli_addrl)) > 0)
@@ -100,7 +101,7 @@ void		server_check_msg_udp(t_all *all)
 	     (struct sockaddr *)&all->udp->tmp_sock, all->udp->cli_addrl);
       all->udp->cli_sock[i] = all->udp->tmp_sock;
       all->timeout[i] = 1;
-      printf("all functionnal\n");
+      printf("all functionnal with id = %d\n", i);
     }
   else
     {

@@ -4,6 +4,7 @@ int		tcp_server_add_pseudo(t_all *all, char *str, int i)
 {
   if (tcp_server_check_pseudo(all, str) == -1)
     return (-1);
+  memset(all->pseudo[i], 0, 21);
   strncpy(all->pseudo[i], str, strlen(str));
   return (0);
 }
