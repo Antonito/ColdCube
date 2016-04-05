@@ -191,6 +191,8 @@ void	Display::Update(Camera &cam, Map &map, Player &player,
 	  break ;
 	}
     }
+  if (cam.isOculus())
+    cam.UpdateFor();
   if (eventKey[data->config.keys.forward])
     player.Move(vec2(cam.GetFor().x, cam.GetFor().y));
   else if (eventKey[data->config.keys.backward])

@@ -21,8 +21,13 @@ class Camera
 
       ovr_Initialize(0);
       hmd = ovrHmd_Create(0);
-      ovrHmd_ConfigureTracking(hmd, ovrTrackingCap_Orientation | ovrTrackingCap_MagYawCorrection | ovrTrackingCap_Position, 0);
-
+      if (hmd)
+	ovrHmd_ConfigureTracking(hmd, ovrTrackingCap_Orientation | ovrTrackingCap_MagYawCorrection | ovrTrackingCap_Position, 0);
+    }
+  ~Camera()
+    {
+      if (hmd)
+	ovrHmd_Destroy(hmd);
     }
 
   inline mat4 GetViewProjection() const
@@ -30,30 +35,32 @@ class Camera
     return m_perspective * glm::lookAt(m_position, m_position + m_forward, m_up);
   }
 
+  int isOculus() {return hmd ? 1 : 0;}
+
   vec3 &GetPos() {return m_position;}
   void UpdateFor()
   {
+    ovrPosef pose[2];
+    //m_rotation[0] = pose[0].Orientation.x * 90;
+    if (hmd) {
+      pose[0] = ovrHmd_GetHmdPosePerEye(hmd, hmd->EyeRenderOrder[0]);
+      pose[1] = ovrHmd_GetHmdPosePerEye(hmd, hmd->EyeRenderOrder[1]);
+      if (pose[0].Orientation.x <= -0.5)
+	pose[0].Orientation.x = -0.499;
+      m_rotation[0] = pose[0].Orientation.x * 90.0 * 2;
+      m_rotation[1] = pose[0].Orientation.y * 90.0 * 2;
+    }
+
     vec4	forward(0, 1, 0, 0);
     mat4	rz = glm::rotate((typeof(m_rotation.y))(m_rotation.y * M_PI / 180), vec3(0, 0, 1));
     vec3	axis(rz * vec4(1, 0, 0, 0));
     mat4	rx = glm::rotate((typeof(m_rotation.x))(m_rotation.x * M_PI / 180), axis);
-
     vec3	res(rx * rz * forward);
-    ovr_Initialize(0);
-    hmd = ovrHmd_Create(0);
-    ovrHmd_ConfigureTracking(hmd, ovrTrackingCap_Orientation | ovrTrackingCap_MagYawCorrection | ovrTrackingCap_Position, 0);
     m_forward = normalize(res);
   }
   vec3 &GetFor() {return m_forward;}
 
   vec2 &GetRot() {
-    ovrPosef pose[2];
-    //m_rotation[0] = pose[0].Orientation.x * 90;
-    pose[0] = ovrHmd_GetHmdPosePerEye(hmd, hmd->EyeRenderOrder[0]);
-    pose[1] = ovrHmd_GetHmdPosePerEye(hmd, hmd->EyeRenderOrder[1]);
-    std::cout << "Value  : " << pose[0].Orientation.x << std::endl << std::endl;
-    std::cout << "wanted : " << m_rotation[0] << std::endl << std::endl;
-    //m_rotation[0] = pose[0].Orientation.x * 90.0;
     return m_rotation;
   }
 
