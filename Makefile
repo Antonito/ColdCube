@@ -14,14 +14,13 @@ GAME_FILES=		main.cpp			\
 
 SERV_PREFIX=		src/server/
 
-SERV_FILES=		main.c				\
-			udp/main_udp_thread.c		\
-			udp/server_udp_msg.c		\
-			tcp/main_tcp_thread.c		\
-			tcp/server_tcp_functions.c	\
-			tcp/server_tcp_msg.c		\
-			server_pseudo.c			\
-			events.c
+SERV_FILES=		main.cpp			\
+			udp/main_udp_thread.cpp		\
+			udp/server_udp_msg.cpp		\
+			tcp/main_tcp_thread.cpp		\
+			tcp/server_tcp_functions.cpp	\
+			tcp/server_tcp_msg.cpp		\
+			server_pseudo.cpp
 
 ENGINE_PREFIX=		src/engine/
 
@@ -65,9 +64,11 @@ GAME+=			$(TOOLS)
 
 GAME+=			$(ENGINE)
 
+SERVER+=		src/tools/events.cpp
+
 NAME=			coldcube
 
-NAMESERV=		server_game
+NAMESERV=		server_coldcube
 
 HEAD=			-Iinclude
 
@@ -113,9 +114,9 @@ LIB=			-lstdc++			\
 OBJ=			$(GAME:.cpp=.o)
 
 OBJ+=			$(ENGINE_C:.c=.o)
-OBJSERV=		$(SERVER_CPP_FILES:.cpp=.o)
+OBJSERV=		$(SERVER:.cpp=.o)
 
-OBJSERV+=		$(SERVER:.c=.o)
+#OBJSERV+=		$(SERVER:.c=.o)
 
 $(NAMESERV):	$(OBJSERV) $(NAME)
 	@echo -n "[ "
