@@ -1,6 +1,7 @@
 #ifndef	AI_H_
 # define AI_H_
 
+# include <GL/glew.h>
 # include "engine/player.hpp"
 # include "events.hpp"
 

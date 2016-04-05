@@ -1,11 +1,9 @@
 #ifndef PLAYER_HPP_
 # define PLAYER_HPP_
 
-# include <glm/glm.hpp>
 # include "common_structs.hpp"
+# include "engine/map.hpp"
 # include "engine/camera.hpp"
-
-using namespace glm;
 
 class Player
 {

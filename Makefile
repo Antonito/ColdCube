@@ -64,7 +64,14 @@ GAME+=			$(TOOLS)
 
 GAME+=			$(ENGINE)
 
-SERVER+=		src/tools/events.cpp
+SERVER+=		src/tools/events.cpp		\
+			src/game/ai.cpp			\
+			src/engine/player.cpp		\
+			src/engine/mesh.cpp		\
+			src/engine/map.cpp		\
+			src/engine/chunk.cpp		\
+			src/engine/texture.cpp		\
+			src/engine/physic.cpp
 
 NAME=			coldcube
 
@@ -116,6 +123,7 @@ OBJ=			$(GAME:.cpp=.o)
 OBJ+=			$(ENGINE_C:.c=.o)
 OBJSERV=		$(SERVER:.cpp=.o)
 
+OBJSERV+=		$(ENGINE_C:.c=.o)
 #OBJSERV+=		$(SERVER:.c=.o)
 
 $(NAMESERV):	$(OBJSERV) $(NAME)
