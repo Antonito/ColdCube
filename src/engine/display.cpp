@@ -165,6 +165,7 @@ void	Display::Update(Camera &cam, Map &map, Player &player,
 	      break ;
 	    case(SDLK_k):
 	      cheat.selected.fly = (cheat.selected.fly) ?  false : true;
+	      cheat.selected.collisions = cheat.selected.fly;
 	      break ;
 	    case(SDLK_l):
 	      cheat.selected.collisions =
@@ -225,6 +226,12 @@ void	Display::Update(Camera &cam, Map &map, Player &player,
 int	startGame(t_data *data, std::vector<menuItem> &items, Display &disp)
 {
   //Initilisation
+#ifdef	CHEAT
+  cheat.selected.ammo = false;
+  cheat.selected.life = false;
+  cheat.selected.fly = false;
+  cheat.selected.collisions = false;
+#endif
   if (data->config.keyboard == QWERTY_MODE)
     setQwerty(&data->config.keys);
   else if (data->config.keyboard == AZERTY_MODE)
