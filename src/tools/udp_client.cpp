@@ -1,13 +1,3 @@
-/*
-** udp_client_test.c for udp client test for server in /home/lokoum/prog
-**
-** Made by Lucas Troncy
-** Login   <troncy_l@epitech.net>
-**
-** Started on  Mon Mar 07 16:48:42 2016 Lucas Troncy
-// Last update Tue Apr 05 00:16:43 2016 Lucas Troncy
-*/
-
 #ifdef _WIN32
 # include <windows.h>
 # include <winsock2.h>
@@ -94,7 +84,6 @@ int		clientLaunchUdpc(t_data *data)
       return (-1);
     }
   printf("before recv ID\n");
-  usleep(1000);
   recvfrom(data->net.udp.sock, tmp, 3, 0,
 	  (struct sockaddr *)&data->net.udp.to_serv, (socklen_t *)&len);
   printf("After recv ID\n");
