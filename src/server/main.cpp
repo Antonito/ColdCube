@@ -1,11 +1,19 @@
 #include "server.hpp"
 
+#ifdef	CHEAT
+# include "cheat.hpp"
+t_cheat	cheat;
+#endif
+
 int		main(int argc, char **argv)
 {
   t_all		all;
   int		i;
   int		j;
 
+#ifdef	CHEAT
+  memset(&cheat, 0, sizeof(t_cheat));
+#endif
   if (argc < 2)
     {
       fprintf(stderr, "Usage:\n./server_game port\n");

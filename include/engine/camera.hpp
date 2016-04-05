@@ -1,11 +1,11 @@
 #ifndef CAMERA_HPP_
 # define CAMERA_HPP_
 
+# include "engine/misc.hpp"
 # include <math.h>
 # include <stdio.h>
 # include <OVR.h>
 # include <iostream>
-# include "engine/misc.hpp"
 
 using namespace glm;
 
@@ -14,7 +14,7 @@ class Camera
  public:
   Camera(const vec3& pos, float fov, float aspect, float zNear, float zFar, ovrHmd oculusHmd, bool oculus)
     {
-      m_perspective = glm::perspective(fov, aspect, zNear, zFar);
+      m_perspective = perspective(fov, aspect, zNear, zFar);
       m_position = pos;
       m_rotation = vec2(0, 0);
       m_up = vec3(0, 0, 1);
@@ -27,7 +27,7 @@ class Camera
 
   inline mat4 GetViewProjection() const
   {
-    return m_perspective * glm::lookAt(m_position, m_position + m_forward, m_up);
+    return m_perspective * lookAt(m_position, m_position + m_forward, m_up);
   }
 
   bool isOculus() {return m_hmd ? true : false;}
@@ -55,9 +55,9 @@ class Camera
       finalRot = m_rotation;
 
     vec4	forward(0, 1, 0, 0);
-    mat4	rz = glm::rotate((GLfloat)(finalRot.y * M_PI / 180), vec3(0, 0, 1));
+    mat4	rz = rotate((typeof(m_rotation.y))(m_rotation.y * M_PI / 180), vec3(0, 0, 1));
     vec3	axis(rz * vec4(1, 0, 0, 0));
-    mat4	rx = glm::rotate((GLfloat)(finalRot.x * M_PI / 180), axis);
+    mat4	rx = rotate((typeof(m_rotation.x))(m_rotation.x * M_PI / 180), axis);
     vec3	res(rx * rz * forward);
     m_forward = normalize(res);
   }
