@@ -151,6 +151,7 @@ void Player::Update(Map &map, float time)
 
   vec3 move(m_move * m_speed * time, m_fall * time);
   double	z = m_pos.z;
+
   m_pos = GetFullCollision(map, m_pos, move);
   if (this->IsOnBlock())
     m_move *= 0.81;
@@ -158,19 +159,6 @@ void Player::Update(Map &map, float time)
     m_fall = 0;
   // printf("(%.2f, %.2f, %.2f)             ", m_pos.x, m_pos.y, m_pos.z);
   // fflush(stdout);
-}
-
-static bool IsColinear(vec3 u, vec3 v)
-{
-  vec3	k(0, 0, 0);
-
-  if ((u.x == 0.0f && u.y == 0.0f && u.z == 0.0f) ||
-      (v.x == 0.0f && v.y == 0.0f && v.z == 0.0f))
-    return (true);
-  k.x = u.x / v.x;
-  k.y = u.y / v.y;
-  k.z = u.z / v.z;
-  return (k.x == k.y && k.y == k.z);
 }
 
 void	Player::SetCam(Camera &cam, bool third, t_player *p)
