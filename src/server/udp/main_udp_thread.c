@@ -96,7 +96,7 @@ void		server_check_msg_udp(t_all *all)
 	  return ;
 	}
       sprintf(tmp, "%c", (char)i);
-      sendto(all->udp->main_sock, tmp, 1, 0,
+      sendto(all->udp->main_sock, tmp, 2, 0,
 	     (struct sockaddr *)&all->udp->tmp_sock, all->udp->cli_addrl);
       all->udp->cli_sock[i] = all->udp->tmp_sock;
       all->timeout[i] = 1;

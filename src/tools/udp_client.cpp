@@ -54,10 +54,11 @@ void			*udp_thread(void *data)
   return (NULL);
 }
 
-int		clientLaunchUdpc(t_data *data)
+int			clientLaunchUdpc(t_data *data)
 {
-  int		len;
-  char		tmp[30] = {0};
+  int			len;
+  char			tmp[30] = {0};
+  struct timeval	tv;
 #if _WIN32
   WSADATA		wsa;
 
@@ -76,6 +77,10 @@ int		clientLaunchUdpc(t_data *data)
   data->net.udp.to_serv.sin_port = htons(data->net.port + 1);
   data->net.udp.to_serv.sin_addr.s_addr = inet_addr(data->net.ip);
   len = sizeof(data->net.udp.to_serv);
+  tv.tv_sec = 1;
+  tv.tv_usec = 0;
+  if (setsockopt(data->net.udp.sock, SOL_SOCKET, SO_RCVTIMEO,&tv,sizeof(tv)) < 0)
+    return (-1);
   snprintf(tmp, 24, "/add %s", data->net.pseudo);
   if (sendto(data->net.udp.sock, tmp, strlen(tmp), 0,
 	     (struct sockaddr *)&data->net.udp.to_serv, len) < 1)
@@ -84,8 +89,14 @@ int		clientLaunchUdpc(t_data *data)
       return (-1);
     }
   printf("before recv ID\n");
+  tmp[0] = -1;
   recvfrom(data->net.udp.sock, tmp, 3, 0,
 	  (struct sockaddr *)&data->net.udp.to_serv, (socklen_t *)&len);
+  if (tmp[0] < 0 || tmp[0] > 9)
+    {
+      fprintf(stderr, "receving Id timedOut or wrong Id\n");
+      return (-1);
+    }
   printf("After recv ID\n");
   data->net.playerIndexUdp = (int)tmp[0];
   printf("Id = %d\n", data->net.playerIndexUdp);

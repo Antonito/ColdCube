@@ -45,6 +45,8 @@ void		udps_check_timeout(t_all *all)
 	  fprintf(stdout, "client %s timedout !\n", all->pseudo[i]);
 	  udp_send_disconnect(all, (char)i);
 	  all->connected[i] = 0;
+	  close(all->tcp->cli_sock[i]);
+	  all->tcp->cli_sock[i] = 0;
 	  all->nb_actual -= 1;
 	}
       else
