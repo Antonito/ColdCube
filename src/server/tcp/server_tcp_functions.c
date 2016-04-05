@@ -35,8 +35,7 @@ void		tcps_cli_add(t_all *all)
 	  all->tcp->cli_sock[i] = all->tcp->tmp_sock;
 	  all->connected[i] = 1;
 	  all->timeout[i] = 1;
-	  write(all->tcp->tmp_sock, "ok", 2);
-	  fprintf(stdout, "tcp client tmp_sock added on index = %d\n", i);
+	  all->tmpIndex = i;
 	  break;
 	}
     }
@@ -51,21 +50,23 @@ void		tcps_check_received(t_all *all, int i)
 	{
 	  if (tcp_server_add_pseudo(all, &all->tcp->buff[3], i) == -1)
 	    {
-	      fprintf(stdout, "client rejected\n");
+	      fprintf(stdout, "[WARN]client already connected, bye\n");
 	      fprintf(stdout, ":%s:\n", &all->tcp->buff[3]);
 	      write(all->tcp->tmp_sock, "sorry bad pseudo or server full\n", 33);
+	      all->connected[all->tmpIndex] = 0;
+	      close(all->tcp->cli_sock[all->tmpIndex]);
+	      all->tcp->cli_sock[all->tmpIndex] = 0;
 	    }
 	  else
 	    {
-	      fprintf(stdout, ":%s:\n", all->pseudo[i]);
-	      fprintf(stdout, "pseudo: OK, client added, synced\n");
+	      fprintf(stdout, "[TCP] added :%s:\n", all->pseudo[i]);
 	      write(all->tcp->tmp_sock, "ok", 2);
 	      tcps_sync_all(all);
 	    }
 	}
       if (all->tcp->buff[1] == 'r')
 	{
-	  fprintf(stdout, "client disconnected by /r\n");
+	  fprintf(stdout, "[WARN]client disconnected by /r\n");
 	  close(all->tcp->cli_sock[i]);
 	  all->tcp->cli_sock[i] = 0;
 	  all->nb_actual -= 1;

@@ -97,8 +97,7 @@ void		server_check_msg_tcp(t_all *all)
 	      }
 	    else
 	      {
-		/*we got a MSG here */
-		fprintf(stdout, "we got a message here\n");
+		fprintf(stdout, "[TCP] MSG\n");
 		all->tcp->buff[len] = '\0';
 		fprintf(stdout, ":%s:\n", all->tcp->buff);
 		tcps_check_received(all, i);

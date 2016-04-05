@@ -90,11 +90,12 @@ void		server_check_msg_udp(t_all *all)
     {
       if ((i = tcp_get_pseudo_index(all, &all->udp->buff[5])) == -1)
 	{
+	  printf("we cannot find him to pseudo DB\nwith :%s:\n", &all->udp->buff[5]);
 	  sendto(all->udp->main_sock, "/r", 2, 0,
 		(struct sockaddr *)&all->udp->tmp_sock, all->udp->cli_addrl);
-	  printf("we cannot find him to pseudo DB\nwith :%s:\n", &all->udp->buff[5]);
 	  return ;
 	}
+      fprintf(stdout, "[UDP] Client added correctly\n");
       sprintf(tmp, "%c", (char)i);
       sendto(all->udp->main_sock, tmp, 2, 0,
 	     (struct sockaddr *)&all->udp->tmp_sock, all->udp->cli_addrl);

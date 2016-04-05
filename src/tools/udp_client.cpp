@@ -77,7 +77,7 @@ int			clientLaunchUdpc(t_data *data)
   data->net.udp.to_serv.sin_port = htons(data->net.port + 1);
   data->net.udp.to_serv.sin_addr.s_addr = inet_addr(data->net.ip);
   len = sizeof(data->net.udp.to_serv);
-  tv.tv_sec = 1;
+  tv.tv_sec = 2;
   tv.tv_usec = 0;
   if (setsockopt(data->net.udp.sock, SOL_SOCKET, SO_RCVTIMEO,&tv,sizeof(tv)) < 0)
     return (-1);
@@ -85,6 +85,7 @@ int			clientLaunchUdpc(t_data *data)
   if (sendto(data->net.udp.sock, tmp, strlen(tmp), 0,
 	     (struct sockaddr *)&data->net.udp.to_serv, len) < 1)
     {
+      close(data->net.udp.sock);
       fprintf(stderr, "error sending pseudo (udp)\n");
       return (-1);
     }
@@ -95,6 +96,7 @@ int			clientLaunchUdpc(t_data *data)
   if (tmp[0] < 0 || tmp[0] > 9)
     {
       fprintf(stderr, "receving Id timedOut or wrong Id = %d\n", (int)tmp[0]);
+      close(data->net.udp.sock);
       return (-1);
     }
   printf("After recv ID\n");
