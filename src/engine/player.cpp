@@ -31,13 +31,24 @@ Player::~Player()
 {
 }
 
+bool Player::IsOnBlock()
+{
+  if (m_pos.z == (int)m_pos.z && (m_map->GetBlock(m_pos + vec3(0, 0, -1)) ||
+				  m_map->GetBlock(m_pos + vec3(0, 0.8, -1)) ||
+				  m_map->GetBlock(m_pos + vec3(0.8, 0, -1)) ||
+				  m_map->GetBlock(m_pos + vec3(0.8, 0.8, -1))))
+    return (true);
+  return (false);
+}
+
 void Player::Move(vec2 dir)
 {
-  m_move += normalize(dir) * (GLfloat)((m_pos.z == 1.0) ? 1 : 0.2);
-  if (m_move.length() > 3.0)
+  if (this->IsOnBlock())
+    m_move += normalize(dir);
+  if (m_move.length() > 5.0)
     {
       m_move = normalize(m_move);
-      m_move *= 2.5;
+      m_move *= 4.5;
     }
 }
 
@@ -45,7 +56,8 @@ void Player::Jump()
 {
   //  ivec3 p(m_pos);
 
-  m_fall = 10;
+  if (this->IsOnBlock())
+    m_fall = 8;
   // if (m_pos.z != (int)m_pos.z)
   //   {
   //     if (m_map->IsLoaded(p))
@@ -60,19 +72,10 @@ void Player::Fall(float time)
 {
   ivec3	p(m_pos);
 
-  if (m_pos.z != (int)m_pos.z)
-    m_fall -= 0.4;
-  else
-    {
-      if (!m_map->IsLoaded(p) ||
-  	  !m_map->GetBlock(m_pos))
-	m_fall -= 0.4f;
-      else
-	{
-	  m_fall = 0.0f;
-	  m_move *= 0.9;
-	}
-    }
+  if (!this->IsOnBlock())
+    m_fall -= 0.5f;
+  // else if (m_fall < 0.0)
+  //   m_fall = 0.0f;
 }
 
 
@@ -113,16 +116,17 @@ vec3 Player::GetCollisionMove(vec3 pos, vec3 move)
   return (pos);
 }
 
-void Player::Update(float time)
+void Player::Update(Map &map, float time)
 {
   this->Fall(time);
 
   vec3 move(m_move * m_speed * time, m_fall * time);
-  m_pos = GetCollisionMove(m_pos, move);
-  if (m_pos.z == 1.0)
+  double	z = m_pos.z;
+  m_pos = GetFullCollision(map, m_pos, move);
+  if (this->IsOnBlock())
     m_move *= 0.81;
-  else
-    m_move *= 0.994;
+  if (m_pos.z == z)
+    m_fall = 0;
   // printf("(%.2f, %.2f, %.2f)             ", m_pos.x, m_pos.y, m_pos.z);
   // fflush(stdout);
 }

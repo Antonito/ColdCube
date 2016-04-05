@@ -27,16 +27,16 @@ class Camera
 
   inline mat4 GetViewProjection() const
   {
-    return m_perspective * lookAt(m_position, m_position + m_forward, m_up);
+    return m_perspective * glm::lookAt(m_position, m_position + m_forward, m_up);
   }
 
   vec3 &GetPos() {return m_position;}
   void UpdateFor()
   {
     vec4	forward(0, 1, 0, 0);
-    mat4	rz = rotate((typeof(m_rotation.y))(m_rotation.y * M_PI / 180), vec3(0, 0, 1));
+    mat4	rz = glm::rotate((typeof(m_rotation.y))(m_rotation.y * M_PI / 180), vec3(0, 0, 1));
     vec3	axis(rz * vec4(1, 0, 0, 0));
-    mat4	rx = rotate((typeof(m_rotation.x))(m_rotation.x * M_PI / 180), axis);
+    mat4	rx = glm::rotate((typeof(m_rotation.x))(m_rotation.x * M_PI / 180), axis);
 
     vec3	res(rx * rz * forward);
     ovr_Initialize(0);

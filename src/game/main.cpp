@@ -7,20 +7,20 @@
 
 void	setAzerty(t_keys *keys)
 {
-  keys->forward = SDLK_z;
-  keys->backward = SDLK_s;
-  keys->left = SDLK_q;
-  keys->right = SDLK_d;
-  keys->jump = SDLK_SPACE;
+  keys->forward = KEY_Z;
+  keys->backward = KEY_S;
+  keys->left = KEY_Q;
+  keys->right = KEY_D;
+  keys->jump = KEY_SPACE;
 }
 
 void	setQwerty(t_keys *keys)
 {
-  keys->forward = SDLK_w;
-  keys->backward = SDLK_s;
-  keys->left = SDLK_a;
-  keys->right = SDLK_d;
-  keys->jump = SDLK_SPACE;
+  keys->forward = KEY_W;
+  keys->backward = KEY_S;
+  keys->left = KEY_A;
+  keys->right = KEY_D;
+  keys->jump = KEY_SPACE;
 }
 
 void	initData(t_data *data)

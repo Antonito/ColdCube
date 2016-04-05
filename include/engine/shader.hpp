@@ -14,6 +14,7 @@ class	Shader
 
   void Bind();
   void Update(const Transform& transform, Camera& camera);
+  void Update(const Transform& transform, Camera& camera, vec3 *light);
   void Update(const glm::mat4& transform, Camera& camera);
 
   virtual ~Shader();
@@ -24,7 +25,7 @@ enum
 {
   TRANSFORM_U,
   SHADOW_MAT_U,
-  //  LIGHT_U,
+  LIGHT_U,
 
   NB_UNIFORMS
 };

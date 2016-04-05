@@ -4,6 +4,7 @@
 *.ko
 *.obj
 *.elf
+vgcore*
 
 # Precompiled Headers
 *.gch
