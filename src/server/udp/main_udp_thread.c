@@ -92,7 +92,7 @@ void		server_check_msg_udp(t_all *all)
 	{
 	  sendto(all->udp->main_sock, "/r", 2, 0,
 		(struct sockaddr *)&all->udp->tmp_sock, all->udp->cli_addrl);
-	  printf("\nwe cannot find him to pseudo DB\nwith %s\n", &all->udp->buff[5]);
+	  printf("we cannot find him to pseudo DB\nwith :%s:\n", &all->udp->buff[5]);
 	  return ;
 	}
       sprintf(tmp, "%c", (char)i);

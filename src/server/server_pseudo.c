@@ -31,6 +31,7 @@ int		tcp_get_pseudo_index(t_all *all, char *str)
   i = -1;
   while (++i < 10)
     {
+      printf("!%s!->:%s:\n", all->pseudo[i], str);
       if (all->connected[i] == 0)
 	continue;
       if (strncmp(all->pseudo[i], str, strlen(str)) == 0)

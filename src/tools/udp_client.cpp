@@ -94,7 +94,7 @@ int			clientLaunchUdpc(t_data *data)
 	  (struct sockaddr *)&data->net.udp.to_serv, (socklen_t *)&len);
   if (tmp[0] < 0 || tmp[0] > 9)
     {
-      fprintf(stderr, "receving Id timedOut or wrong Id\n");
+      fprintf(stderr, "receving Id timedOut or wrong Id = %d\n", (int)tmp[0]);
       return (-1);
     }
   printf("After recv ID\n");
