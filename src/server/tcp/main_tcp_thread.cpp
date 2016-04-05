@@ -6,8 +6,7 @@ void		*main_tcp_thread(void *data)
   int		i;
 
   all = (t_all *)data;
-  if ((all->tcp = malloc(sizeof(t_tcps))) == NULL)
-    return (NULL);
+  all->tcp = new t_tcps;
   memset(all->tcp, 0, sizeof(t_tcps));
   i = 1;
   if ((all->tcp->main_sock = socket(AF_INET, SOCK_STREAM, 0)) < 1)

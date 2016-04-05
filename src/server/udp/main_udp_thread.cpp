@@ -6,8 +6,7 @@ void		*main_udp_thread(void *data)
   t_all		*all;
 
   all = (t_all *)data;
-  if ((all->udp = malloc(sizeof(t_udps))) == NULL)
-    return (NULL);
+  all->udp = new t_udps;
   if ((all->udp->port = all->port + 1) < 1024)
     return ((void *)0);
   if ((all->udp->main_sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == -1)
