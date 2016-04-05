@@ -28,6 +28,7 @@ class Display
   SDL_Window*	m_window;
   SDL_GLContext	m_glContext;
   bool		m_isClosed;
+  SDL_Surface*	m_windowSurface;
 };
 
 #endif // !DISPLAY_HPP_
