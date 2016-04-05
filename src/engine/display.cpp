@@ -11,6 +11,14 @@
 #include "tools.hpp"
 #include "Menu.h"
 
+void	SetSDL_Rect(SDL_Rect &r, int x, int y, int w, int h)
+{
+  r.x = x;
+  r.y = y;
+  r.w = w;
+  r.h = h;
+}
+
 Display::Display(int width, int height, const std::string& title)
 {
   if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
@@ -26,7 +34,7 @@ Display::Display(int width, int height, const std::string& title)
   SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
   SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
-  m_window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_OPENGL);
+  m_window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN_DESKTOP);
   m_glContext = SDL_GL_CreateContext(m_window);
   SDL_SetRelativeMouseMode(SDL_TRUE);
 
@@ -40,6 +48,7 @@ Display::Display(int width, int height, const std::string& title)
   glEnable(GL_DEPTH_TEST);
   glEnable(GL_CULL_FACE);
   glCullFace(GL_BACK);
+  m_windowSurface = SDL_GetWindowSurface(m_window);
 }
 
 Display::~Display()
@@ -265,6 +274,7 @@ void			Display::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
 {
   SDL_Event		event;
   struct timeval	tv;
+  SDL_Rect		dest = {0, 0, WIN_X, WIN_Y};
 
   while (SDL_PollEvent(&event))
     {
@@ -469,8 +479,28 @@ void			Display::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
       else
 	items[menu->currentItem].text += "|";
     }
+
   menu->draw();
-  SDL_BlitSurface(surface, NULL, screen, pos);
+  SDL_FillRect(m_windowSurface, NULL, SDL_MapRGB(screen->format, 143, 45, 42));
+  if (data->config.oculus)
+    {
+      SetSDL_Rect(dest, 0, WIN_Y / 4, WIN_X / 2, WIN_Y / 2);
+      SDL_BlitScaled(screen, NULL, m_windowSurface, &dest);
+
+      SetSDL_Rect(dest, pos->x / 2 + 3, WIN_Y / 4 + pos->y / 2, pos->w, pos->h);
+      SDL_BlitScaled(surface, NULL, m_windowSurface, &dest);
+
+      SetSDL_Rect(dest, WIN_X / 2, WIN_Y / 4, WIN_X / 2, WIN_Y / 2);
+      SDL_BlitScaled(screen, NULL, m_windowSurface, &dest);
+
+      SetSDL_Rect(dest, WIN_X / 2 + pos->x / 2 - 3, WIN_Y / 4 + pos->y / 2, pos->w, pos->h);
+      SDL_BlitScaled(surface, NULL, m_windowSurface, &dest);
+    }
+  else
+    {
+      SDL_BlitSurface(surface, NULL, screen, pos);
+      SDL_BlitSurface(screen, NULL, m_windowSurface, &dest);
+    }
   SDL_UpdateWindowSurface(m_window);
   if (items[menu->currentItem].type == MENU_TEXTINPUT)
     items[menu->currentItem].text.erase(items[menu->currentItem].text.length() - 1);

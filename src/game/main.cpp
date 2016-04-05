@@ -41,7 +41,7 @@ int	game()
   std::vector<menuItem>	items(14);
   std::string		inputText = "Some text";
   SDL_Rect		pos;
-  SDL_Surface		*screen = SDL_GetWindowSurface(display.GetWin());
+  SDL_Surface		*screen = SDL_CreateRGBSurface(0, WIN_X, WIN_Y, 32, 0, 0, 0, 0);// SDL_GetWindowSurface(display.GetWin());
   SDL_Surface		*surface = NULL;
   Menu			*menu = new Menu(screen, &items);
 

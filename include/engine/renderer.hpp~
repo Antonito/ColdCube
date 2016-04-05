@@ -1,0 +1,16 @@
+#ifndef RENDERER_HPP_
+# define RENDERER_HPP_
+
+#include "engine/misc.hpp"
+
+Class Renderer
+{
+ public:
+  Renderer(int w, int h);
+  ~Renderer();
+ private:
+  GLuint frameBuffer;
+  GLuint depthBuffer;
+};
+
+#endif // !RENDERER_HPP_

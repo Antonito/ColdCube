@@ -22,7 +22,7 @@ int	engineMain(Display &display, t_data *data)
   Shader	shader("shaders/test1");
 
   Map		map("map");
-  Player	player(vec3(10, 5, 5), 90, &map, data->net.playerIndexUdp);
+  Player	player(vec3(125, 125, 500), 90, &map, data->net.playerIndexUdp);
   Camera camera(glm::vec3(10, 5, 10), 70.0f, (float)WIN_X / WIN_Y, 0.01f, 500.0f);
   Transform transform;
   int		fps = 0;
@@ -34,6 +34,7 @@ int	engineMain(Display &display, t_data *data)
   vec2	lastPos[10] = {vec2(0, 0)};
 
   vec3		light(10, 10, 5);
+  int		render;
 
   i = 0;
   while (i < 10)
@@ -42,6 +43,7 @@ int	engineMain(Display &display, t_data *data)
       data->players[i].direction = vec3(0, 1, 0);
       i++;
     }
+  shader.Bind();
 
   while (!display.IsClosed())
     {
@@ -55,28 +57,33 @@ int	engineMain(Display &display, t_data *data)
 	  fps = 0;
 	  count++;
 	}
-
-      shader.Bind();
-
-      shader.Update(transform, camera, &light);
+      render = 0;
       display.Clear(0.0f, 0.3f, 0.8f, 1.0f);
       transform.GetPos() = vec3(0, 0, 0);
-      map.Draw();
-      i = 0;
-      while (i < 10)
-      	{
-      	  if (i != player.GetId() || player.GetThird())
-      	    {
-	      // transform.GetPos() = data->players[i].position;
-     	      // shader.Update(transform, camera);
-      	       text.Bind(0);
-      	      // playerModel.Draw();
-	       DrawPlayerModel(data->players[i].position, data->players[i].direction, length(vec2(data->players[i].position) - lastPos[i]) * 5, camera, shader);
-	       lastPos[i] = vec2(data->players[i].position);
+      while (render < data->config.oculus + 1)
+	{
+	  if (data->config.oculus)
+	    glViewport((render == 0) ? 0 : WIN_X / 2, 0, WIN_X / 2, WIN_Y);
+	  if (render == 1)
+	    camera.GetPos() += normalize(cross(camera.GetFor(), vec3(0, 0, 1))) * (GLfloat)0.32;
+	  shader.Update(transform, camera, &light);
+	  map.Draw();
+	  i = 0;
+	  while (i < 10)
+	    {
+	      if (i != player.GetId() || player.GetThird())
+		{
+		  // transform.GetPos() = data->players[i].position;
+		  // shader.Update(transform, camera);
+		  text.Bind(0);
+		  // playerModel.Draw();
+		  DrawPlayerModel(data->players[i].position, data->players[i].direction, length(vec2(data->players[i].position) - lastPos[i]) * 5, camera, shader);
+		  lastPos[i] = vec2(data->players[i].position);
+		}
+	      i++;
 	    }
-      	  i++;
+	  render++;
 	}
-      transform.GetPos() = vec3(0, 0, 0);
       display.Update(camera, map, player, data);
       player.FillCPlayer(data->players + player.GetId(), camera.GetFor());
     }

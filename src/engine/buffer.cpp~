@@ -1,0 +1,4 @@
+Buffer::Buffer(int w, int h)
+{
+
+}
