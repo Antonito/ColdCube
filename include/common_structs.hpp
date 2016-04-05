@@ -15,6 +15,7 @@
 # include <GL/gl.h>
 # include <arpa/inet.h>
 # include <glm/glm.hpp>
+# include <OVR.h>
 # include "events.hpp"
 # include "Score.hpp"
 # include "engine/keys.hpp"
@@ -130,6 +131,7 @@ typedef struct		s_keys
 
 typedef struct		s_config
 {
+  ovrHmd		oculusHmd;
   bool			oculus;
   int			keyboard;
   unsigned char		musicVolume;

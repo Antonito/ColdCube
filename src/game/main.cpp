@@ -4,6 +4,7 @@
 #include "Menu.h"
 #include <GL/glut.h>
 #include "SDL2/SDL_image.h"
+#include <OVR.h>
 
 #ifdef	CHEAT
 # include "cheat.hpp"
@@ -32,7 +33,6 @@ void	initData(t_data *data)
 {
   memset(data, 0, sizeof(t_data));
   data->game.running = true;
-  data->config.oculus = false;
   data->config.keyboard = AZERTY_MODE;
   data->config.musicVolume = 50;
   data->config.effectsVolume = 50;
@@ -56,7 +56,12 @@ int	game()
   SDL_Surface		*screen = SDL_CreateRGBSurface(0, WIN_X, WIN_Y, 32, 0, 0, 0, 0);// SDL_GetWindowSurface(display.GetWin());
   SDL_Surface		*surface = NULL;
   Menu			*menu = new Menu(screen, &items);
+  ovrHmd		hmd;
 
+  ovr_Initialize(0);
+  hmd = ovrHmd_Create(0);
+  if (hmd)
+    ovrHmd_ConfigureTracking(hmd, ovrTrackingCap_Orientation | ovrTrackingCap_MagYawCorrection | ovrTrackingCap_Position, 0);
   loginMenu(items);
   //Macro definie dans game.hpp
   surface = IMG_Load(CURSOR_IMG);
@@ -64,11 +69,15 @@ int	game()
   pos.y = (screen->h >> 1)- (surface->h >> 1);
   SDL_StartTextInput();
   initData(data);
+  data->config.oculusHmd = hmd;
+  data->config.oculus = (hmd != NULL);
   while (data->game.running)
     {
       display.UpdateMenu(menu, items, &pos, screen, surface, data);
     }
   delete data;
+  if (hmd)
+    ovrHmd_Destroy(hmd);
   return (0);
 }
 

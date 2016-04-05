@@ -22,8 +22,9 @@ int	engineMain(Display &display, t_data *data)
   Shader	shader("shaders/test1");
 
   Map		map("map");
-  Player	player(vec3(125, 125, 500), 90, &map, data->net.playerIndexUdp);
-  Camera camera(glm::vec3(10, 5, 10), 70.0f, (float)WIN_X / WIN_Y, 0.01f, 500.0f);
+  Player	player(vec3(120, 120, 65), 90, &map, data->net.playerIndexUdp);
+  Camera camera(vec3(10, 5, 10), 70.0f, (float)WIN_X / WIN_Y, 0.01f, 500.0f,
+		data->config.oculusHmd, data->config.oculus);
   Transform transform;
   int		fps = 0;
   int		t = time(NULL);
@@ -77,6 +78,9 @@ int	engineMain(Display &display, t_data *data)
 		  // shader.Update(transform, camera);
 		  text.Bind(0);
 		  // playerModel.Draw();
+		  // camera.GetPos() += vec3(eyes[1].Position.x - eyes[0].Position.x,
+		  // 			  eyes[1].Position.y - eyes[0].Position.y,
+		  // 			  eyes[1].Position.z - eyes[0].Position.z);
 		  DrawPlayerModel(data->players[i].position, data->players[i].direction, length(vec2(data->players[i].position) - lastPos[i]) * 5, camera, shader);
 		  lastPos[i] = vec2(data->players[i].position);
 		}
