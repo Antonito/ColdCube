@@ -11,6 +11,10 @@
 #include "tools.hpp"
 #include "Menu.h"
 
+#ifdef	CHEAT
+# include "cheat.hpp"
+#endif
+
 Display::Display(int width, int height, const std::string& title)
 {
   if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
@@ -150,6 +154,21 @@ void	Display::Update(Camera &cam, Map &map, Player &player,
 	      break ;
 	    case (SDLK_t):
 	      player.GetThird() = !player.GetThird();
+	      break ;
+#endif
+#ifdef	CHEAT
+	    case(SDLK_i):
+	      cheat.selected.ammo = (cheat.selected.ammo) ?  false : true;
+	      break ;
+	    case(SDLK_j):
+	      cheat.selected.life = (cheat.selected.life) ?  false : true;
+	      break ;
+	    case(SDLK_k):
+	      cheat.selected.fly = (cheat.selected.fly) ?  false : true;
+	      break ;
+	    case(SDLK_l):
+	      cheat.selected.collisions =
+		(cheat.selected.collisions) ?  false : true;
 	      break ;
 #endif
 	    }

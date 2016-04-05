@@ -1,5 +1,7 @@
 DEBUG=			yes
 
+CHEAT=			yes
+
 GAME_PREFIX=		src/game/
 
 GAME_FILES=		main.cpp			\
@@ -78,6 +80,14 @@ ifeq ($(DEBUG), yes)
 CXXFLAGS+= -g -D DEBUG
 
 CFLAGS+= -g -D DEBUG
+
+endif
+
+ifeq ($(CHEAT), yes)
+
+CXXFLAGS+= -D CHEAT
+
+CFLAGS+= -D CHEAT
 
 endif
 
