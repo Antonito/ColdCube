@@ -68,6 +68,8 @@ int		clientLaunchTcpc(t_data *data)
       return (-1);
     }
   read(data->net.tcp.sock, tmp, 29);
+  if (tmp[0] == 's')
+    return (-1);
   if (strncmp("sorry", tmp, 5) == 0)
     return (1);
   data->net.tcp.run = 1;

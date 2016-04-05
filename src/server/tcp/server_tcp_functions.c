@@ -70,6 +70,7 @@ void		tcps_check_received(t_all *all, int i)
 	  all->tcp->cli_sock[i] = 0;
 	  all->nb_actual -= 1;
 	  all->connected[i] = 0;
+	  memset(all->pseudo[i], 0, 21);
 	 }
     }
   else
