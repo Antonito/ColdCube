@@ -1,4 +1,7 @@
 #include "User.hpp"
+#ifdef	CHEAT
+# include "cheat.hpp"
+#endif
 
 User::User(t_player *player)
 {
@@ -24,6 +27,10 @@ void	User::sprint(int state)
 
 void	User::getDamage()
 {
+#ifdef	CHEAT
+  if (cheat.selected.life)
+    m_player->life = 100;
+#endif
   ;
 }
 

@@ -1,11 +1,19 @@
 #include "engine/misc.hpp"
 #include "engine/map.hpp"
 
+#ifdef	CHEAT
+# include "cheat.hpp"
+#endif
+
 #define ABS(A) (((double)(A) >= 0) ? (A) : -(A))
 #define MAX(A, B) (((A) >= (B)) ? (A) : (B))
 
 double	GetCollisionX(Map &map, vec3 start, vec3 move)
 {
+#ifdef	CHEAT
+  if (cheat.selected.collisions)
+    return (1.0);
+#endif
   if (move.x == 0.0)
     return (1.0);
 
@@ -40,6 +48,10 @@ double	GetCollisionX(Map &map, vec3 start, vec3 move)
 
 double	GetCollisionY(Map &map, vec3 start, vec3 move)
 {
+#ifdef	CHEAT
+  if (cheat.selected.collisions)
+    return (1.0);
+#endif
   if (move.y == 0.0)
     return (1.0);
 
@@ -74,6 +86,10 @@ double	GetCollisionY(Map &map, vec3 start, vec3 move)
 
 double	GetCollisionZ(Map &map, vec3 start, vec3 move)
 {
+#ifdef	CHEAT
+  if (move.z > 0.0 && cheat.selected.collisions)
+    return (1.0);
+#endif
   if (move.z == 0.0)
     return (1.0);
 

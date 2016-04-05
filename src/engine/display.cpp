@@ -11,6 +11,10 @@
 #include "tools.hpp"
 #include "Menu.h"
 
+#ifdef	CHEAT
+# include "cheat.hpp"
+#endif
+
 Display::Display(int width, int height, const std::string& title)
 {
   if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
@@ -152,6 +156,22 @@ void	Display::Update(Camera &cam, Map &map, Player &player,
 	      player.GetThird() = !player.GetThird();
 	      break ;
 #endif
+#ifdef	CHEAT
+	    case(SDLK_i):
+	      cheat.selected.ammo = (cheat.selected.ammo) ?  false : true;
+	      break ;
+	    case(SDLK_j):
+	      cheat.selected.life = (cheat.selected.life) ?  false : true;
+	      break ;
+	    case(SDLK_k):
+	      cheat.selected.fly = (cheat.selected.fly) ?  false : true;
+	      cheat.selected.collisions = cheat.selected.fly;
+	      break ;
+	    case(SDLK_l):
+	      cheat.selected.collisions =
+		(cheat.selected.collisions) ?  false : true;
+	      break ;
+#endif
 	    }
 	  break ;
 	case (SDL_KEYUP):
@@ -206,6 +226,12 @@ void	Display::Update(Camera &cam, Map &map, Player &player,
 int	startGame(t_data *data, std::vector<menuItem> &items, Display &disp)
 {
   //Initilisation
+#ifdef	CHEAT
+  cheat.selected.ammo = false;
+  cheat.selected.life = false;
+  cheat.selected.fly = false;
+  cheat.selected.collisions = false;
+#endif
   if (data->config.keyboard == QWERTY_MODE)
     setQwerty(&data->config.keys);
   else if (data->config.keyboard == AZERTY_MODE)

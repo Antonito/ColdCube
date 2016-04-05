@@ -2,6 +2,10 @@
 #include "engine/player.hpp"
 #include "engine/misc.hpp"
 
+#ifdef	CHEAT
+# include "cheat.hpp"
+#endif
+
 static bool IsColinear(vec3 u, vec3 v);
 
 Player::Player()
@@ -43,8 +47,18 @@ bool Player::IsOnBlock()
 
 void Player::Move(vec2 dir)
 {
+#ifdef	CHEAT
+  if (!cheat.selected.fly)
+    {
+      if (this->IsOnBlock())
+	m_move += normalize(dir);
+    }
+  else
+    m_move += normalize(dir);
+#else
   if (this->IsOnBlock())
     m_move += normalize(dir);
+#endif
   if (m_move.length() > 5.0)
     {
       m_move = normalize(m_move);
@@ -56,8 +70,13 @@ void Player::Jump()
 {
   //  ivec3 p(m_pos);
 
+#ifdef	CHEAT
+  if (!cheat.selected.fly && this->IsOnBlock())
+    m_fall = 8;
+#else
   if (this->IsOnBlock())
     m_fall = 8;
+#endif
   // if (m_pos.z != (int)m_pos.z)
   //   {
   //     if (m_map->IsLoaded(p))
@@ -72,8 +91,18 @@ void Player::Fall(float time)
 {
   ivec3	p(m_pos);
 
+#ifdef	CHEAT
+  if (!cheat.selected.fly)
+    {
+      if (!this->IsOnBlock())
+	m_fall -= 0.5f;
+    }
+  else
+    m_move *= 0.95;
+#else
   if (!this->IsOnBlock())
     m_fall -= 0.5f;
+#endif
   // else if (m_fall < 0.0)
   //   m_fall = 0.0f;
 }
