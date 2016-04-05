@@ -71,7 +71,7 @@ void Player::Jump()
   //  ivec3 p(m_pos);
 
 #ifdef	CHEAT
-  if (!cheat.selected.collisions && this->IsOnBlock())
+  if (!cheat.selected.fly && this->IsOnBlock())
     m_fall = 8;
 #else
   if (this->IsOnBlock())
