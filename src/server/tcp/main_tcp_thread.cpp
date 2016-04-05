@@ -6,8 +6,7 @@ void		*main_tcp_thread(void *data)
   int		i;
 
   all = (t_all *)data;
-  if ((all->tcp = malloc(sizeof(t_tcps))) == NULL)
-    return (NULL);
+  all->tcp = new t_tcps;
   memset(all->tcp, 0, sizeof(t_tcps));
   i = 1;
   if ((all->tcp->main_sock = socket(AF_INET, SOCK_STREAM, 0)) < 1)
@@ -97,8 +96,7 @@ void		server_check_msg_tcp(t_all *all)
 	      }
 	    else
 	      {
-		/*we got a MSG here */
-		fprintf(stdout, "we got a message here\n");
+		fprintf(stdout, "[TCP] MSG\n");
 		all->tcp->buff[len] = '\0';
 		fprintf(stdout, ":%s:\n", all->tcp->buff);
 		tcps_check_received(all, i);

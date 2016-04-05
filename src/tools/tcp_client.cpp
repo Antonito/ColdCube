@@ -64,12 +64,17 @@ int		clientLaunchTcpc(t_data *data)
   snprintf(tmp, 24, "/a %s", data->net.pseudo);
   if (write(data->net.tcp.sock, tmp, strlen(tmp)) != (int)strlen(tmp))
     {
+      close(data->net.tcp.sock);
       fprintf(stderr, "error sending pseudo\n");
       return (-1);
     }
   read(data->net.tcp.sock, tmp, 29);
-  if (strncmp("sorry", tmp, 5) == 0)
-    return (1);
+  fprintf(stdout, ":%s:\n", tmp);
+  if (tmp[0] == 's')
+    {
+      close(data->net.tcp.sock);
+      return (-1);
+    }
   data->net.tcp.run = 1;
   data->net.playerIndexTcp = atoi(tmp);
   pthread_create(&data->net.tcp.thread, NULL, tcp_thread, (void *)data);

@@ -2,6 +2,10 @@
 #include "engine/player.hpp"
 #include "engine/misc.hpp"
 
+#ifdef	CHEAT
+# include "cheat.hpp"
+#endif
+
 static bool IsColinear(vec3 u, vec3 v);
 
 Player::Player()
@@ -43,8 +47,18 @@ bool Player::IsOnBlock()
 
 void Player::Move(vec2 dir)
 {
+#ifdef	CHEAT
+  if (!cheat.selected.fly)
+    {
+      if (this->IsOnBlock())
+	m_move += normalize(dir);
+    }
+  else
+    m_move += normalize(dir);
+#else
   if (this->IsOnBlock())
     m_move += normalize(dir);
+#endif
   if (m_move.length() > 5.0)
     {
       m_move = normalize(m_move);
@@ -56,8 +70,13 @@ void Player::Jump()
 {
   //  ivec3 p(m_pos);
 
+#ifdef	CHEAT
+  if (!cheat.selected.fly && this->IsOnBlock())
+    m_fall = 8;
+#else
   if (this->IsOnBlock())
     m_fall = 8;
+#endif
   // if (m_pos.z != (int)m_pos.z)
   //   {
   //     if (m_map->IsLoaded(p))
@@ -72,8 +91,18 @@ void Player::Fall(float time)
 {
   ivec3	p(m_pos);
 
+#ifdef	CHEAT
+  if (!cheat.selected.fly)
+    {
+      if (!this->IsOnBlock())
+	m_fall -= 0.5f;
+    }
+  else
+    m_move *= 0.95;
+#else
   if (!this->IsOnBlock())
     m_fall -= 0.5f;
+#endif
   // else if (m_fall < 0.0)
   //   m_fall = 0.0f;
 }
@@ -122,6 +151,7 @@ void Player::Update(Map &map, float time)
 
   vec3 move(m_move * m_speed * time, m_fall * time);
   double	z = m_pos.z;
+
   m_pos = GetFullCollision(map, m_pos, move);
   if (this->IsOnBlock())
     m_move *= 0.81;
@@ -129,19 +159,6 @@ void Player::Update(Map &map, float time)
     m_fall = 0;
   // printf("(%.2f, %.2f, %.2f)             ", m_pos.x, m_pos.y, m_pos.z);
   // fflush(stdout);
-}
-
-static bool IsColinear(vec3 u, vec3 v)
-{
-  vec3	k(0, 0, 0);
-
-  if ((u.x == 0.0f && u.y == 0.0f && u.z == 0.0f) ||
-      (v.x == 0.0f && v.y == 0.0f && v.z == 0.0f))
-    return (true);
-  k.x = u.x / v.x;
-  k.y = u.y / v.y;
-  k.z = u.z / v.z;
-  return (k.x == k.y && k.y == k.z);
 }
 
 void	Player::SetCam(Camera &cam, bool third, t_player *p)

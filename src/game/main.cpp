@@ -5,6 +5,11 @@
 #include <GL/glut.h>
 #include "SDL2/SDL_image.h"
 
+#ifdef	CHEAT
+# include "cheat.hpp"
+t_cheat	cheat;
+#endif
+
 void	setAzerty(t_keys *keys)
 {
   keys->forward = KEY_Z;
@@ -32,6 +37,13 @@ void	initData(t_data *data)
   data->config.musicVolume = 50;
   data->config.effectsVolume = 50;
   setAzerty(&data->config.keys);
+#ifdef	CHEAT
+  bzero(&cheat, sizeof(t_cheat));
+  cheat.keys.ammo = KEY_I;
+  cheat.keys.life = KEY_J;
+  cheat.keys.fly = KEY_K;
+  cheat.keys.collisions = KEY_L;
+#endif
 }
 
 int	game()

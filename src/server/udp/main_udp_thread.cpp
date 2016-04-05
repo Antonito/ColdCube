@@ -6,8 +6,7 @@ void		*main_udp_thread(void *data)
   t_all		*all;
 
   all = (t_all *)data;
-  if ((all->udp = malloc(sizeof(t_udps))) == NULL)
-    return (NULL);
+  all->udp = new t_udps;
   if ((all->udp->port = all->port + 1) < 1024)
     return ((void *)0);
   if ((all->udp->main_sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == -1)
@@ -90,11 +89,12 @@ void		server_check_msg_udp(t_all *all)
     {
       if ((i = tcp_get_pseudo_index(all, &all->udp->buff[5])) == -1)
 	{
+	  printf("we cannot find him to pseudo DB\nwith :%s:\n", &all->udp->buff[5]);
 	  sendto(all->udp->main_sock, "/r", 2, 0,
 		(struct sockaddr *)&all->udp->tmp_sock, all->udp->cli_addrl);
-	  printf("\nwe cannot find him to pseudo DB\nwith %s\n", &all->udp->buff[5]);
 	  return ;
 	}
+      fprintf(stdout, "[UDP] Client added correctly\n");
       sprintf(tmp, "%c", (char)i);
       sendto(all->udp->main_sock, tmp, 2, 0,
 	     (struct sockaddr *)&all->udp->tmp_sock, all->udp->cli_addrl);

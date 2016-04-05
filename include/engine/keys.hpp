@@ -10,6 +10,12 @@ enum e_eventKey
     KEY_A,
     KEY_W,
     KEY_SPACE,
+#ifdef	CHEAT
+    KEY_I,
+    KEY_J,
+    KEY_K,
+    KEY_L,
+#endif
     NB_KEY_EVENT
   };
 
