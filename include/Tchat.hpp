@@ -24,6 +24,7 @@ class Tchat
     Tchat();
     Tchat(unsigned char transparency);
     ~Tchat();
+    void constructor();
     void getTchat();
     void backspace();
     void display(SDL_Rect, SDL_Surface *);
