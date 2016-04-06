@@ -11,5 +11,6 @@ int	clientLaunchUdpc(t_data *);
 int	createUdpPacket(t_data *, t_player *);
 int	readUdpPacket(t_data *);
 bool	checkPacket(char *);
+char	**my_str_to_wordtab(char *, char);
 
 #endif	/* !TOOLS_H_ */

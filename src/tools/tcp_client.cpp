@@ -13,6 +13,21 @@
 #endif
 #include <iostream>
 #include "common_structs.hpp"
+#include "tools.hpp"
+
+void		tcp_set_pseudo(t_data *data)
+{
+  int		i;
+  char		**pseudo;
+
+  i = -1;
+  if ((pseudo = my_str_to_wordtab(data->net.tcp.buff, '\n')) == NULL)
+    return ;
+  while (pseudo[++i + 1] != NULL)
+    {
+      strncpy(data->players[i].pseudo, pseudo[i + 1], strlen(pseudo[i + 1]));
+    }
+}
 
 void		*tcp_thread(void *data)
 {
@@ -27,6 +42,8 @@ void		*tcp_thread(void *data)
 	  fprintf(stdout, "run thread = 0\n");
 	}
       _data->net.tcp.buff[len] = 0;
+      if (strncmp("/s", _data->net.tcp.buff, 2) == 0)
+	tcp_set_pseudo(_data);
       fprintf(stderr, ":%s:", _data->net.tcp.buff);
       fflush(stderr);
     }
