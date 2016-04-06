@@ -17,8 +17,9 @@ Tchat::Tchat()
 Tchat::Tchat(unsigned char transparency)
 {
   std::cout << "caca" << std::endl;
-  this->messages = new std::vector<std::string>();
-  this->messages->push_back("You are now connected");
+  this->messages = std::vector<std::string>();
+  this->messages.push_back("You are now connected");
+  std::cout << this->messages.size() << " <- size" << std::endl;
   this->maxlen = 20;
   this->header = IMG_Load(TCHAT_HEADER);
   this->footer = IMG_Load(TCHAT_FOOTER);
@@ -34,6 +35,15 @@ Tchat::~Tchat()
 {
   TTF_CloseFont(this->name_font);
   TTF_CloseFont(this->text_font);
+  SDL_FreeSurface(this->background);
+  SDL_FreeSurface(this->header);
+  SDL_FreeSurface(this->footer);
+}
+
+void Tchat::getTchat()
+{
+  std::cout << "this = " << this << std::endl;
+  std::cout << "this->messages = " << this->messages.size() << std::endl;
 }
 
 void Tchat::display(SDL_Rect pos, SDL_Surface *to)
@@ -46,10 +56,11 @@ void Tchat::display(SDL_Rect pos, SDL_Surface *to)
   SDL_Surface *text;
   SDL_Color grey = {42, 42, 42, 0};
 
-  for (int i = this->messages->size() ; i ; i--)
+  this->getTchat();
+  for (int i = this->messages.size() ; i ; i--)
   {
-    std::cout << "Printing : " << (*this->messages)[i].c_str() << std::endl;
-    text = TTF_RenderUTF8_Blended(this->text_font, (*this->messages)[i].c_str(), grey);
+    std::cout << "Printing : " << this->messages[i].c_str() << std::endl;
+    text = TTF_RenderUTF8_Blended(this->text_font, this->messages[i].c_str(), grey);
     SDL_BlitSurface(text, NULL, background, &text_pos);
     SDL_FreeSurface(text);
   }

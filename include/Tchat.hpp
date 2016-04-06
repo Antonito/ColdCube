@@ -9,20 +9,6 @@
 
 class Tchat
 {
-  public:
-    Tchat();
-    Tchat(unsigned char transparency);
-    ~Tchat();
-    void backspace();
-    void display(SDL_Rect, SDL_Surface *);
-    void focus();
-    void moveLeft();
-    void moveRight();
-    void send();
-    void setTransparency(int);
-    void write_text(char *);
-    void scroll(int);
-  private:
     SDL_Surface *background;
     SDL_Surface *footer;
     SDL_Surface *header;
@@ -32,8 +18,22 @@ class Tchat
     int cursor;
     int maxlen;
     std::string input;
-    std::vector<std::string> *messages;
+    std::vector<std::string> messages;
     unsigned char transparency;
+  public:
+    Tchat();
+    Tchat(unsigned char transparency);
+    ~Tchat();
+    void getTchat();
+    void backspace();
+    void display(SDL_Rect, SDL_Surface *);
+    void focus();
+    void moveLeft();
+    void moveRight();
+    void send();
+    void setTransparency(int);
+    void write_text(char *);
+    void scroll(int);
 };
 
 #endif /* !TCHAT_HPP */
