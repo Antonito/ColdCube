@@ -18,6 +18,7 @@
 # include <OVR.h>
 # include "events.hpp"
 # include "Score.hpp"
+# include "Tchat.hpp"
 # include "engine/keys.hpp"
 
 typedef enum		e_state
@@ -147,6 +148,7 @@ typedef	struct		s_data
   t_network		net;
   t_config		config;
   SDL_Surface		*screen;
+  Tchat			tchat;
   char			sounds[];
 }			t_data;
 

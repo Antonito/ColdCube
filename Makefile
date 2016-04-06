@@ -9,6 +9,7 @@ GAME_FILES=		main.cpp			\
 			score.cpp			\
 			damage.cpp			\
 			user.cpp			\
+			interface/Tchat.cpp 		\
 			menus/main_menu.cpp		\
 			menus/Menu.cpp
 

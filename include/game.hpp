@@ -16,6 +16,11 @@
 # if (WIN_X == 1280)
 #  define CURSOR_IMG			"./assets/imgs/cursor720.bmp"
 #  define MENU_BACKGROUND		"./assets/imgs/menu/720/%s.bmp"
+#  define TCHAT_BACKGROUND		"./assets/imgs/tchat/background.png"
+#  define TCHAT_HEADER			"./assets/imgs/tchat/header.png"
+#  define TCHAT_FOOTER			"./assets/imgs/tchat/footer.png"
+#  define TCHAT_FONT_NAME		"./assets/fonts/chat.ttf"
+#  define TCHAT_FONT_TEXT		"./assets/fonts/chat.ttf"
 #  define ROOM_BACKGROUND		"./assets/imgs/room/720/background.png"
 #  define ROOM_ICON_PLAYER		"./assets/imgs/room/icon_connected.png"
 #  define ROOM_ICON_IA			"./assets/imgs/room/icon_ia.png"
@@ -25,6 +30,11 @@
 # else
 #  define CURSOR_IMG			"./assets/imgs/cursor.bmp"
 #  define MENU_BACKGROUND		"./assets/imgs/menu/%s.bmp"
+#  define TCHAT_BACKGROUND		"./assets/imgs/tchat/background.png"
+#  define TCHAT_HEADER			"./assets/imgs/tchat/header.png"
+#  define TCHAT_FOOTER			"./assets/imgs/tchat/footer.png"
+#  define TCHAT_FONT_NAME		"./assets/fonts/chat.ttf"
+#  define TCHAT_FONT_TEXT		"./assets/fonts/chat.ttf"
 #  define ROOM_BACKGROUND		"./assets/imgs/room/background.png"
 #  define ROOM_ICON_PLAYER		"./assets/imgs/room/icon_connected.png"
 #  define ROOM_ICON_IA			"./assets/imgs/room/icon_ia.png"
