@@ -31,6 +31,11 @@ void	setQwerty(t_keys *keys)
 
 void	initData(t_data *data)
 {
+  int	i;
+
+  i = -1;
+  while (++i < 10)
+    data->players[i].pseudo = (char *)malloc(sizeof(char) * 21);
   memset(data, 0, sizeof(t_data));
   data->game.running = true;
   data->config.keyboard = AZERTY_MODE;
@@ -76,6 +81,8 @@ int	game()
     {
       display.UpdateMenu(menu, items, &pos, screen, surface, data);
     }
+  for(int i = 0; i < 10; i++)
+    free(data->players[i].pseudo);
   delete data;
   if (hmd)
     ovrHmd_Destroy(hmd);
