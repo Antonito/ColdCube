@@ -59,7 +59,7 @@ typedef struct		s_udps
   int			port;
   struct sockaddr_in	tmp_sock;
   struct sockaddr_in	cli_sock[10];
-  char			cli_buff[8][200];
+  char			cli_buff[10][200];
   char			buff[UDP_READ + 1];
   struct sockaddr_in	my_addr;
   fd_set		readfds;
