@@ -17,8 +17,9 @@ Tchat::Tchat()
 Tchat::Tchat(unsigned char transparency)
 {
   std::cout << "caca" << std::endl;
-  this->messages = std::vector<std::string>();
-  this->messages.push_back("You are now connected");
+  this->messages = std::vector<std::string>(4);
+  this->messages[0] = "toto";
+  this->messages[1] = "toto";
   std::cout << this->messages.size() << " <- size" << std::endl;
   this->maxlen = 20;
   this->header = IMG_Load(TCHAT_HEADER);
@@ -28,6 +29,22 @@ Tchat::Tchat(unsigned char transparency)
   this->text_font = TTF_OpenFont(TCHAT_FONT_TEXT, (int)(50 / WIN_RATIO));
   this->isFocused = false;
   this->input = "";
+  this->transparency = transparency;
+}
+
+void Tchat::constructor()
+{
+  std::cout << "caca" << std::endl;
+  this->messages = std::vector<std::string>(4);
+  this->messages[0] = "toto";
+  std::cout << this->messages.size() << " <- size" << std::endl;
+  this->maxlen = 20;
+  this->header = IMG_Load(TCHAT_HEADER);
+  this->footer = IMG_Load(TCHAT_FOOTER);
+  this->background = IMG_Load(TCHAT_BACKGROUND);
+  this->name_font = TTF_OpenFont(TCHAT_FONT_NAME, (int)(50 / WIN_RATIO));
+  this->text_font = TTF_OpenFont(TCHAT_FONT_TEXT, (int)(50 / WIN_RATIO));
+  this->isFocused = false;
   this->transparency = transparency;
 }
 
@@ -57,7 +74,7 @@ void Tchat::display(SDL_Rect pos, SDL_Surface *to)
   SDL_Color grey = {42, 42, 42, 0};
 
   this->getTchat();
-  for (int i = this->messages.size() ; i ; i--)
+  for (int i = this->messages.size() ; i && 0 ; i--)
   {
     std::cout << "Printing : " << this->messages[i].c_str() << std::endl;
     text = TTF_RenderUTF8_Blended(this->text_font, this->messages[i].c_str(), grey);

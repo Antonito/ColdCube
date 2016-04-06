@@ -16,9 +16,7 @@ int		room(Displayer &display, t_data *data)
   SDL_Rect	pos = {WIN_X / 2, WIN_Y / 2, WIN_X, WIN_Y};
 
   surface = IMG_Load(CURSOR_IMG);
-  std::cout << "toto" << std::endl;
-  data->tchat = new Tchat();
-  data->tchat.getTchat();
+  data->tchat.constructor();
 
   while (!display.IsClosed() && data->game.running)
     {
