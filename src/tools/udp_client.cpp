@@ -24,7 +24,7 @@ void			*udp_send_thread(void *data)
   while (_data->net.udp.run_send)
     {
       gettimeofday(&t1, NULL);
-      if (t1.tv_usec % 15000 == 0)
+      if (t1.tv_usec % 15000 <= 100)
 	createUdpPacket(_data, &_data->players[_data->net.playerIndexUdp]);
     }
   return (NULL);
