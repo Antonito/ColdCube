@@ -284,6 +284,8 @@ int	startGame(t_data *data, std::vector<menuItem> &items, Display &disp)
 	  std::clog << "UDP OK\n";
 #endif
 	  room(disp, data);
+	  setEvent(&data->players[data->net.playerIndexUdp].events, CONNECTED, true);
+	  engineMain(disp, data);
 	  write(data->net.tcp.sock, "/r", 2);
 	  fprintf(stdout, "tcp fd closed\n");
 #ifdef _WIN32
@@ -293,6 +295,7 @@ int	startGame(t_data *data, std::vector<menuItem> &items, Display &disp)
 	  close(data->net.udp.sock);
 	  close(data->net.tcp.sock);
 #endif
+	  setEvent(&data->players[data->net.playerIndexUdp].events, CONNECTED, false);
 	}
     }
   data->net.tcp.run = 0;

@@ -22,6 +22,7 @@
 # include <sys/socket.h>
 # include <sys/select.h>
 # include <netinet/in.h>
+# include "common_structs.hpp"
 
 /*
 ** s_tcps pour le server, il gere le tchate est la sync des clients
@@ -58,7 +59,7 @@ typedef struct		s_udps
   int			port;
   struct sockaddr_in	tmp_sock;
   struct sockaddr_in	cli_sock[10];
-  char			cli_buff[8][200];
+  char			cli_buff[10][200];
   char			buff[UDP_READ + 1];
   struct sockaddr_in	my_addr;
   fd_set		readfds;
@@ -78,6 +79,8 @@ typedef struct		s_all
   int			isPackage[10];
   int			nb_actual;
   int			tmpIndex;
+  pthread_t		aiThread;
+  t_player		*ai;
 }			t_all;
 
 /* src/server/udp/server_udp_msg.c */
@@ -124,5 +127,8 @@ int		tcp_server_add_pseudo(t_all *, char *, int);
 int		tcp_server_check_pseudo(t_all *, char *);
 void		tcp_server_remove_pseudo_str(t_tcps *, char *);
 int		tcp_get_pseudo_index(t_all *, char *);
+
+/* AI  */
+void		*main_ai_thread(void *);
 
 #endif /* !SERVER_H_ */

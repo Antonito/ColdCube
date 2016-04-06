@@ -1,4 +1,5 @@
 #include "server.hpp"
+#include "common_structs.hpp"
 
 #ifdef	CHEAT
 # include "cheat.hpp"
@@ -14,6 +15,7 @@ int		main(int argc, char **argv)
 #ifdef	CHEAT
   memset(&cheat, 0, sizeof(t_cheat));
 #endif
+  memset(&all, 0, sizeof(t_all));
   if (argc < 2)
     {
       fprintf(stderr, "Usage:\n./server_game port\n");
@@ -31,15 +33,21 @@ int		main(int argc, char **argv)
   all.port = atoi(argv[1]);
   if (pthread_create(&all.tcpt, NULL, main_tcp_thread, (void *)&all) != 0)
     {
-      fprintf(stderr, "error creating the tcp thread :(\n");
+      fprintf(stderr, "Error: Creating the TCP thread\n");
       return (1);
     }
   if (pthread_create(&all.tudp, NULL, main_udp_thread, (void *)&all) != 0)
     {
-      fprintf(stderr, "error creating the udp thread :(\n");
+      fprintf(stderr, "Error: Creating the UDP thread\n");
+      return (1);
+    }
+  if (pthread_create(&all.aiThread, NULL, main_ai_thread, (void *)&all) != 0)
+    {
+      fprintf(stderr, "Error: Creating the AI thread\n");
       return (1);
     }
   pthread_join(all.tcpt, NULL);
   pthread_join(all.tudp, NULL);
+  pthread_join(all.aiThread, NULL);
   return (0);
 }
