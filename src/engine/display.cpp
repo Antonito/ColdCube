@@ -17,12 +17,12 @@
 # include "cheat.hpp"
 #endif
 
-void	SetSDL_Rect(SDL_Rect &r, int x, int y, int w, int h)
+void	SetSDL_Rect(SDL_Rect *r, int x, int y, int w, int h)
 {
-  r.x = x;
-  r.y = y;
-  r.w = w;
-  r.h = h;
+  r->x = x;
+  r->y = y;
+  r->w = w;
+  r->h = h;
 }
 
 Display::Display(int width, int height, const std::string& title)
@@ -367,16 +367,16 @@ void			Display::UpdateRoom(t_data *room, SDL_Rect *pos,
   SDL_BlitSurface((room->players[9].pseudo) ? icon_connected : icon_ia, NULL, bg, &(players[9]));
   if (room->config.oculus)
     {
-      SetSDL_Rect(dest, 0, WIN_Y / 4, WIN_X / 2, WIN_Y / 2);
+      SetSDL_Rect(&dest, 0, WIN_Y / 4, WIN_X / 2, WIN_Y / 2);
       SDL_BlitScaled(bg, NULL, m_windowSurface, &dest);
 
-      SetSDL_Rect(dest, pos->x / 2 + 3, WIN_Y / 4 + pos->y / 2, surface->w, surface->h);
+      SetSDL_Rect(&dest, pos->x / 2 + 3, WIN_Y / 4 + pos->y / 2, surface->w, surface->h);
       SDL_BlitScaled(surface, NULL, m_windowSurface, &dest);
 
-      SetSDL_Rect(dest, WIN_X / 2, WIN_Y / 4, WIN_X / 2, WIN_Y / 2);
+      SetSDL_Rect(&dest, WIN_X / 2, WIN_Y / 4, WIN_X / 2, WIN_Y / 2);
       SDL_BlitScaled(bg, NULL, m_windowSurface, &dest);
 
-      SetSDL_Rect(dest, WIN_X / 2 + pos->x / 2 - 3, WIN_Y / 4 + pos->y / 2, surface->w, surface->h);
+      SetSDL_Rect(&dest, WIN_X / 2 + pos->x / 2 - 3, WIN_Y / 4 + pos->y / 2, surface->w, surface->h);
       SDL_BlitScaled(surface, NULL, m_windowSurface, &dest);
     }
   else
@@ -606,16 +606,16 @@ void			Display::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
   SDL_FillRect(m_windowSurface, NULL, SDL_MapRGB(screen->format, 143, 45, 42));
   if (data->config.oculus)
     {
-      SetSDL_Rect(dest, 0, WIN_Y / 4, WIN_X / 2, WIN_Y / 2);
+      SetSDL_Rect(&dest, 0, WIN_Y / 4, WIN_X / 2, WIN_Y / 2);
       SDL_BlitScaled(screen, NULL, m_windowSurface, &dest);
 
-      SetSDL_Rect(dest, pos->x / 2 + 3, WIN_Y / 4 + pos->y / 2, pos->w, pos->h);
+      SetSDL_Rect(&dest, pos->x / 2 + 3, WIN_Y / 4 + pos->y / 2, pos->w, pos->h);
       SDL_BlitScaled(surface, NULL, m_windowSurface, &dest);
 
-      SetSDL_Rect(dest, WIN_X / 2, WIN_Y / 4, WIN_X / 2, WIN_Y / 2);
+      SetSDL_Rect(&dest, WIN_X / 2, WIN_Y / 4, WIN_X / 2, WIN_Y / 2);
       SDL_BlitScaled(screen, NULL, m_windowSurface, &dest);
 
-      SetSDL_Rect(dest, WIN_X / 2 + pos->x / 2 - 3, WIN_Y / 4 + pos->y / 2, pos->w, pos->h);
+      SetSDL_Rect(&dest, WIN_X / 2 + pos->x / 2 - 3, WIN_Y / 4 + pos->y / 2, pos->w, pos->h);
       SDL_BlitScaled(surface, NULL, m_windowSurface, &dest);
     }
   else

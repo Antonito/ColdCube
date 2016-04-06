@@ -6,10 +6,9 @@
 Mesh::Mesh()
 {
   m_vertexArrayObject = 0;
-  m_temp = false;
 }
 
-Mesh::Mesh(Vertex* vertices, unsigned int nbVertices, unsigned int *indices, unsigned int nbIndices, bool temp)
+Mesh::Mesh(Vertex* vertices, unsigned int nbVertices, unsigned int *indices, unsigned int nbIndices)
 {
   IndexedModel model;
 
@@ -25,13 +24,11 @@ Mesh::Mesh(Vertex* vertices, unsigned int nbVertices, unsigned int *indices, uns
 
   model.CalcNormals();
   InitMesh(model);
-  m_temp = temp;
 }
 
 Mesh::~Mesh()
 {
-  if (!m_temp)
-    glDeleteVertexArrays(1, &m_vertexArrayObject);
+  glDeleteVertexArrays(1, &m_vertexArrayObject);
 }
 
 void Mesh::InitMesh(const IndexedModel& model)
