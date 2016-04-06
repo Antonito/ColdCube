@@ -10,6 +10,8 @@ void		udps_send_to_all(t_all *all)
   i = -1;
   while (++i < 10)
     {
+      if (all->connected[i] == 0 || all->isPackage[i] == 0)
+	continue;
       j = -1;
       while (++j < 10)
 	{
