@@ -19,13 +19,18 @@ void			*udp_send_thread(void *data)
 {
   t_data		*_data;
   struct timeval	t1;
+  struct timeval	t2;
 
   _data = (t_data *)data;
+  gettimeofday(&t1, NULL);
   while (_data->net.udp.run_send)
     {
-      gettimeofday(&t1, NULL);
-      if (t1.tv_usec % 30000 <= 100)
-	createUdpPacket(_data, &_data->players[_data->net.playerIndexUdp]);
+      gettimeofday(&t2, NULL);
+      if (t2.tv_usec - t1.tv_usec >= 16000)
+	{
+	  createUdpPacket(_data, &_data->players[_data->net.playerIndexUdp]);
+	  gettimeofday(&t1, NULL);
+	}
     }
   return (NULL);
 }

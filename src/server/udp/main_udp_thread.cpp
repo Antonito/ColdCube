@@ -35,10 +35,12 @@ void			udp_thread(t_all *all)
   time_t		z1, z2;
   time_t		diffout;
   struct timeval	t1;
+  struct timeval	t2;
 
   all->udp->action = 1;
   all->udp->cli_addrl = sizeof(all->udp->tmp_sock);
   z1 = time(NULL);
+  gettimeofday(&t1, NULL);
   while (all->udp->action)
   {
     FD_ZERO(&all->udp->readfds);
@@ -50,10 +52,11 @@ void			udp_thread(t_all *all)
       {
 	fprintf(stderr, "Error select\n");
       }
-    gettimeofday(&t1, NULL);
-    if (t1.tv_usec % 30000 <= 1000)
+    gettimeofday(&t2, NULL);
+    if (t2.tv_usec - t1.tv_usec >= 14000)
       {
 	udps_send_to_all(all);
+	gettimeofday(&t1, NULL);
       }
     if (diffout >= 5)
       {
