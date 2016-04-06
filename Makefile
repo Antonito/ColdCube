@@ -28,7 +28,7 @@ ENGINE_PREFIX=		src/engine/
 
 ENGINE_FILES=		animation_player.cpp		\
 			chunk.cpp			\
-			display.cpp			\
+			displayer.cpp			\
 			load_shader.cpp			\
 			map.cpp				\
 			mesh.cpp			\

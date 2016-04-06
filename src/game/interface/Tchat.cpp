@@ -13,14 +13,18 @@ Tchat::Tchat()
 {
   Tchat(0);
 }
+
 Tchat::Tchat(unsigned char transparency)
 {
-  this->messages = new std::vector<std::string>;
-  this->messages->push_back("You are now connected");
+  std::cout << "caca" << std::endl;
+  this->messages = std::vector<std::string>(4);
+  this->messages[0] = "toto";
+  this->messages[1] = "toto";
+  std::cout << this->messages.size() << " <- size" << std::endl;
   this->maxlen = 20;
-  this->background = IMG_Load(TCHAT_BACKGROUND);
   this->header = IMG_Load(TCHAT_HEADER);
   this->footer = IMG_Load(TCHAT_FOOTER);
+  this->background = IMG_Load(TCHAT_BACKGROUND);
   this->name_font = TTF_OpenFont(TCHAT_FONT_NAME, (int)(50 / WIN_RATIO));
   this->text_font = TTF_OpenFont(TCHAT_FONT_TEXT, (int)(50 / WIN_RATIO));
   this->isFocused = false;
@@ -28,9 +32,24 @@ Tchat::Tchat(unsigned char transparency)
   this->transparency = transparency;
 }
 
+void Tchat::constructor()
+{
+  std::cout << "caca" << std::endl;
+  this->messages = std::vector<std::string>(4);
+  this->messages[0] = "toto";
+  std::cout << this->messages.size() << " <- size" << std::endl;
+  this->maxlen = 20;
+  this->header = IMG_Load(TCHAT_HEADER);
+  this->footer = IMG_Load(TCHAT_FOOTER);
+  this->background = IMG_Load(TCHAT_BACKGROUND);
+  this->name_font = TTF_OpenFont(TCHAT_FONT_NAME, (int)(50 / WIN_RATIO));
+  this->text_font = TTF_OpenFont(TCHAT_FONT_TEXT, (int)(50 / WIN_RATIO));
+  this->isFocused = false;
+  this->transparency = transparency;
+}
+
 Tchat::~Tchat()
 {
-  delete this->messages;
   TTF_CloseFont(this->name_font);
   TTF_CloseFont(this->text_font);
   SDL_FreeSurface(this->background);
@@ -38,14 +57,39 @@ Tchat::~Tchat()
   SDL_FreeSurface(this->footer);
 }
 
-void Tchat::display(SDL_Rect pos, SDL_Surface *to)
+void Tchat::getTchat()
 {
-  display(pos, to, WIN_Y);
+  std::cout << "this = " << this << std::endl;
+  std::cout << "this->messages = " << this->messages.size() << std::endl;
 }
 
-void Tchat::display(SDL_Rect pos, SDL_Surface *to, int height)
+void Tchat::display(SDL_Rect pos, SDL_Surface *to)
 {
-  SDL_BlitSurface(this->background, NULL, to, &pos);
+  SDL_Rect base = pos;
+  SDL_Rect text_pos = {42, 42, pos.w, pos.h};
+  SDL_Surface *header = IMG_Load(TCHAT_HEADER);
+  SDL_Surface *footer = IMG_Load(TCHAT_FOOTER);
+  SDL_Surface *background = IMG_Load(TCHAT_BACKGROUND);
+  SDL_Surface *text;
+  SDL_Color grey = {42, 42, 42, 0};
+
+  this->getTchat();
+  for (int i = this->messages.size() ; i && 0 ; i--)
+  {
+    std::cout << "Printing : " << this->messages[i].c_str() << std::endl;
+    text = TTF_RenderUTF8_Blended(this->text_font, this->messages[i].c_str(), grey);
+    SDL_BlitSurface(text, NULL, background, &text_pos);
+    SDL_FreeSurface(text);
+  }
+  SDL_BlitSurface(background, NULL, to, &pos);
+  pos = base;
+  SDL_BlitSurface(header, NULL, to, &pos);
+  pos = base;
+  pos.y = base.h - footer->h;
+  SDL_BlitSurface(footer, NULL, to, &pos);
+  SDL_FreeSurface(header);
+  SDL_FreeSurface(footer);
+  SDL_FreeSurface(background);
 }
 
 void Tchat::focus()

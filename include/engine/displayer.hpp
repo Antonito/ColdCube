@@ -1,5 +1,5 @@
-#ifndef DISPLAY_HPP_
-# define DISPLAY_HPP_
+#ifndef DISPLAYER_HPP_
+# define DISPLAYER_HPP_
 
 # include <SDL2/SDL.h>
 # include <string>
@@ -9,10 +9,10 @@
 # include "map.hpp"
 # include "common_structs.hpp"
 
-class Display
+class Displayer
 {
  public:
-  Display(int width, int height, const std::string& title);
+  Displayer(int width, int height, const std::string& title);
 
   void	Clear(float r, float g, float b, float a);
   void  Update(Camera &cam, Map &map, Player &player, t_data *data);
@@ -23,7 +23,7 @@ class Display
   bool	IsClosed();
   void	setClosed(bool state){m_isClosed = state;};
 
-  virtual ~Display();
+  virtual ~Displayer();
  protected:
  private:
   SDL_Window*	m_window;
@@ -32,6 +32,6 @@ class Display
   SDL_Surface*	m_windowSurface;
 };
 
-int	room(Display &, t_data *);
+int	room(Displayer &, t_data *);
 
-#endif // !DISPLAY_HPP_
+#endif // !DISPLAYER_HPP_
