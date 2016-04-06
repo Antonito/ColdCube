@@ -11,6 +11,7 @@
 # include <sys/types.h>
 # include <pthread.h>
 # include <sys/time.h>
+# include <iostream>
 #endif
 #include "tools.hpp"
 #include "common_structs.hpp"
@@ -18,18 +19,23 @@
 void			*udp_send_thread(void *data)
 {
   t_data		*_data;
+  long			timestamp;
+  long			last_packet;
   struct timeval	t1;
   struct timeval	t2;
 
   _data = (t_data *)data;
   gettimeofday(&t1, NULL);
+  last_packet = t1.tv_sec * 1000 + t1.tv_usec / 1000;
   while (_data->net.udp.run_send)
     {
       gettimeofday(&t2, NULL);
-      if (t2.tv_usec - t1.tv_usec >= 16000)
+      timestamp = t2.tv_sec * 1000 + t2.tv_usec / 1000;
+      if ((timestamp - last_packet) >= 16)
 	{
 	  createUdpPacket(_data, &_data->players[_data->net.playerIndexUdp]);
 	  gettimeofday(&t1, NULL);
+	  last_packet = t1.tv_sec * 1000 + t1.tv_usec / 1000;
 	}
     }
   return (NULL);

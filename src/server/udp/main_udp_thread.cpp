@@ -34,6 +34,8 @@ void			udp_thread(t_all *all)
   int			go;
   time_t		z1, z2;
   time_t		diffout;
+  long			timestamp;
+  long			last_packet;
   struct timeval	t1;
   struct timeval	t2;
 
@@ -41,6 +43,7 @@ void			udp_thread(t_all *all)
   all->udp->cli_addrl = sizeof(all->udp->tmp_sock);
   z1 = time(NULL);
   gettimeofday(&t1, NULL);
+  last_packet = t1.tv_sec * 1000 + t1.tv_usec / 1000;
   while (all->udp->action)
   {
     FD_ZERO(&all->udp->readfds);
@@ -53,10 +56,12 @@ void			udp_thread(t_all *all)
 	fprintf(stderr, "Error select\n");
       }
     gettimeofday(&t2, NULL);
-    if (t2.tv_usec - t1.tv_usec >= 14000)
+    timestamp = t2.tv_sec * 1000 + t2.tv_usec / 1000;
+    if ((timestamp - last_packet) >= 14)
       {
 	udps_send_to_all(all);
 	gettimeofday(&t1, NULL);
+	last_packet = t1.tv_sec * 1000 + t1.tv_usec / 1000;
       }
     if (diffout >= 5)
       {
