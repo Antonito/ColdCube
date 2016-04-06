@@ -32,12 +32,18 @@ void		AI::findPlayer(t_player *player)
   i = 1;
   if (getEvent(player[i].events, CONNECTED))
     m_closestPlayer = player[i].position;
+  else
+    m_closestPlayer = vec3(0, 0, 0);
   while (++i < 10)
     {
       tmp3 = player[i].position;
-      if (glm::length(tmp3) <= glm::length(m_closestPlayer) &&
-	  getEvent(player[i].events, CONNECTED))
-	m_closestPlayer = tmp3;
+      // if (glm::length(tmp3) <= glm::length(m_closestPlayer) &&
+      // 	  getEvent(player[i].events, CONNECTED))
+      if (getEvent(player[i].events, CONNECTED))
+	{
+	  std::cout << "Id = " << i << "\n";
+	  m_closestPlayer = tmp3;
+	}
     }
   dprintf(2, "Closest player is at %f %f %f\n", m_closestPlayer.x, m_closestPlayer.y, m_closestPlayer.z);
 }

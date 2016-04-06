@@ -281,6 +281,7 @@ int	startGame(t_data *data, std::vector<menuItem> &items, Display &disp)
 #ifdef	DEBUG
 	  std::clog << "UDP OK\n";
 #endif
+	  setEvent(&data->players[data->net.playerIndexUdp].events, CONNECTED, true);
 	  engineMain(disp, data);
 	  write(data->net.tcp.sock, "/r", 2);
 	  fprintf(stdout, "tcp fd closed\n");
@@ -291,6 +292,7 @@ int	startGame(t_data *data, std::vector<menuItem> &items, Display &disp)
 	  close(data->net.udp.sock);
 	  close(data->net.tcp.sock);
 #endif
+	  setEvent(&data->players[data->net.playerIndexUdp].events, CONNECTED, false);
 	}
     }
   data->net.tcp.run = 0;

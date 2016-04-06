@@ -77,7 +77,7 @@ int		createUdpPacketAI(int id, t_player *player, char *buff)
       packet[n + i] = tmp[i];
       ++i;
     }
-  buff = tmp;
+  strncpy(buff, tmp, 42);
   return (0);
 }
 
