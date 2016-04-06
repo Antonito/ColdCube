@@ -16,6 +16,7 @@ int		room(Display &display, t_data *data)
   SDL_Rect	pos = {WIN_X / 2, WIN_Y / 2, WIN_X, WIN_Y};
 
   surface = IMG_Load(CURSOR_IMG);
+  data->tchat = new Tchat();
 
   while (!display.IsClosed() && data->game.running)
     {

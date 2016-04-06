@@ -148,7 +148,7 @@ typedef	struct		s_data
   t_network		net;
   t_config		config;
   SDL_Surface		*screen;
-  Tchat			tchat;
+  Tchat			*tchat;
   char			sounds[];
 }			t_data;
 

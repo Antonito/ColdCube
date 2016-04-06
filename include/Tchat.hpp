@@ -15,7 +15,6 @@ class Tchat
     ~Tchat();
     void backspace();
     void display(SDL_Rect, SDL_Surface *);
-    void display(SDL_Rect, SDL_Surface *, int height);
     void focus();
     void moveLeft();
     void moveRight();
