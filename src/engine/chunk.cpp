@@ -212,34 +212,6 @@ static unsigned int GetFullColor(unsigned char color)
   static unsigned int colors[] =
     {0x00000000, 0xFFFFFFFF, 0xFF0000FF, 0xFF00FF00,
      0xFFFF0000, 0xFF222222, 0xFF777777};
-  // static bool isSet = false;
-
-  // if (!isSet)
-  //   {
-  //     int	i = 0;
-  //     while (i < 256)
-  // 	{
-  // 	  // colors[i] = (((i >> 6) & 4) * 85) << 24;
-  // 	  //colors[i] = i << 24;
-  // 	  // colors[i] |= rand() % (256 * 256 * 256);
-  // 	  //	  colors[i] = (rand() & 0x00FFFFFF) | (i << 24);
-  // 	  colors[i] = (i << 24);
-  // 	  colors[i] |= ((i >> 4) & 3) * 85;
-  // 	  colors[i] |= (((i >> 2) & 3) * 85) << 8;
-  // 	  colors[i] |= ((i & 3) * 85) << 16;
-  // 	  // colors[i] |= i;
-  // 	  // int	temp = rand() % 8;
-  // 	  // // colors[i] = (i << 24);
-  // 	  // colors[i] = (rand() % 100 + (((temp & 4) == 4) ? 155 : 0)) << 16;
-  // 	  // colors[i] |= (rand() % 100 + (((temp & 2) == 2) ? 155 : 0)) << 8;
-  // 	  // colors[i] |= rand() % 100 + (((temp & 1) == 1) ? 155 : 0);
-  // 	  // // colors[i] = 256 * 256 * 256 - 1;
-  // 	  // colors[i] |= i << 24;
-
-  // 	  i++;
-  // 	}
-  //     isSet = true;
-  //   }
   return (colors[(int)color]);
 }
 
@@ -250,9 +222,8 @@ unsigned char Chunk::GetBlock(int x, int y, int z)
 
 void Chunk::PutCube(unsigned char cube, ivec3 pos)
 {
-  printf("[%d, %d] (%d, %d, %d)\n", m_pos.x, m_pos.y, pos.x, pos.y, pos.z);
   if (pos.z >= m_pos.z && pos.z <= m_pos.z + m_height &&
-      (m_chunk[pos.x + 16 * pos.y + 256 * pos.z] == 0 || cube == 0))
+      (m_chunk[pos.x + (pos.y << 4) + (pos.z << 8)] == 0 || cube == 0))
     {
       m_chunk[pos.x + 16 * pos.y + 256 * pos.z] = cube;
       m_texture.~Texture();
