@@ -58,6 +58,7 @@ int	game()
   Menu			*menu = new Menu(screen, &items);
   ovrHmd		hmd;
 
+  data->screen = screen;
   ovr_Initialize(0);
   hmd = ovrHmd_Create(0);
   if (hmd)

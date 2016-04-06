@@ -16,6 +16,7 @@ class Display
 
   void	Clear(float r, float g, float b, float a);
   void  Update(Camera &cam, Map &map, Player &player, t_data *data);
+  void  UpdateRoom(t_data *data, SDL_Rect *, SDL_Surface *, SDL_Surface *);
   void  UpdateMenu(Menu *menu, std::vector<menuItem> &items, SDL_Rect *pos,
 		   SDL_Surface *screen, SDL_Surface *surface, t_data *data);
   SDL_Window	*GetWin()const{return m_window;};
@@ -30,5 +31,7 @@ class Display
   bool		m_isClosed;
   SDL_Surface*	m_windowSurface;
 };
+
+int	room(Display &, t_data *);
 
 #endif // !DISPLAY_HPP_

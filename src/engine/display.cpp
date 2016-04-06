@@ -1,3 +1,5 @@
+#include "SDL2/SDL_image.h"
+#include "SDL2/SDL_ttf.h"
 #include <sys/time.h>
 #include <unistd.h>
 #include <GL/glew.h>
@@ -281,7 +283,7 @@ int	startGame(t_data *data, std::vector<menuItem> &items, Display &disp)
 #ifdef	DEBUG
 	  std::clog << "UDP OK\n";
 #endif
-	  engineMain(disp, data);
+	  room(disp, data);
 	  write(data->net.tcp.sock, "/r", 2);
 	  fprintf(stdout, "tcp fd closed\n");
 #ifdef _WIN32
@@ -297,6 +299,91 @@ int	startGame(t_data *data, std::vector<menuItem> &items, Display &disp)
   data->net.udp.run_send = 0;
   data->net.udp.run = 0;
   return (0);
+}
+
+void			Display::UpdateRoom(t_data *room, SDL_Rect *pos,
+					    SDL_Surface *bg, SDL_Surface *surface)
+{
+  SDL_Event		event;
+  SDL_Rect		dest = {0, 0, WIN_X, WIN_Y};
+  SDL_Rect		players[] = {{1370, 215, WIN_X, WIN_Y},
+				     {1535, 270, WIN_X, WIN_Y},
+				     {1205, 270, WIN_X, WIN_Y},
+				     {1635, 410, WIN_X, WIN_Y},
+				     {1110, 410, WIN_X, WIN_Y},
+				     {1635, 578, WIN_X, WIN_Y},
+				     {1110, 578, WIN_X, WIN_Y},
+				     {1535, 718, WIN_X, WIN_Y},
+				     {1205, 718, WIN_X, WIN_Y},
+				     {1370, 773, WIN_X, WIN_Y}};
+  SDL_Surface		*icon_connected,
+			*icon_ia;
+
+  while (SDL_PollEvent(&event))
+    {
+      switch(event.type)
+	{
+	  case SDL_KEYUP:
+	    if (event.key.keysym.sym == SDLK_ESCAPE)
+	      room->game.running = false;
+	    break;
+	  case SDL_QUIT:
+	    room->game.running = false;
+	    break;
+	  case SDL_MOUSEMOTION:
+	    if (event.motion.x)
+	      event.motion.x -= (event.motion.xrel / 3) / WIN_RATIO;
+	    if (event.motion.y)
+	      event.motion.y -= (event.motion.yrel / 3) / WIN_RATIO;
+	    pos->x += (event.motion.xrel / 2) / WIN_RATIO;
+	    pos->y += (event.motion.yrel / 2) / WIN_RATIO;
+	    if (pos->x > WIN_X)
+	      pos->x = WIN_X;
+	    else if (pos->x < 0)
+	      pos->x = 0;
+	    if (pos->y > WIN_Y)
+	      pos->y = WIN_Y;
+	    else if (pos->y < 0)
+	      pos->y = 0;
+	    break;
+	}
+    }
+  icon_connected = IMG_Load(ROOM_ICON_PLAYER);
+  icon_ia = IMG_Load(ROOM_ICON_IA);
+  SDL_FillRect(m_windowSurface, NULL, SDL_MapRGB(m_windowSurface->format, 243, 237, 211));
+  SDL_BlitSurface((room->players[0].pseudo) ? icon_connected : icon_ia, NULL, bg, &(players[0]));
+  SDL_BlitSurface((room->players[1].pseudo) ? icon_connected : icon_ia, NULL, bg, &(players[1]));
+  SDL_BlitSurface((room->players[2].pseudo) ? icon_connected : icon_ia, NULL, bg, &(players[2]));
+  SDL_BlitSurface((room->players[3].pseudo) ? icon_connected : icon_ia, NULL, bg, &(players[3]));
+  SDL_BlitSurface((room->players[4].pseudo) ? icon_connected : icon_ia, NULL, bg, &(players[4]));
+  SDL_BlitSurface((room->players[5].pseudo) ? icon_connected : icon_ia, NULL, bg, &(players[5]));
+  SDL_BlitSurface((room->players[6].pseudo) ? icon_connected : icon_ia, NULL, bg, &(players[6]));
+  SDL_BlitSurface((room->players[7].pseudo) ? icon_connected : icon_ia, NULL, bg, &(players[7]));
+  SDL_BlitSurface((room->players[8].pseudo) ? icon_connected : icon_ia, NULL, bg, &(players[8]));
+  SDL_BlitSurface((room->players[9].pseudo) ? icon_connected : icon_ia, NULL, bg, &(players[9]));
+  if (room->config.oculus)
+    {
+      SetSDL_Rect(dest, 0, WIN_Y / 4, WIN_X / 2, WIN_Y / 2);
+      SDL_BlitScaled(bg, NULL, m_windowSurface, &dest);
+
+      SetSDL_Rect(dest, pos->x / 2 + 3, WIN_Y / 4 + pos->y / 2, surface->w, surface->h);
+      SDL_BlitScaled(surface, NULL, m_windowSurface, &dest);
+
+      SetSDL_Rect(dest, WIN_X / 2, WIN_Y / 4, WIN_X / 2, WIN_Y / 2);
+      SDL_BlitScaled(bg, NULL, m_windowSurface, &dest);
+
+      SetSDL_Rect(dest, WIN_X / 2 + pos->x / 2 - 3, WIN_Y / 4 + pos->y / 2, surface->w, surface->h);
+      SDL_BlitScaled(surface, NULL, m_windowSurface, &dest);
+    }
+  else
+    {
+      SDL_BlitSurface(bg, NULL, m_windowSurface, &dest);
+      SDL_BlitSurface(surface, NULL, m_windowSurface, pos);
+    }
+  SDL_UpdateWindowSurface(m_window);
+  SDL_FreeSurface(icon_connected);
+  SDL_FreeSurface(icon_ia);
+  usleep(1000);
 }
 
 void			Display::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
