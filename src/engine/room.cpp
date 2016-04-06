@@ -1,7 +1,7 @@
 #include <ctime>
 #include "game.hpp"
 #include "common_structs.hpp"
-#include "engine/display.hpp"
+#include "engine/displayer.hpp"
 #include <time.h>
 #include "SDL2/SDL_image.h"
 
@@ -9,7 +9,7 @@ using namespace glm;
 
 Mesh	SetPlanes(int, vec3);
 
-int		room(Display &display, t_data *data)
+int		room(Displayer &display, t_data *data)
 {
   SDL_Surface		*bg,
 			*surface;

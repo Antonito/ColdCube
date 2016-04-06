@@ -2,7 +2,7 @@
 #include <ctime>
 #include "game.hpp"
 #include "common_structs.hpp"
-#include "engine/display.hpp"
+#include "engine/displayer.hpp"
 #include "engine/shader.hpp"
 #include "engine/mesh.hpp"
 #include "engine/player.hpp"
@@ -17,7 +17,7 @@ using namespace glm;
 
 Mesh	SetPlanes(int, vec3);
 
-int	engineMain(Display &display, t_data *data)
+int	engineMain(Displayer &display, t_data *data)
 {
   Shader	shader("shaders/test1");
 

@@ -1,5 +1,5 @@
 #include <SDL2/SDL.h>
-#include "engine/display.hpp"
+#include "engine/displayer.hpp"
 #include "game.hpp"
 #include "Menu.h"
 #include <GL/glut.h>
@@ -54,7 +54,7 @@ void	initData(t_data *data)
 int	game()
 {
   t_data		*data = new t_data;
-  Display		display(WIN_X, WIN_Y, "ColdCube");
+  Displayer		display(WIN_X, WIN_Y, "ColdCube");
   std::vector<menuItem>	items(14);
   std::string		inputText = "Some text";
   SDL_Rect		pos;

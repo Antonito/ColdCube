@@ -4,8 +4,9 @@
 #include <unistd.h>
 #include <GL/glew.h>
 #include <GL/gl.h>
+#include <GL/glx.h>
 #include <sys/time.h>
-#include "engine/display.hpp"
+#include "engine/displayer.hpp"
 #include <iostream>
 #include <SDL2/SDL.h>
 #include "common_structs.hpp"
@@ -25,7 +26,7 @@ void	SetSDL_Rect(SDL_Rect *r, int x, int y, int w, int h)
   r->h = h;
 }
 
-Display::Display(int width, int height, const std::string& title)
+Displayer::Displayer(int width, int height, const std::string& title)
 {
   if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
     {
@@ -53,30 +54,32 @@ Display::Display(int width, int height, const std::string& title)
   m_isClosed = false;
   glEnable(GL_DEPTH_TEST);
   glEnable(GL_CULL_FACE);
+  glEnable(GL_LIGHTING);
+  glEnable(GL_LIGHT0);
   glCullFace(GL_BACK);
   m_windowSurface = SDL_GetWindowSurface(m_window);
 }
 
-Display::~Display()
+Displayer::~Displayer()
 {
   SDL_GL_DeleteContext(m_glContext);
   SDL_DestroyWindow(m_window);
   SDL_Quit();
 }
 
-void	Display::Clear(float r, float g, float b, float a)
+void	Displayer::Clear(float r, float g, float b, float a)
 {
   glClearColor(r, g, b, a);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-bool	Display::IsClosed()
+bool	Displayer::IsClosed()
 {
   return (m_isClosed);
 }
 
-void	Display::Update(Camera &cam, Map &map, Player &player,
-			t_data *data)
+void	Displayer::Update(Camera &cam, Map &map, Player &player,
+			  t_data *data)
 {
   SDL_GL_SwapWindow(m_window);
   usleep(15800);
@@ -234,7 +237,7 @@ void	Display::Update(Camera &cam, Map &map, Player &player,
   player.SetCam(cam, player.GetThird(), data->players + player.GetId());
 }
 
-int	startGame(t_data *data, std::vector<menuItem> &items, Display &disp)
+int	startGame(t_data *data, std::vector<menuItem> &items, Displayer &disp)
 {
   //Initilisation
 #ifdef	CHEAT
@@ -277,7 +280,7 @@ int	startGame(t_data *data, std::vector<menuItem> &items, Display &disp)
 #ifdef	DEBUG
       std::clog << "TCP OK\n";
 #endif
-	usleep(2000);
+      usleep(2000);
       if (!clientLaunchUdpc(data))
 	{
 #ifdef	DEBUG
@@ -304,8 +307,8 @@ int	startGame(t_data *data, std::vector<menuItem> &items, Display &disp)
   return (0);
 }
 
-void			Display::UpdateRoom(t_data *room, SDL_Rect *pos,
-					    SDL_Surface *bg, SDL_Surface *surface)
+void			Displayer::UpdateRoom(t_data *room, SDL_Rect *pos,
+					      SDL_Surface *bg, SDL_Surface *surface)
 {
   SDL_Event		event;
   SDL_Rect		dest = {0, 0, WIN_X, WIN_Y};
@@ -320,35 +323,35 @@ void			Display::UpdateRoom(t_data *room, SDL_Rect *pos,
 				     {1205, 718, WIN_X, WIN_Y},
 				     {1370, 773, WIN_X, WIN_Y}};
   SDL_Surface		*icon_connected,
-			*icon_ia;
+    *icon_ia;
 
   while (SDL_PollEvent(&event))
     {
       switch(event.type)
 	{
-	  case SDL_KEYUP:
-	    if (event.key.keysym.sym == SDLK_ESCAPE)
-	      room->game.running = false;
-	    break;
-	  case SDL_QUIT:
+	case SDL_KEYUP:
+	  if (event.key.keysym.sym == SDLK_ESCAPE)
 	    room->game.running = false;
-	    break;
-	  case SDL_MOUSEMOTION:
-	    if (event.motion.x)
-	      event.motion.x -= (event.motion.xrel / 3) / WIN_RATIO;
-	    if (event.motion.y)
-	      event.motion.y -= (event.motion.yrel / 3) / WIN_RATIO;
-	    pos->x += (event.motion.xrel / 2) / WIN_RATIO;
-	    pos->y += (event.motion.yrel / 2) / WIN_RATIO;
-	    if (pos->x > WIN_X)
-	      pos->x = WIN_X;
-	    else if (pos->x < 0)
-	      pos->x = 0;
-	    if (pos->y > WIN_Y)
-	      pos->y = WIN_Y;
-	    else if (pos->y < 0)
-	      pos->y = 0;
-	    break;
+	  break;
+	case SDL_QUIT:
+	  room->game.running = false;
+	  break;
+	case SDL_MOUSEMOTION:
+	  if (event.motion.x)
+	    event.motion.x -= (event.motion.xrel / 3) / WIN_RATIO;
+	  if (event.motion.y)
+	    event.motion.y -= (event.motion.yrel / 3) / WIN_RATIO;
+	  pos->x += (event.motion.xrel / 2) / WIN_RATIO;
+	  pos->y += (event.motion.yrel / 2) / WIN_RATIO;
+	  if (pos->x > WIN_X)
+	    pos->x = WIN_X;
+	  else if (pos->x < 0)
+	    pos->x = 0;
+	  if (pos->y > WIN_Y)
+	    pos->y = WIN_Y;
+	  else if (pos->y < 0)
+	    pos->y = 0;
+	  break;
 	}
     }
   icon_connected = IMG_Load(ROOM_ICON_PLAYER);
@@ -389,9 +392,9 @@ void			Display::UpdateRoom(t_data *room, SDL_Rect *pos,
   usleep(1000);
 }
 
-void			Display::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
-					    SDL_Rect *pos, SDL_Surface *screen,
-					    SDL_Surface *surface, t_data *data)
+void			Displayer::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
+					      SDL_Rect *pos, SDL_Surface *screen,
+					      SDL_Surface *surface, t_data *data)
 {
   SDL_Event		event;
   struct timeval	tv;
@@ -477,7 +480,7 @@ void			Display::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
 	      menu->moveUp();
 	      if (items[menu->currentItem].type == MENU_TEXTINPUT)
 		menu->hold();
-	  }
+	    }
 	  if (event.key.keysym.sym == SDLK_BACKSPACE &&
 	      items[menu->currentItem].text.length())
 	    {
