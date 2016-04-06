@@ -31,6 +31,7 @@ ENGINE_FILES=		animation_player.cpp		\
 			map.cpp				\
 			mesh.cpp			\
 			physic.cpp			\
+			room.cpp			\
 			player.cpp			\
 			shader.cpp			\
 			texture.cpp			\
