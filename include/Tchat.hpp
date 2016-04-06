@@ -12,12 +12,14 @@ class Tchat
     SDL_Surface *background;
     SDL_Surface *footer;
     SDL_Surface *header;
+    SDL_Surface *cursor_img;
     TTF_Font *name_font;
     TTF_Font *text_font;
     bool isFocused;
-    int cursor;
-    int maxlen;
-    std::string input;
+    unsigned int cursor;
+    unsigned int cursor_pos;
+    unsigned long maxlen;
+    std::string *input;
     std::vector<std::string> messages;
     unsigned char transparency;
   public:
@@ -25,7 +27,6 @@ class Tchat
     Tchat(unsigned char transparency);
     ~Tchat();
     void constructor();
-    void getTchat();
     void backspace();
     void display(SDL_Rect, SDL_Surface *);
     void focus();
@@ -33,7 +34,7 @@ class Tchat
     void moveRight();
     void send();
     void setTransparency(int);
-    void write_text(char *);
+    void write_text(const char *);
     void scroll(int);
 };
 

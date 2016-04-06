@@ -330,6 +330,23 @@ void			Display::UpdateRoom(t_data *room, SDL_Rect *pos,
 	    if (event.key.keysym.sym == SDLK_ESCAPE)
 	      room->game.running = false;
 	    break;
+	  case SDL_KEYDOWN:
+	    switch (event.key.keysym.sym)
+	      {
+		case SDLK_BACKSPACE:
+		  room->tchat.backspace();
+		  break;
+		case SDLK_LEFT:
+		  room->tchat.moveLeft();
+		  break;
+		case SDLK_RIGHT:
+		  room->tchat.moveRight();
+		  break;
+		case SDLK_RETURN:
+		  room->tchat.send();
+		  break;
+	      }
+	    break;
 	  case SDL_QUIT:
 	    room->game.running = false;
 	    break;
@@ -348,6 +365,9 @@ void			Display::UpdateRoom(t_data *room, SDL_Rect *pos,
 	      pos->y = WIN_Y;
 	    else if (pos->y < 0)
 	      pos->y = 0;
+	    break;
+	  case SDL_TEXTINPUT:
+	    room->tchat.write_text(event.text.text);
 	    break;
 	}
     }

@@ -83,7 +83,6 @@ int	game()
     }
   for(int i = 0; i < 10; i++)
     free(data->players[i].pseudo);
-  delete data;
   if (hmd)
     ovrHmd_Destroy(hmd);
   return (0);
