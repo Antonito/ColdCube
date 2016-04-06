@@ -10,26 +10,10 @@ void		udps_send_to_all(t_all *all)
   i = -1;
   while (++i < 10)
     {
-      if (all->connected[i] == 0 || all->isPackage[i] == 0)
-	continue;
       j = -1;
       while (++j < 10)
 	{
 	  if (all->connected[j] == 0 || all->isPackage[j] == 0)
-	    continue;
-	  sendto(all->udp->main_sock, all->udp->cli_buff[i], 42, 0,
-		 (struct sockaddr *)&all->udp->cli_sock[j], all->udp->cli_addrl);
-	}
-    }
-  i = -1;
-  while (++i < 10)
-    {
-      if (all->connected[i])
-	continue;
-      j = -1;
-      while (++j < 10)
-	{
-	  if (all->connected[j] == 0)
 	    continue;
 	  sendto(all->udp->main_sock, all->udp->cli_buff[i], 42, 0,
 		 (struct sockaddr *)&all->udp->cli_sock[j], all->udp->cli_addrl);
