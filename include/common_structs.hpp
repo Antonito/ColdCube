@@ -146,6 +146,7 @@ typedef	struct		s_data
   t_game		game;
   t_network		net;
   t_config		config;
+  SDL_Surface		*screen;
   char			sounds[];
 }			t_data;
 

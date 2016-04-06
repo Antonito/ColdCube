@@ -14,17 +14,23 @@
 # define FONT_PATH			"assets/fonts/menu.ttf"
 
 # if (WIN_X == 1280)
-#  define WIN_RATIO			1.50
-#  define SLIDER_CURSOR			"./assets/imgs/menu/720/slider-cursor.png"
+#  define CURSOR_IMG			"./assets/imgs/cursor720.bmp"
+#  define MENU_BACKGROUND		"./assets/imgs/menu/720/%s.bmp"
+#  define ROOM_BACKGROUND		"./assets/imgs/room/720/background.png"
+#  define ROOM_ICON_PLAYER		"./assets/imgs/room/icon_connected.png"
+#  define ROOM_ICON_IA			"./assets/imgs/room/icon_ia.png"
 #  define SLIDER_BAR			"./assets/imgs/menu/720/slider-bar.png"
-#  define MENU_BACKGROUND		"assets/imgs/menu/720/%s.bmp"
-#  define CURSOR_IMG			"assets/imgs/cursor720.bmp"
+#  define SLIDER_CURSOR			"./assets/imgs/menu/720/slider-cursor.png"
+#  define WIN_RATIO			1.50
 # else
-#  define WIN_RATIO			1
-#  define SLIDER_CURSOR			"./assets/imgs/menu/slider-cursor.png"
+#  define CURSOR_IMG			"./assets/imgs/cursor.bmp"
+#  define MENU_BACKGROUND		"./assets/imgs/menu/%s.bmp"
+#  define ROOM_BACKGROUND		"./assets/imgs/room/background.png"
+#  define ROOM_ICON_PLAYER		"./assets/imgs/room/icon_connected.png"
+#  define ROOM_ICON_IA			"./assets/imgs/room/icon_ia.png"
 #  define SLIDER_BAR			"./assets/imgs/menu/slider-bar.png"
-#  define MENU_BACKGROUND		"assets/imgs/menu/%s.bmp"
-#  define CURSOR_IMG			"assets/imgs/cursor.bmp"
+#  define SLIDER_CURSOR			"./assets/imgs/menu/slider-cursor.png"
+#  define WIN_RATIO			1
 # endif
 
 # define PLAYER_SIZE			0.9
@@ -37,13 +43,13 @@
 
 # define TOTAL_PTS			10000
 
-# define RIFLE_DMG			10
-# define PISTOL_DMG			15
 # define KNIFE_DMG			30
+# define PISTOL_DMG			15
+# define RIFLE_DMG			10
 
-# define HEAD_RIFLE			2.50
-# define HEAD_PISTOL			3.00
 # define HEAD_KNIFE			10.00
+# define HEAD_PISTOL			3.00
+# define HEAD_RIFLE			2.50
 
 # define FAR_RIFLE			5
 # define FAR_PISTOL			7
