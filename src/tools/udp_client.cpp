@@ -37,6 +37,7 @@ void			*udp_send_thread(void *data)
 	  gettimeofday(&t1, NULL);
 	  last_packet = t1.tv_sec * 1000 + t1.tv_usec / 1000;
 	}
+      usleep(3000);
     }
   return (NULL);
 }
@@ -60,6 +61,7 @@ void			*udp_thread(void *data)
 	    }
 	  readUdpPacket(_data);
 	}
+      usleep(3000);
     }
   close(_data->net.udp.sock);
   return (NULL);

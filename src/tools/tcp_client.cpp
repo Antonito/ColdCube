@@ -23,9 +23,13 @@ void		tcp_set_pseudo(t_data *data)
   i = -1;
   if ((pseudo = my_str_to_wordtab(data->net.tcp.buff, '\n')) == NULL)
     return ;
+  write(1, "OOOOOOOOOO\n", 11);
+  printf("DATA %p\n", data);
   while (pseudo[++i + 1] != NULL)
     {
+      fprintf(stdout, "#%s#\n", pseudo[i + 1]);
       //strncpy(data->players[i].pseudo, pseudo[i + 1], strlen(pseudo[i + 1]));
+      //data->players[i].pseudo[strlen(pseudo[i + 1])] = 0;
     }
 }
 
@@ -46,6 +50,7 @@ void		*tcp_thread(void *data)
 	tcp_set_pseudo(_data);
       fprintf(stderr, ":%s:", _data->net.tcp.buff);
       fflush(stderr);
+      usleep(3000);
     }
   close(_data->net.tcp.sock);
   fprintf(stdout, "stoped tcp thread\n");

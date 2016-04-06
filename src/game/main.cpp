@@ -35,7 +35,10 @@ void	initData(t_data *data)
 
   i = -1;
   while (++i < 10)
-    data->players[i].pseudo = (char *)malloc(sizeof(char) * 21);
+    {
+      data->players[i].pseudo = (char *)malloc(sizeof(char) * 21);
+      memset(data->players[i].pseudo, 0, 21);
+    }
   memset(data, 0, sizeof(t_data));
   data->game.running = true;
   data->config.keyboard = AZERTY_MODE;
