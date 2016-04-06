@@ -77,7 +77,7 @@ int		createUdpPacketAI(int id, t_player *player, char *buff)
       packet[n + i] = tmp[i];
       ++i;
     }
-  strncpy(buff, packet, 42);
+  memcpy(buff, packet, 42);
   return (0);
 }
 
@@ -182,9 +182,9 @@ int	initAI(t_player *player)
   direction.x = 1;
   direction.y = 0;
   direction.z = 0;
-  pos.x = 0;
-  pos.y = 0;
-  pos.z = 1;
+  pos.x = 1;
+  pos.y = 1;
+  pos.z = 3;
   while (++i < 10)
     {
       memset(&player[i], 0, sizeof(t_player));
@@ -196,6 +196,7 @@ int	initAI(t_player *player)
       player[i].position = pos;
       player[i].direction = direction;
       pos.x++;
+      pos.y += 2;
     }
   return (0);
 }
@@ -235,7 +236,7 @@ void	*main_ai_thread(void *all)
   	    {
   	      AIs[i].updateAI(data->ai, data->connected);
   	      createUdpPacketAI(i, &data->ai[i], data->udp->cli_buff[i]);
-	      printf("Out: %f %f %f\n", data->ai[i].position.x, data->ai[i].position.y, data->ai[i].position.z);
+	      data->isPackage[i] = true;
   	    }
   	}
       usleep(1000);

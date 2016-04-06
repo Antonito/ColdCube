@@ -47,9 +47,8 @@ void		AI::findPlayer(t_player *player, int *isConnected)
 void		AI::moveToPlayer(void)
 {
   //  m_model.Move(glm::normalize(glm::vec2(m_closestPlayer.x, m_closestPlayer.y)));
-  m_model.GetPos() += m_closestPlayer;
+  m_model.GetPos() += glm::normalize(m_closestPlayer) * (GLfloat)0.1;
   m_player->position = m_model.GetPos();
-  printf("%f %f %f\n", m_player->position.x, m_player->position.y, m_player->position.z);
 }
 
 void		AI::updateAI(t_player *player, int *isConnected)

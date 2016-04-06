@@ -40,7 +40,7 @@ int	engineMain(Display &display, t_data *data)
   i = 0;
   while (i < 10)
     {
-      data->players[i].position = vec3(0, -1, 2);
+      data->players[i].position = vec3(2, 2 + i, 2);
       data->players[i].direction = vec3(0, 1, 0);
       i++;
     }
