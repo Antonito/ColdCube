@@ -77,12 +77,11 @@ int		createUdpPacketAI(int id, t_player *player, char *buff)
       packet[n + i] = tmp[i];
       ++i;
     }
-  strncpy(buff, tmp, 42);
+  strncpy(buff, packet, 42);
   return (0);
 }
 
-int		readUdpPacketAI(char *pack, t_player *players, int *isPackage,
-				int playerIndexUdp)
+int		readUdpPacketAI(char *pack, t_player *players, int *isPackage)
 {
   GLfloat	flo;
   char *	tmp;
@@ -96,8 +95,6 @@ int		readUdpPacketAI(char *pack, t_player *players, int *isPackage,
       fflush(stderr);*/
       return (1);
     }
-  if (playerIndexUdp == pack[0])
-    return (0);
   i = 0;
   flo = 0.0f;
   all = 2;
@@ -203,19 +200,6 @@ int	initAI(t_player *player)
   return (0);
 }
 
-int	initPlayers(t_player *player, char *packet, int *isPackage)
-{
-  int		i;
-
-  i = -1;
-  while (++i < 10)
-    {
-      if (isPackage[i])
-	readUdpPacketAI(packet, player, isPackage, i);
-    }
-  return (0);
-}
-
 void	*main_ai_thread(void *all)
 {
   int	i;
@@ -233,21 +217,26 @@ void	*main_ai_thread(void *all)
   while (++i < 10)
     {
       AIs[i].setPlayer(&data->ai[i]);
+      AIs[i].setId(i);
     }
   while (1)
     {
       i = -1;
       while (++i < 10)
 	{
-	  initPlayers(data->ai, data->udp->cli_buff[i], data->isPackage);
-	  if (!data->connected[i])
-	    {
-	      dprintf(2, "IA %d\n", i);
-	      AIs[i].updateAI(data->ai);
-	      //CreatePacket CLI_SOCK[];
-	      createUdpPacketAI(i, &data->ai[i], data->udp->cli_buff[i]);
-	    }
+	  if (data->isPackage[i] && data->connected[i])
+	    readUdpPacketAI(data->udp->cli_buff[i], &data->ai[i],
+			    data->isPackage);
 	}
+      i = -1;
+      while (++i < 10)
+  	{
+  	  if (!data->connected[i])
+  	    {
+  	      AIs[i].updateAI(data->ai, data->connected);
+  	      createUdpPacketAI(i, &data->ai[i], data->udp->cli_buff[i]);
+  	    }
+  	}
       usleep(1000);
     }
   return (NULL);
