@@ -25,7 +25,7 @@ void		tcp_set_pseudo(t_data *data)
     return ;
   while (pseudo[++i + 1] != NULL)
     {
-      strncpy(data->players[i].pseudo, pseudo[i + 1], strlen(pseudo[i + 1]));
+      //strncpy(data->players[i].pseudo, pseudo[i + 1], strlen(pseudo[i + 1]));
     }
 }
 
@@ -54,7 +54,7 @@ void		*tcp_thread(void *data)
 
 int		clientLaunchTcpc(t_data *data)
 {
-  char		tmp[30];
+  char		tmp[30] = {0};
 #ifdef _WIN32
   WSADATA	wsa;
 
