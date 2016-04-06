@@ -18,7 +18,7 @@ class Map
   void Save();
 private:
   int	m_nbChunk;
-  Chunk	m_chunks[256];
+  Chunk	*m_chunks[64];
 };
 
 #endif // !MAP_HPP_

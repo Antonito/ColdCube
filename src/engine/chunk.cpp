@@ -11,9 +11,9 @@
 # include <unistd.h>
 #endif
 
-static Texture SetTex(char *, int);
- Mesh SetPlanes(int, vec3);
-static unsigned int GetFullColor(unsigned char);
+static Texture		*SetTex(char *, int);
+Mesh			*SetPlanes(int, vec3);
+static unsigned int	GetFullColor(unsigned char);
 
 Chunk::Chunk()
 {
@@ -21,8 +21,8 @@ Chunk::Chunk()
   m_height = 0;
   m_pos = ivec3(0, 0, 0);
   m_chunk = NULL;
-  m_texture = Texture();
-  m_planes = Mesh();
+  m_texture = new Texture();
+  m_planes = new Mesh();
 }
 
 Chunk::Chunk(const std::string &path, int chunk)
@@ -39,7 +39,7 @@ Chunk::Chunk(const std::string &path, int chunk)
       m_texture = SetTex(m_chunk, m_height);
       vec3 pos(m_pos.x, m_pos.y, m_pos.z);
       m_planes = SetPlanes(m_height, pos);
-      if (m_texture.GetTexture() != 0)
+      if (m_texture->GetTexture() != 0)
 	m_isLoaded = true;
     }
 }
@@ -47,15 +47,20 @@ Chunk::Chunk(const std::string &path, int chunk)
 Chunk::~Chunk()
 {
   m_isLoaded = false;
+  delete m_texture;
+  delete m_planes;
+  m_texture = NULL;
+  m_planes = NULL;
+  free(m_chunk);
 }
 
 void Chunk::Draw()
 {
-  m_texture.Bind(0);
-  m_planes.Draw();
+  m_texture->Bind(0);
+  m_planes->Draw();
 }
 
-static Texture SetTex(char *chunk, int height)
+static Texture *SetTex(char *chunk, int height)
 {
   int	i, j, k, coord, coord2;
   int	size = 48 * height * 2;
@@ -110,11 +115,12 @@ static Texture SetTex(char *chunk, int height)
       	imgData[5 * size + k] = 0;
       k++;
     }
-  Texture tex((const unsigned char*)imgData, 16, 2 * 48 * height, true);
+  Texture *tex = new Texture((const unsigned char*)imgData, 16, 2 * 48 * height);
+  delete [] imgData;
   return (tex);
 }
 
- Mesh SetPlanes(int height, vec3 pos)
+Mesh *SetPlanes(int height, vec3 pos)
 {
   int	i, j;
   unsigned int	nbVertices = (4 * 16 * 2 + 4 * height) * 2;
@@ -202,7 +208,7 @@ static Texture SetTex(char *chunk, int height)
       j++;
     }
 
-  Mesh mesh(vertices, nbVertices, indices, nbIndices, true);
+  Mesh *mesh = new Mesh(vertices, nbVertices, indices, nbIndices);
   delete [] vertices;
   return (mesh);
 }
@@ -226,7 +232,7 @@ void Chunk::PutCube(unsigned char cube, ivec3 pos)
       (m_chunk[pos.x + (pos.y << 4) + (pos.z << 8)] == 0 || cube == 0))
     {
       m_chunk[pos.x + 16 * pos.y + 256 * pos.z] = cube;
-      m_texture.~Texture();
+      delete m_texture;
       m_texture = SetTex(m_chunk, m_height);
     }
 }

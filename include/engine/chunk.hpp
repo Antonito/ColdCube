@@ -21,20 +21,15 @@ public:
   void PutCube(unsigned char cube, ivec3 pos);
   ~Chunk();
   bool IsLoaded() {return m_isLoaded;}
-  void	Temp(bool t) {
-    m_planes.Temp(t);
-    m_texture.Temp(t);
-
-  }
   void Save(char *file);
   unsigned char GetBlock(int x, int y, int z);
 
 private:
-  Mesh		m_planes;
+  Mesh		*m_planes;
   ivec3		m_pos;
   int		m_height;
   char		*m_chunk;
-  Texture	m_texture;
+  Texture	*m_texture;
   bool		m_isLoaded;
 };
 
