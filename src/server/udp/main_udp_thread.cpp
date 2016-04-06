@@ -51,10 +51,9 @@ void			udp_thread(t_all *all)
 	fprintf(stderr, "Error select\n");
       }
     gettimeofday(&t1, NULL);
-    if (t1.tv_usec % 30000)
+    if (t1.tv_usec % 30000 <= 1000)
       {
 	udps_send_to_all(all);
-	gettimeofday(&t1, NULL);
       }
     if (diffout >= 5)
       {
