@@ -2,14 +2,22 @@
 
 //Retarded AI version 1.0
 
+AI::AI()
+{
+}
+
 AI::AI(t_player *player)
 {
   m_player = player;
-  m_model = Player();
 }
 
 AI::~AI()
 {
+}
+
+void		AI::setPlayer(t_player *player)
+{
+  m_player = player;
 }
 
 void		AI::shootPlayer(void)
@@ -31,6 +39,7 @@ void		AI::findPlayer(t_player *player)
 	  getEvent(player[i].events, CONNECTED))
 	m_closestPlayer = tmp3;
     }
+  dprintf(2, "Closest player is at %f %f %f\n", m_closestPlayer.x, m_closestPlayer.y, m_closestPlayer.z);
 }
 
 void		AI::moveToPlayer(void)

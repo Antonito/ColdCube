@@ -8,9 +8,11 @@
 class AI
 {
 public:
+  AI();
   AI(t_player *player);
   ~AI();
 
+  void		setPlayer(t_player *player);
   bool		isBot(uint32_t events) {return (!getEvent(events, CONNECTED));};
   void		shootPlayer(void);
   void		findPlayer(t_player *player);

@@ -15,6 +15,7 @@ GAME_FILES=		main.cpp			\
 SERV_PREFIX=		src/server/
 
 SERV_FILES=		main.cpp			\
+			ai_thread.cpp			\
 			udp/main_udp_thread.cpp		\
 			udp/server_udp_msg.cpp		\
 			tcp/main_tcp_thread.cpp		\
@@ -65,6 +66,7 @@ GAME+=			$(TOOLS)
 GAME+=			$(ENGINE)
 
 SERVER+=		src/tools/events.cpp		\
+			src/tools/check_package.cpp	\
 			src/game/ai.cpp			\
 			src/engine/player.cpp		\
 			src/engine/mesh.cpp		\
