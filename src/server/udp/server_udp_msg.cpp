@@ -10,17 +10,18 @@ void		udps_send_to_all(t_all *all)
   i = -1;
   while (++i < 10)
     {
-      if (all->connected[i] == 0)
+      if (all->connected[i] == 0 || all->isPackage[i] == 0)
 	continue;
       j = -1;
       while (++j < 10)
 	{
-	  if (all->connected[j] == 0)
+	  if (all->connected[j] == 0 || all->isPackage[j] == 0)
 	    continue;
 	  sendto(all->udp->main_sock, all->udp->cli_buff[i], 42, 0,
 		 (struct sockaddr *)&all->udp->cli_sock[j], all->udp->cli_addrl);
 	}
     }
+  memset(all->isPackage, 0, sizeof(int) * 10);
 }
 
 void		set_cli_buff(t_all *all, int index)
@@ -31,6 +32,7 @@ void		set_cli_buff(t_all *all, int index)
   while (++i < 42)
     all->udp->cli_buff[index][i] = all->udp->buff[i];
   all->timeout[index] = 1;
+  all->isPackage[index] = 1;
 }
 
 void		udps_check_timeout(t_all *all)

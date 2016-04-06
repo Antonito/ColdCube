@@ -105,6 +105,7 @@ int			clientLaunchUdpc(t_data *data)
   data->net.udp.run = 1;
   data->net.udp.run_send = 1;
   printf("creating thread UDP\n");
+  memset(data->net.isPackage, 0, sizeof(10) * 10);
   pthread_create(&data->net.udp.thread, NULL, udp_thread, (void *)data);
   pthread_create(&data->net.udp.thread_send, NULL, udp_send_thread, (void *)data);
   printf("thread created\n");

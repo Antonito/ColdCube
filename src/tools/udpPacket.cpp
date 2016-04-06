@@ -100,6 +100,7 @@ int		readUdpPacket(t_data *data)
   flo = 0.0f;
   all = 2;
   tlo = 0;
+  data->net.isPackage[(int)data->net.udp.buff[0]] = 1;
   tmp = (char *)&flo;
   while (i < sizeof(GLfloat))
     {

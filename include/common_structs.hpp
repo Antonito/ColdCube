@@ -66,6 +66,7 @@ typedef	struct		s_network
   int			port;
   int			playerIndexTcp;
   int			playerIndexUdp;
+  int			isPackage[10];
 }			t_network;
 
 /*

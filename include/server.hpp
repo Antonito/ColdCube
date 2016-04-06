@@ -75,6 +75,7 @@ typedef struct		s_all
   char			pseudo[10][21];
   int			connected[10];
   int			timeout[10];
+  int			isPackage[10];
   int			nb_actual;
   int			tmpIndex;
 }			t_all;
