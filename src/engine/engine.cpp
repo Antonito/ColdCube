@@ -22,7 +22,7 @@ int	engineMain(Display &display, t_data *data)
   Shader	shader("shaders/test1");
 
   Map		map("map");
-  Player	player(vec3(120, 120, 65), 90, &map, data->net.playerIndexUdp);
+  Player	player(vec3(120, 120, 10), 90, &map, data->net.playerIndexUdp);
   Camera camera(vec3(10, 5, 10), 70.0f, (float)WIN_X / WIN_Y, 0.01f, 500.0f,
 		data->config.oculusHmd, data->config.oculus);
   Transform transform;
@@ -40,7 +40,7 @@ int	engineMain(Display &display, t_data *data)
   i = 0;
   while (i < 10)
     {
-      data->players[i].position = vec3(0, -1, 2);
+      data->players[i].position = vec3(2, 2 + i, 2);
       data->players[i].direction = vec3(0, 1, 0);
       i++;
     }

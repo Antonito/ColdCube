@@ -47,15 +47,12 @@ class Mesh
 {
  public:
   Mesh();
-  Mesh(Vertex* vertices, unsigned int nbVertices, unsigned int *indices, unsigned int nbIndices, bool temp = false);
+  Mesh(Vertex* vertices, unsigned int nbVertices, unsigned int *indices, unsigned int nbIndices);
 
   void Draw();
-  bool IsTemp() {return m_temp;}
-  void Temp(bool t) {m_temp = t;}
   virtual ~Mesh();
  private:
   void InitMesh(const IndexedModel& model);
-  bool	m_temp;
 
 enum
 {
