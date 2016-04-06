@@ -96,11 +96,11 @@
 # include <time.h>
 # include <pthread.h>
 # include <SDL2/SDL.h>
-# include "engine/display.hpp"
+# include "engine/displayer.hpp"
 # include "common_structs.hpp"
 
 unsigned int	getDamage(int, int);
-int		engineMain(Display &, t_data *);
+int		engineMain(Displayer &, t_data *);
 void		setAzerty(t_keys *);
 void		setQwerty(t_keys *);
 void		free_game(t_data *);

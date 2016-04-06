@@ -1,5 +1,5 @@
 #include <SDL2/SDL.h>
-#include "engine/display.hpp"
+#include "engine/displayer.hpp"
 #include "game.hpp"
 #include "Menu.h"
 #include <GL/glut.h>
@@ -8,7 +8,7 @@
 
 #ifdef	CHEAT
 # include "cheat.hpp"
-t_cheat	cheat;
+t_cheat		cheat;
 #endif
 
 void	setAzerty(t_keys *keys)
@@ -33,10 +33,13 @@ void	initData(t_data *data)
 {
   int	i;
 
+  memset(data, 0, sizeof(t_data));
   i = -1;
   while (++i < 10)
-    data->players[i].pseudo = (char *)malloc(sizeof(char) * 21);
-  memset(data, 0, sizeof(t_data));
+    {
+      data->players[i].pseudo = new char [21];
+      memset(data->players[i].pseudo, 0, 21);
+    }
   data->game.running = true;
   data->config.keyboard = AZERTY_MODE;
   data->config.musicVolume = 50;
@@ -54,7 +57,7 @@ void	initData(t_data *data)
 int	game()
 {
   t_data		*data = new t_data;
-  Display		display(WIN_X, WIN_Y, "ColdCube");
+  Displayer		display(WIN_X, WIN_Y, "ColdCube");
   std::vector<menuItem>	items(14);
   std::string		inputText = "Some text";
   SDL_Rect		pos;

@@ -37,6 +37,7 @@ void			*udp_send_thread(void *data)
 	  gettimeofday(&t1, NULL);
 	  last_packet = t1.tv_sec * 1000 + t1.tv_usec / 1000;
 	}
+      usleep(3000);
     }
   return (NULL);
 }
@@ -60,6 +61,7 @@ void			*udp_thread(void *data)
 	    }
 	  readUdpPacket(_data);
 	}
+      usleep(3000);
     }
   close(_data->net.udp.sock);
   return (NULL);
@@ -86,7 +88,7 @@ int			clientLaunchUdpc(t_data *data)
     }
   data->net.udp.to_serv.sin_family = AF_INET;
   data->net.udp.to_serv.sin_port = htons(data->net.port + 1);
-  data->net.udp.to_serv.sin_addr.s_addr = inet_addr(data->net.ip);
+  data->net.udp.to_serv.sin_addr.s_addr = inet_addr(data->net.purIp);
   len = sizeof(data->net.udp.to_serv);
   tv.tv_sec = 2;
   tv.tv_usec = 0;
