@@ -235,6 +235,7 @@ void	*main_ai_thread(void *all)
   	    {
   	      AIs[i].updateAI(data->ai, data->connected);
   	      createUdpPacketAI(i, &data->ai[i], data->udp->cli_buff[i]);
+	      data->isPackage[i] = true;
 	      printf("Out: %f %f %f\n", data->ai[i].position.x, data->ai[i].position.y, data->ai[i].position.z);
   	    }
   	}
