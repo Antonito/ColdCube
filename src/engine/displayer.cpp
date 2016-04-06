@@ -357,6 +357,7 @@ void			Displayer::UpdateRoom(t_data *room, SDL_Rect *pos,
   icon_connected = IMG_Load(ROOM_ICON_PLAYER);
   icon_ia = IMG_Load(ROOM_ICON_IA);
   SDL_FillRect(m_windowSurface, NULL, SDL_MapRGB(m_windowSurface->format, 243, 237, 211));
+  room->tchat.display(dest, bg);
   SDL_BlitSurface((room->players[0].pseudo) ? icon_connected : icon_ia, NULL, bg, &(players[0]));
   SDL_BlitSurface((room->players[1].pseudo) ? icon_connected : icon_ia, NULL, bg, &(players[1]));
   SDL_BlitSurface((room->players[2].pseudo) ? icon_connected : icon_ia, NULL, bg, &(players[2]));
