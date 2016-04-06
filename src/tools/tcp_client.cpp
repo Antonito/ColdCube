@@ -20,17 +20,31 @@ void		tcp_set_pseudo(t_data *data)
   int		i;
   char		**pseudo;
 
-  i = -1;
+  /*data->players[0].pseudo[0] = 's';
+  data->players[0].pseudo[1] = 'a';
+  data->players[0].pseudo[2] = 'c';
+  data->players[0].pseudo[3] = 'k';
+  data->players[0].pseudo[4] = 0;
+  fprintf(stdout, "%s\n", data->players[i].pseudo);*/
+  /*i = -1;
   if ((pseudo = my_str_to_wordtab(data->net.tcp.buff, '\n')) == NULL)
     return ;
   write(1, "OOOOOOOOOO\n", 11);
   printf("DATA %p\n", data);
-  while (pseudo[++i + 1] != NULL)
+  while (pseudo[++i] != NULL)
+    fprintf(stdout, "%s\n", pseudo [i]);
+  write(1, "kkkkk\n", 6);
+  while (pseudo[++i + 1] != NULL && i < 10)
     {
       fprintf(stdout, "#%s#\n", pseudo[i + 1]);
-      //strncpy(data->players[i].pseudo, pseudo[i + 1], strlen(pseudo[i + 1]));
-      //data->players[i].pseudo[strlen(pseudo[i + 1])] = 0;
+      strncpy(data->players[i].pseudo, pseudo[i + 1], strlen(pseudo[i + 1]));
+      write(1, "JJJJJJJJJJJJJ\n", 14);
     }
+  i = -1;
+  while (pseudo[++i] != NULL)
+    {
+      free(pseudo[i]);
+    }*/
 }
 
 void		*tcp_thread(void *data)

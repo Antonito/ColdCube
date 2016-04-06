@@ -5,7 +5,7 @@
 ** Login   <troncy_l@epitech.net>
 ** 
 ** Started on  Thu Feb 25 18:09:08 2016 Lucas Troncy
-** Last update Wed Apr 06 12:31:02 2016 Lucas Troncy
+** Last update Wed Apr 06 20:57:38 2016 Lucas Troncy
 */
 
 #include <stdlib.h>
@@ -47,6 +47,7 @@ char		**my_str_to_wordtab(char *str, char splitter)
       index++;
       if ((table[i] = (char *)malloc(sizeof(char) * (index + 1))) == NULL)
 	return (NULL);
+      memset(table[i], 0, index + 1);
       table[i][0] = '\0';
       table[i] = strncpy(table[i], &str[starter], index - 1);
       starter += index;
