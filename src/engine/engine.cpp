@@ -72,7 +72,7 @@ int	engineMain(Displayer &display, t_data *data)
 	  render++;
 	}
       user.IsShooted(data->players, data->game.Team2, map);
-      display.Update(camera, map, player, data);
+      display.Update(camera, map, player, data, user);
       player.FillCPlayer(data->players + player.GetId(), camera.GetFor());
     }
   return (0);

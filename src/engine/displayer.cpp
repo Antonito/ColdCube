@@ -78,7 +78,7 @@ bool	Displayer::IsClosed()
 }
 
 void	Displayer::Update(Camera &cam, Map &map, Player &player,
-			  t_data *data)
+			  t_data *data, User &user)
 {
   SDL_Rect		tchat_pos = {0, 2 * WIN_Y / 3, 854, WIN_Y / 3};
 
@@ -261,6 +261,10 @@ void	Displayer::Update(Camera &cam, Map &map, Player &player,
     player.Move(-vec2(cam.GetFor().x, cam.GetFor().y));
   if (eventKey[data->config.keys.jump])
     player.Jump();
+  if (eventKey[data->config.keys.fire])
+    user.shoot(true);
+  else
+    user.shoot(false);
   #ifdef CHEAT
   if (cheat.selected.fly && eventKey[data->config.keys.forward])
     player.MoveCheat(cam.GetFor());
@@ -616,7 +620,8 @@ void			Displayer::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
 		menu->hold();
 	    }
 	  if (event.key.keysym.sym == SDLK_BACKSPACE &&
-	      items[menu->currentItem].text.length())
+	      items[menu->currentItem].text.length() &&
+	      items[menu->currentItem].type == MENU_TEXTINPUT)
 	    {
 	      if (!isprint(items[menu->currentItem].text[items[menu->currentItem].text.length() - 1]))
 		items[menu->currentItem].text.erase(items[menu->currentItem].text.length() - 2);
