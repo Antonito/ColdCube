@@ -78,7 +78,7 @@ bool	Displayer::IsClosed()
 }
 
 void	Displayer::Update(Camera &cam, Map &map, Player &player,
-			  t_data *data)
+			  t_data *data, User &user)
 {
   SDL_Rect		tchat_pos = {0, 2 * WIN_Y / 3, 854, WIN_Y / 3};
 
@@ -261,6 +261,10 @@ void	Displayer::Update(Camera &cam, Map &map, Player &player,
     player.Move(-vec2(cam.GetFor().x, cam.GetFor().y));
   if (eventKey[data->config.keys.jump])
     player.Jump();
+  if (eventKey[data->config.keys.fire])
+    user.shoot(true);
+  else
+    user.shoot(false);
   #ifdef CHEAT
   if (cheat.selected.fly)
     player.MoveCheat(cam.GetFor());

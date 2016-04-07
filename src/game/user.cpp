@@ -36,9 +36,9 @@ void	User::sprint(int state)
 //   ;
 // }
 
-void	User::shoot()
+void	User::shoot(bool shoot)
 {
-  ;
+  setEvent(&m_player->events, SHOOT, shoot);
 }
 
 
