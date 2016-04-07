@@ -317,6 +317,12 @@ void	Displayer::Update(Camera &cam, Map &map, Player &player,
     player.Move(vec2(cam.GetFor().x, cam.GetFor().y));
   else if (eventKey[data->config.keys.backward])
     player.Move(-vec2(cam.GetFor().x, cam.GetFor().y));
+
+  if (eventKey[data->config.keys.left])
+    player.Move(-vec2(normalize(cross(cam.GetFor(), vec3(0, 0, 1))).x, cross(cam.GetFor(), vec3(0, 0, 1)).y));
+  else if (eventKey[data->config.keys.right])
+    player.Move(vec2(normalize(cross(cam.GetFor(), vec3(0, 0, 1))).x, cross(cam.GetFor(), vec3(0, 0, 1)).y));
+
   if (eventKey[data->config.keys.jump])
     player.Jump();
   if (eventKey[data->config.keys.fire])

@@ -44,7 +44,7 @@ void	User::shoot(bool shoot)
 
 vec4    User::IsHit(t_player *p, Map &map)
 {
-  vec3	start = p->position;
+  vec3	start = p->position + vec3(0.4, 0.4, 1.6);
   vec3	pos = start;
   vec3	dir = normalize(p->direction) * (GLfloat)0.4;
   vec3	user = m_player->position;
@@ -78,7 +78,9 @@ int     User::IsShooted(t_player *p, Score &advTeam, Map &map)
       weapon = p[i].selected_weapon;
       headshot = false;
       if (getEvent(p[i].events, SHOOT) && id % 2 != i % 2)
+	{
   	hit = this->IsHit(p + i, map);
+	}
       if (hit.w > 0.0)
   	{
   	  dist = vec2(hit.x - m_player->position.x - 0.4,
@@ -92,6 +94,7 @@ int     User::IsShooted(t_player *p, Score &advTeam, Map &map)
   	  else
   	    damage = getDamage(weapon, ARM_HIT);
   	  m_player->life -= damage;
+	  printf("LIFE %d\n", m_player->life);
   	  if (m_player->life <= 0)
   	    advTeam.updateScore(weapon, headshot, length(vec3(hit) - p[i].position));
   	}
