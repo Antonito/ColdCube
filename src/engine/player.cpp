@@ -6,8 +6,6 @@
 # include "cheat.hpp"
 #endif
 
-static bool IsColinear(vec3 u, vec3 v);
-
 Player::Player()
 {
   m_pos = vec3(0, 0, 0);

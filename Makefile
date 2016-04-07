@@ -1,7 +1,8 @@
+# Useful variables
 DEBUG=			no
-
 CHEAT=			no
 
+# Sources
 GAME_PREFIX=		src/game/
 
 GAME_FILES=		main.cpp			\
@@ -52,20 +53,15 @@ TOOLS_FILES=		text.cpp			\
 			events.cpp			\
 			str2tab.cpp
 
+# Adding prefixes
 GAME=			$(addprefix $(GAME_PREFIX),$(GAME_FILES))
-
 SERVER=			$(addprefix $(SERV_PREFIX),$(SERV_FILES))
-
 ENGINE=			$(addprefix $(ENGINE_PREFIX),$(ENGINE_FILES))
-
 TOOLS=			$(addprefix $(TOOLS_PREFIX),$(TOOLS_FILES))
-
 ENGINE_C=		$(addprefix $(ENGINE_PREFIX),$(ENGINE_C_FILES))
-
 TOOLS_C=		$(addprefix $(TOOLS_PREFIX),$(TOOLS_C_FILES))
 
 GAME+=			$(TOOLS)
-
 GAME+=			$(ENGINE)
 
 SERVER+=		src/tools/events.cpp		\
@@ -79,34 +75,34 @@ SERVER+=		src/tools/events.cpp		\
 			src/engine/physic.cpp
 
 NAME=			coldcube
-
 NAMESERV=		server_coldcube
 
 HEAD=			-Iinclude
 
-CXXFLAGS= $(HEAD) -W -Wall -Wextra
+# Flags
 
+CXXFLAGS= $(HEAD) -W -Wall -Wextra
 CFLAGS= $(HEAD) -W -Wall -Wextra
 
 ifeq ($(DEBUG), yes)
-
 CXXFLAGS+= -g -D DEBUG
-
 CFLAGS+= -g -D DEBUG
-
 endif
 
 ifeq ($(CHEAT), yes)
-
 CXXFLAGS+= -D CHEAT
-
 CFLAGS+= -D CHEAT
-
 endif
+
+# Compiler
 
 CC=			gcc
 
+ifeq ($(DEBUG), yes)
+CXX=			clang
+else
 CXX=			g++
+endif
 
 RM=			rm -f
 
@@ -123,13 +119,13 @@ LIB=			-lstdc++			\
 			-lOVR				\
 			-ldl
 
+# Obj link
+
 OBJ=			$(GAME:.cpp=.o)
-
 OBJ+=			$(ENGINE_C:.c=.o)
-OBJSERV=		$(SERVER:.cpp=.o)
 
+OBJSERV=		$(SERVER:.cpp=.o)
 OBJSERV+=		$(ENGINE_C:.c=.o)
-#OBJSERV+=		$(SERVER:.c=.o)
 
 $(NAMESERV):	$(OBJSERV) $(NAME)
 	@echo -n "[ "
@@ -169,8 +165,7 @@ endif
 	@echo "Compiling" $<
 	@$(CXX) $(CXXFLAGS) -c -o $@ $<
 
-all:	$(NAMESERV)
-#$(NAME)
+all:	$(NAMESERV) $(NAME)
 
 clean:
 	@echo -n "[ "
