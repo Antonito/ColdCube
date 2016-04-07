@@ -71,7 +71,6 @@ void		*tcp_thread(void *data)
 
   while (_data->net.tcp.run)
     {
-      memset(_data->net.tcp.buff, 0, 200);
       if ((len = read(_data->net.tcp.sock, _data->net.tcp.buff, 199)) == 0)
 	{
 	  _data->net.tcp.run = 0;
