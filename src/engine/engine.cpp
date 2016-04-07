@@ -22,7 +22,7 @@ int	engineMain(Displayer &display, t_data *data)
 {
   Shader	shader("shaders/test1");
   Map		map("map");
-  Player	player(vec3(120, 120, 10), 90, &map, data->net.playerIndexUdp);
+  Player	player(vec3(10, 10, 5), 90, &map, data->net.playerIndexUdp);
   User		user(data->players + player.GetId());
   Camera	camera(vec3(10, 5, 10), 70.0f, (float)WIN_X / WIN_Y, 0.01f, 500.0f,
 		       data->config.oculusHmd, data->config.oculus);
@@ -31,7 +31,7 @@ int	engineMain(Displayer &display, t_data *data)
   vec2		lastPos[10] = {vec2(0, 0)};
   vec2		lastPos2[10] = {vec2(0, 0)};
   vec3		lastPredict[10] = {vec3(0, 0, 0)};
-  vec3		light(30, 30, 5);
+  vec3		light(15, 15, 5);
   int		render;
 
   i = 0;
