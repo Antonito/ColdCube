@@ -17,19 +17,18 @@ int		room(Displayer &display, t_data *data)
 
   surface = IMG_Load(CURSOR_IMG);
   data->tchat.constructor();
+  bg = IMG_Load(ROOM_BACKGROUND);
 
   while (!display.IsClosed() && data->game.running)
     {
-      bg = IMG_Load(ROOM_BACKGROUND);
       display.UpdateRoom(data, &pos, bg, surface);
-      SDL_FreeSurface(bg);
     }
   if (!data->game.running)
     {
       data->game.running = true;
-
     }
 
   SDL_FreeSurface(surface);
+  SDL_FreeSurface(bg);
   return (0);
 }

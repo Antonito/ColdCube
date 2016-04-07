@@ -60,9 +60,7 @@ Tchat::~Tchat()
 
 void Tchat::display(SDL_Rect pos, SDL_Surface *to)
 {
-  SDL_Rect base = pos;
   SDL_Rect text_pos = {42, pos.h - this->footer->h - 50, pos.w, pos.h};
-  SDL_Surface *background = IMG_Load(TCHAT_BACKGROUND);
   SDL_Surface *text, *pseudo;
   SDL_Color grey = {82, 82, 82, 0},
 	    black = {0, 0, 0, 0};
@@ -70,6 +68,7 @@ void Tchat::display(SDL_Rect pos, SDL_Surface *to)
   size_t position;
   struct timeval tv;
 
+  SDL_BlitSurface(this->background, NULL, to, &pos);
   for (long i = this->messages.size() ; i-- ;)
   {
     msg = this->messages[i];
@@ -80,32 +79,28 @@ void Tchat::display(SDL_Rect pos, SDL_Surface *to)
 	pseudonym = this->messages[i].substr(0, position + 1);
 	msg = this->messages[i].substr(position + 1);
 	pseudo = TTF_RenderUTF8_Blended(this->name_font, pseudonym.c_str(), black);
-	SDL_BlitSurface(pseudo, NULL, background, &text_pos);
+	SDL_BlitSurface(pseudo, NULL, to, &text_pos);
 	text_pos.x += pseudo->w + 10;
       }
     text = TTF_RenderUTF8_Blended(this->text_font, msg.c_str(), grey);
-    SDL_BlitSurface(text, NULL, background, &text_pos);
+    SDL_BlitSurface(text, NULL, to, &text_pos);
     text_pos.x = 42;
     text_pos.y -= 35;
     SDL_FreeSurface(text);
     if (pseudo)
       SDL_FreeSurface(pseudo);
   }
-  SDL_BlitSurface(background, NULL, to, &pos);
-  pos = base;
-  SDL_BlitSurface(header, NULL, to, &pos);
-  pos = base;
-  pos.y = base.h - footer->h;
-  SDL_BlitSurface(footer, NULL, to, &pos);
-  pos.y += 2 * footer->h / 3 - 12;
+  SDL_BlitSurface(this->header, NULL, to, &pos);
+  pos.y = this->background->h - this->footer->h;
+  SDL_BlitSurface(this->footer, NULL, to, &pos);
+  pos.y += 2 * this->footer->h / 3 - 12;
   pos.x += 54;
   gettimeofday(&tv, NULL);
   text = TTF_RenderUTF8_Blended(this->text_font, this->input->c_str(), black);
   SDL_BlitSurface(text, NULL, to, &pos);
   pos.x += this->cursor_pos;
   if (!this->isFocused && (tv.tv_usec > 500000))
-    SDL_BlitSurface(cursor_img, NULL, to, &pos);
-  SDL_FreeSurface(background);
+    SDL_BlitSurface(this->cursor_img, NULL, to, &pos);
   SDL_FreeSurface(text);
 }
 
