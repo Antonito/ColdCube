@@ -53,6 +53,10 @@ TOOLS_FILES=		text.cpp			\
 			events.cpp			\
 			str2tab.cpp
 
+GENERATION_PREFIX=	src/generation/
+
+GENERATION_FILES=	generate_map.c
+
 # Adding prefixes
 GAME=			$(addprefix $(GAME_PREFIX),$(GAME_FILES))
 SERVER=			$(addprefix $(SERV_PREFIX),$(SERV_FILES))
@@ -60,6 +64,7 @@ ENGINE=			$(addprefix $(ENGINE_PREFIX),$(ENGINE_FILES))
 TOOLS=			$(addprefix $(TOOLS_PREFIX),$(TOOLS_FILES))
 ENGINE_C=		$(addprefix $(ENGINE_PREFIX),$(ENGINE_C_FILES))
 TOOLS_C=		$(addprefix $(TOOLS_PREFIX),$(TOOLS_C_FILES))
+GENERATION=		$(addprefix $(GENERATION_PREFIX),$(GENERATION_FILES))
 
 GAME+=			$(TOOLS)
 GAME+=			$(ENGINE)
@@ -76,6 +81,7 @@ SERVER+=		src/tools/events.cpp		\
 
 NAME=			coldcube
 NAMESERV=		server_coldcube
+NAMEGEN=		generator_coldcube
 
 HEAD=			-Iinclude
 
@@ -127,12 +133,21 @@ OBJ+=			$(ENGINE_C:.c=.o)
 OBJSERV=		$(SERVER:.cpp=.o)
 OBJSERV+=		$(ENGINE_C:.c=.o)
 
-$(NAMESERV):	$(OBJSERV) $(NAME)
+OBJGEN=			$(GENERATION:.c=.o)
+
+$(NAMESERV):	$(OBJSERV) $(NAME) $(NAMEGEN)
 	@echo -n "[ "
 	@echo -n -e "\e[1m\e[92mOK\e[0m"
 	@echo -n " ] "
 	@echo "Compiled server"
 	@$(CC) $(OBJSERV) -o $(NAMESERV) $(LIB)
+
+$(NAMEGEN):	$(OBJGEN)
+	@echo -n "[ "
+	@echo -n -e "\e[1m\e[92mOK\e[0m"
+	@echo -n " ] "
+	@echo "Compiled generator"
+	@$(CC) $(OBJGEN) -o $(NAMEGEN) $(LIB)
 
 $(NAME):	$(OBJ)
 ifeq ($(DEBUG), yes)
@@ -165,7 +180,7 @@ endif
 	@echo "Compiling" $<
 	@$(CXX) $(CXXFLAGS) -c -o $@ $<
 
-all:	$(NAMESERV) $(NAME)
+all:	$(NAMESERV) $(NAME) $(NAMEGEN)
 
 clean:
 	@echo -n "[ "
