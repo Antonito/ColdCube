@@ -104,11 +104,14 @@ void Tchat::display(SDL_Rect pos, SDL_Surface *to)
   SDL_FreeSurface(text);
 }
 
+bool Tchat::isFocus()
+{
+  return isFocused;
+}
+
 void Tchat::focus()
 {
   this->isFocused = !this->isFocused;
-  if (this->isFocused)
-    this->cursor_pos = this->input->length();
 }
 
 void Tchat::moveRight()

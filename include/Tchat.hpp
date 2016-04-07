@@ -26,6 +26,7 @@ public:
   Tchat();
   Tchat(unsigned char transparency);
   ~Tchat();
+  bool isFocus();
   void constructor();
   void backspace();
   void display(SDL_Rect, SDL_Surface *);

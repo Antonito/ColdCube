@@ -89,6 +89,7 @@ void	Displayer::Update(Camera &cam, Map &map, Player &player,
   old = cur;
   SDL_Event	e;
   static bool		eventKey[NB_KEY_EVENT];
+  SDL_Rect		tchat_pos = {0, 2 * WIN_Y / 3, 854, WIN_Y / 3};
 
   tot += 1000 / t;
   nb++;
@@ -156,6 +157,12 @@ void	Displayer::Update(Camera &cam, Map &map, Player &player,
 	    case (SDLK_ESCAPE):
 	      m_isClosed = true;
 	      break ;
+	    case (SDLK_RETURN):
+	      if (!data->tchat.isFocus())
+		data->tchat.focus();
+	      else
+		data->tchat.send(data);
+	      break;
 	    case (SDLK_p):
 	      player.Jump();
 	      break ;
@@ -261,6 +268,7 @@ void	Displayer::Update(Camera &cam, Map &map, Player &player,
   player.Update(map, dTime);
   #endif
   player.SetCam(cam, player.GetThird(), data->players + player.GetId());
+  data->tchat.display(tchat_pos, m_windowSurface);
 }
 
 int	startGame(t_data *data, std::vector<menuItem> &items, Displayer &disp)
@@ -301,12 +309,12 @@ int	startGame(t_data *data, std::vector<menuItem> &items, Displayer &disp)
   std::clog << "[Infos] Pseudo = " << data->net.pseudo << "\n";
 #endif
 
-    room(disp, data);
   if (!clientLaunchTcpc(data)) //TCP Start
     {
 #ifdef	DEBUG
       std::clog << "TCP OK\n";
 #endif
+      room(disp, data);
       usleep(2000);
       if (!clientLaunchUdpc(data))
 	{
@@ -401,10 +409,10 @@ void			Displayer::UpdateRoom(t_data *room, SDL_Rect *pos,
 	    break;
 	}
     }
+  SDL_FillRect(m_windowSurface, NULL, SDL_MapRGB(m_windowSurface->format, 243, 237, 211));
   if (room->config.oculus)
     {
       SDL_Surface *eyes = SDL_CreateRGBSurface(0, WIN_X, WIN_Y, 32, 0, 0, 0, 0);
-      SDL_FillRect(m_windowSurface, NULL, SDL_MapRGB(m_windowSurface->format, 243, 237, 211));
       SDL_FillRect(eyes, NULL, SDL_MapRGB(eyes->format, 243, 237, 211));
       room->tchat.display(dest, eyes);
       SDL_BlitSurface(bg, NULL, eyes, &bg_pos);
