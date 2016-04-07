@@ -1,6 +1,6 @@
 #include "game.hpp"
-#include "engine/player.hpp"
 #include "engine/misc.hpp"
+#include "engine/player.hpp"
 
 #ifdef	CHEAT
 # include "cheat.hpp"
@@ -156,7 +156,7 @@ void Player::Update(Map &map, float time)
 
 void	Player::SetCam(Camera &cam, bool third, t_player *p)
 {
-  cam.GetPos() = m_pos + vec3(0.4, 0.6, 1.6);
+  cam.GetPos() = m_pos + vec3(0.4, 0.4, 1.6) + vec3(p->direction.x, p->direction.y, 0) * (GLfloat)0.25;;
   cam.GetRot() = m_rot;
   if (third)
     cam.GetPos() -= p->direction * (GLfloat)3.0;
@@ -171,4 +171,16 @@ void	Player::FillCPlayer(t_player *p, vec3 dir)
 {
   p->position = m_pos;
   p->direction = dir;
+}
+
+void	PredictPosition(t_player *p, vec3 *last, int *isPackage)
+{
+  vec3	tmp;
+
+  tmp = p->position;
+  if (!*isPackage)
+    p->position += p->position - *last;
+  else
+    *isPackage = 0;
+  *last = tmp;
 }

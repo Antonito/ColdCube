@@ -29,6 +29,7 @@ typedef enum		e_state
 
 typedef enum		e_bodyHit
   {
+    NO_HIT		= -1,
     HEAD_HIT,
     BODY_HIT,
     ARM_HIT,

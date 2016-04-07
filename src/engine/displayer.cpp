@@ -1,3 +1,4 @@
+#include <SDL2/SDL.h>
 #include "SDL2/SDL_image.h"
 #include "SDL2/SDL_ttf.h"
 #include <sys/time.h>
@@ -8,7 +9,6 @@
 #include <sys/time.h>
 #include "engine/displayer.hpp"
 #include <iostream>
-#include <SDL2/SDL.h>
 #include "common_structs.hpp"
 #include "game.hpp"
 #include "tools.hpp"
@@ -81,6 +81,7 @@ void	Displayer::Update(Camera &cam, Map &map, Player &player,
 			  t_data *data)
 {
   SDL_Rect		tchat_pos = {0, 2 * WIN_Y / 3, 854, WIN_Y / 3};
+
   data->tchat.display(tchat_pos, m_windowSurface);
   SDL_GL_SwapWindow(m_window);
   usleep(5800);

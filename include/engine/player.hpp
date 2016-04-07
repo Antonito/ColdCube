@@ -38,6 +38,7 @@ class Player
   bool		m_third;
 };
 
+void	PredictPosition(t_player *p, vec3 *last, int *isPackage);
 vec3	GetFullCollision(Map &map, vec3 pos, vec3 move);
 
 #endif // !PLAYER_HPP_

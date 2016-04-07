@@ -44,9 +44,12 @@ void	initData(t_data *data)
   while (++i < 10)
     {
       data->players[i].pseudo = new char [21];
+      data->players[i].selected_weapon = 0;
       memset(data->players[i].pseudo, 0, 21);
     }
   data->game.running = true;
+  data->game.Team1 = Score();
+  data->game.Team2 = Score();
   data->config.keyboard = AZERTY_MODE;
   data->config.musicVolume = 50;
   data->config.effectsVolume = 50;
@@ -73,18 +76,20 @@ int	game()
   Menu			*menu = new Menu(screen, &items);
   ovrHmd		hmd;
 
-  data->screen = screen;
   ovr_Initialize(0);
   hmd = ovrHmd_Create(0);
   if (hmd)
     ovrHmd_ConfigureTracking(hmd, ovrTrackingCap_Orientation | ovrTrackingCap_MagYawCorrection | ovrTrackingCap_Position, 0);
+  initData(data);
+  data->screen = screen;
   loginMenu(items);
   //Macro definie dans game.hpp
   surface = IMG_Load(CURSOR_IMG);
-  pos.x = (screen->w >> 1)- (surface->w >> 1);
-  pos.y = (screen->h >> 1)- (surface->h >> 1);
+  pos.x = (screen->w / 2) - (surface->w / 2);
+  pos.y = (screen->h / 2) - (surface->h / 2);
+  pos.w = surface->w / 2;
+  pos.h = surface->h / 2;
   SDL_StartTextInput();
-  initData(data);
   data->config.oculusHmd = hmd;
   data->config.oculus = (hmd != NULL);
   while (data->game.running)

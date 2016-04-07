@@ -11,6 +11,7 @@
 #include "engine/camera.hpp"
 #include "engine/map.hpp"
 #include "engine/animation_player.hpp"
+#include "User.hpp"
 #include <time.h>
 
 using namespace glm;
@@ -22,16 +23,14 @@ int	engineMain(Displayer &display, t_data *data)
   Shader	shader("shaders/test1");
   Map		map("map");
   Player	player(vec3(120, 120, 10), 90, &map, data->net.playerIndexUdp);
+  User		user(data->players + player.GetId());
   Camera	camera(vec3(10, 5, 10), 70.0f, (float)WIN_X / WIN_Y, 0.01f, 500.0f,
-		data->config.oculusHmd, data->config.oculus);
+		       data->config.oculusHmd, data->config.oculus);
   Transform	transform;
-  int		fps = 0;
-  int		t = time(NULL);
-  unsigned char	tt[] = {255, 255, 255, 255};
-  Texture	text(tt, 1, 1, false);
   int		i;
-  int		count(1), tot(0);
   vec2		lastPos[10] = {vec2(0, 0)};
+  vec2		lastPos2[10] = {vec2(0, 0)};
+  vec3		lastPredict[10] = {vec3(0, 0, 0)};
   vec3		light(30, 30, 5);
   int		render;
 
@@ -46,16 +45,6 @@ int	engineMain(Displayer &display, t_data *data)
 
   while (!display.IsClosed())
     {
-      fps++;
-      if (t != time(NULL))
-	{
-	  t = time(NULL);
-	  tot += fps;
-	  printf("\r%d\t%.2f\t", fps, (double)tot / count);
-	  fflush(stdout);
-	  fps = 0;
-	  count++;
-	}
       render = 0;
       display.Clear(0.0f, 0.3f, 0.8f, 1.0f);
       transform.GetPos() = vec3(0, 0, 0);
@@ -70,22 +59,19 @@ int	engineMain(Displayer &display, t_data *data)
 	  i = 0;
 	  while (i < 10)
 	    {
-	      if (i != player.GetId() || player.GetThird())
-		{
-		  // transform.GetPos() = data->players[i].position;
-		  // shader.Update(transform, camera);
-		  text.Bind(0);
-		  // playerModel.Draw();
-		  // camera.GetPos() += vec3(eyes[1].Position.x - eyes[0].Position.x,
-		  // 			  eyes[1].Position.y - eyes[0].Position.y,
-		  // 			  eyes[1].Position.z - eyes[0].Position.z);
-		  DrawPlayerModel(data->players[i].position, data->players[i].direction, length(vec2(data->players[i].position) - lastPos[i]) * 5, camera, shader);
-		  lastPos[i] = vec2(data->players[i].position);
-		}
+	      PredictPosition(data->players + i, lastPredict + i, data->net.isPackage + i);
+	      DrawPlayerModel(data->players[i].position, data->players[i].direction,
+			      length(vec2(data->players[i].position) - lastPos[i]) * 5,
+			      camera, shader, i, player.GetId(), player.GetThird());
+	      if (render == 0 && !data->config.oculus)
+		lastPos[i] = vec2(data->players[i].position);
+	      else if (render == 1 && data->config.oculus)
+		lastPos[i] = vec2(data->players[i].position);
 	      i++;
 	    }
 	  render++;
 	}
+      user.IsShooted(data->players, data->game.Team2, map);
       display.Update(camera, map, player, data);
       player.FillCPlayer(data->players + player.GetId(), camera.GetFor());
     }

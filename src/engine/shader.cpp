@@ -76,6 +76,15 @@ void	Shader::Update(const glm::mat4& transform, Camera& camera)
   //  glUniform4fv(m_uniforms[1], 120, lights);
 }
 
+void	Shader::Update(const glm::mat4& transform, const glm::mat4& persp)
+{
+  glm::mat4 model = persp * transform;
+
+  glUniformMatrix4fv(m_uniforms[TRANSFORM_U], 1, GL_FALSE, &model[0][0]);
+  glUniformMatrix4fv(m_uniforms[SHADOW_MAT_U], 1, GL_FALSE, &transform[0][0]);
+  //  glUniform4fv(m_uniforms[1], 120, lights);
+}
+
 static GLuint CreateShader(const std::string& text, GLenum shaderType)
 {
   GLuint shader = glCreateShader(shaderType);
