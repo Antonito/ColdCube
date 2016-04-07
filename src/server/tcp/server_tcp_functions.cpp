@@ -61,6 +61,7 @@ void		tcps_check_received(t_all *all, int i)
 	    {
 	      fprintf(stdout, "[TCP] added :%s:\n", all->pseudo[i]);
 	      write(all->tcp->tmp_sock, "ok", 2);
+	      usleep(1000);
 	      tcps_sync_all(all);
 	    }
 	}
