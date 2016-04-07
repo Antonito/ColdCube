@@ -44,6 +44,8 @@ void		tcps_cli_add(t_all *all)
 
 void		tcps_check_received(t_all *all, int i)
 {
+  char		tmp[3] = {0};
+
   if (all->tcp->buff[0] == '/')
     {
       if (all->tcp->buff[1] == 'a')
@@ -60,7 +62,8 @@ void		tcps_check_received(t_all *all, int i)
 	  else
 	    {
 	      fprintf(stdout, "[TCP] added :%s:\n", all->pseudo[i]);
-	      write(all->tcp->tmp_sock, "ok", 2);
+	      tmp[0] = (char)i;
+	      write(all->tcp->tmp_sock, tmp, 2);
 	      usleep(1000);
 	      tcps_sync_all(all);
 	    }
