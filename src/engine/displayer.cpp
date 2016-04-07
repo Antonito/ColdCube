@@ -618,7 +618,8 @@ void			Displayer::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
 		menu->hold();
 	    }
 	  if (event.key.keysym.sym == SDLK_BACKSPACE &&
-	      items[menu->currentItem].text.length())
+	      items[menu->currentItem].text.length() &&
+	      items[menu->currentItem].type == MENU_TEXTINPUT)
 	    {
 	      if (!isprint(items[menu->currentItem].text[items[menu->currentItem].text.length() - 1]))
 		items[menu->currentItem].text.erase(items[menu->currentItem].text.length() - 2);
