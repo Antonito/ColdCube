@@ -116,8 +116,10 @@ void		set_max_fd(t_tcps *);
 void		tcps_cli_add(t_all *);
 void		tcps_check_received(t_all *, int);
 void		tcps_remove_sock(t_tcps *, int);
+void		*send_time(void *);
 
 /* src/server/tcp/server_tcp_msg.c */
+void		tcps_send_to_all_c(t_all *, char *);
 void		tcps_send_to_all(t_all *);
 void		tcps_sync_all(t_all *);
 

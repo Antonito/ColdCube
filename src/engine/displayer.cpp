@@ -345,7 +345,7 @@ int			minUdpID(t_data *data)
 {
   for (int i = 0 ; i < 10 ; ++i)
     if (*(data->players[i].pseudo))
-      return (std::cout << "First id = " << i << " while yours is " << data->net.playerIndexUdp << std::endl, i);
+      return (/*std::cout << "First id = " << i << " while yours is " << data->net.playerIndexUdp << std::endl,*/ i);
   return (-1);
 }
 

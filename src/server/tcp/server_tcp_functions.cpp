@@ -1,5 +1,24 @@
 #include "server.hpp"
 
+void		*send_time(void *_data)
+{
+  t_all		*all = (t_all *)_data;
+  int		i;
+  char		msg[30];
+
+  i = 6;
+  while (--i > 0)
+    {
+      memset(msg, 0, 30);
+      sprintf(msg, "server: game start in %d", i);
+      tcps_send_to_all_c(all, msg);
+    }
+      memset(msg, 0, 30);
+      sprintf(msg, "/g");
+      tcps_send_to_all_c(all, msg);
+      return (NULL);
+}
+
 void		init_tcps_cli(t_tcps *tcp)
 {
   int		i;
@@ -45,6 +64,7 @@ void		tcps_cli_add(t_all *all)
 void		tcps_check_received(t_all *all, int i)
 {
   char		tmp[3] = {0};
+  pthread_t	timer;
 
   if (all->tcp->buff[0] == '/')
     {
@@ -78,6 +98,14 @@ void		tcps_check_received(t_all *all, int i)
 	  memset(all->pseudo[i], 0, 21);
 	  tcps_sync_all(all);
 	 }
+      if (all->tcp->buff[1] == 'k')
+	{
+	  if (pthread_create(&timer, NULL, send_time, (void *)all) != 0)
+	    {
+	      fprintf(stderr, "Error: Creating the timer thread\n");
+	      return ;
+	    }
+	}
     }
   else
     tcps_send_to_all(all);
