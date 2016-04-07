@@ -14,13 +14,22 @@ Score::~Score()
 {
 }
 
-void		Score::checkWin(int team)
+void		Score::printScore(const int team)
 {
-  std::cout << "Team " << team << " wins !\n";
-  exit(0);
+  std::cout << "Score Team " << team << ": " << m_score << "\n";
 }
 
-void		Score::updateScore(int weapon, bool headShot, double dist)
+void		Score::checkWin(const int team)
+{
+  if (m_score >= TOTAL_PTS)
+    {
+      std::cout << "Team " << team << " wins !\n";
+      exit(0);
+    }
+}
+
+void		Score::updateScore(const int weapon, const bool headShot,
+				   const double dist)
 {
   if (weapon == RIFLE_WEAPON)
     m_score += RIFLE_DMG * m_timeMult * m_streakMult * ((headShot) ? HEAD_RIFLE : 1) * ((dist >= FAR_DIST) ? FAR_RIFLE : 1);
@@ -51,7 +60,7 @@ void	Score::resetStreak(void)
   m_streakMult = 1.00;
 }
 
-void	Score::updateStreakMult(int weapon)
+void	Score::updateStreakMult(const int weapon)
 {
   if (weapon == RIFLE_WEAPON)
     m_streakMult += STREAK_RIFLE;
