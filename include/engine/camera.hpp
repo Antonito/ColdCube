@@ -53,6 +53,8 @@ class Camera
 	  finalRot.x = 89.99;
 	if (finalRot.x < -89.99)
 	  finalRot.x = -89.99;
+	m_rotation.x = finalRot.x;
+	m_rotation.y = finalRot.y;
       }
     else
       finalRot = m_rotation;
