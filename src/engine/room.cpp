@@ -19,17 +19,15 @@ int		room(Displayer &display, t_data *data)
   data->tchat.constructor();
   bg = IMG_Load(ROOM_BACKGROUND);
 
-  while (!display.IsClosed() && data->game.running)
+  while (!display.IsClosed() && data->game.running && strcmp(data->net.tcp.buff, "/g"))
     {
       std::cout << "clicked = " << pos.w << std::endl;
       display.UpdateRoom(data, &pos, bg, surface);
     }
   if (!data->game.running)
-    {
-      data->game.running = true;
-    }
+    data->game.running = true;
 
   SDL_FreeSurface(surface);
   SDL_FreeSurface(bg);
-  return (0);
+  return (!strcmp(data->net.tcp.buff, "/g"));
 }

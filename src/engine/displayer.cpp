@@ -314,8 +314,19 @@ int	startGame(t_data *data, std::vector<menuItem> &items, Displayer &disp)
 #ifdef	DEBUG
       std::clog << "TCP OK\n";
 #endif
-      room(disp, data);
-      usleep(2000);
+      if (!room(disp, data))
+      {
+	write(data->net.tcp.sock, "/r", 2);
+#ifdef _WIN32
+	  closesocket(data->net.tcp.sock);
+#else
+	  close(data->net.tcp.sock);
+#endif
+	data->net.tcp.run = 0;
+	data->net.udp.run_send = 0;
+	data->net.udp.run = 0;
+	return (0);
+      }
       if (!clientLaunchUdpc(data))
 	{
 #ifdef	DEBUG
@@ -425,6 +436,10 @@ void			Displayer::UpdateRoom(t_data *room, SDL_Rect *pos,
 	    if (pos->x > 1705 && pos->y > 858
 		&& pos->x < 1905 && pos->y < 1058)
 	      clicked = 1;
+	    else if (pos->x < 854 && !room->tchat.isFocus())
+	      room->tchat.focus(true);
+	    else
+	      room->tchat.focus(false);
 	    break;
 	  case SDL_MOUSEMOTION:
 	    if (event.motion.x)
