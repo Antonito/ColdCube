@@ -25,8 +25,9 @@ void		tcps_sync_all(t_all *all)
   while (++i < 10)
     {
       if (all->connected[i] == 0)
-	continue;
-      strcat(buff, all->pseudo[i]);
+	strcat(buff, "/no");
+      else
+	strcat(buff, all->pseudo[i]);
       strcat(buff, "\n");
     }
   i = -1;
