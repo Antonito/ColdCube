@@ -96,7 +96,7 @@ int     User::IsShooted(t_player *p, Score &advTeam, Map &map)
   	    advTeam.updateScore(weapon, headshot, length(vec3(hit) - p[i].position));
   	}
       if (getEvent(p[i].events, SHOOT))
-  	setEvent(&p[i].events, SHOOT, true);
+  	setEvent(&p[i].events, SHOOT, false);
       i++;
     }
   return (0);

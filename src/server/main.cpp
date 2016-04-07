@@ -41,13 +41,13 @@ int		main(int argc, char **argv)
       fprintf(stderr, "Error: Creating the UDP thread\n");
       return (1);
     }
-  if (pthread_create(&all.aiThread, NULL, main_ai_thread, (void *)&all) != 0)
-    {
-      fprintf(stderr, "Error: Creating the AI thread\n");
-      return (1);
-    }
+  // if (pthread_create(&all.aiThread, NULL, main_ai_thread, (void *)&all) != 0)
+  //   {
+  //     fprintf(stderr, "Error: Creating the AI thread\n");
+  //     return (1);
+  //   }
   pthread_join(all.tcpt, NULL);
   pthread_join(all.tudp, NULL);
-  pthread_join(all.aiThread, NULL);
+  //  pthread_join(all.aiThread, NULL);
   return (0);
 }
