@@ -20,21 +20,19 @@ Mesh	SetPlanes(int, vec3);
 int	engineMain(Displayer &display, t_data *data)
 {
   Shader	shader("shaders/test1");
-
   Map		map("map");
   Player	player(vec3(120, 120, 10), 90, &map, data->net.playerIndexUdp);
-  Camera camera(vec3(10, 5, 10), 70.0f, (float)WIN_X / WIN_Y, 0.01f, 500.0f,
+  Camera	camera(vec3(10, 5, 10), 70.0f, (float)WIN_X / WIN_Y, 0.01f, 500.0f,
 		data->config.oculusHmd, data->config.oculus);
-  Transform transform;
+  Transform	transform;
   int		fps = 0;
   int		t = time(NULL);
   unsigned char	tt[] = {255, 255, 255, 255};
-  Texture text(tt, 1, 1, false);
-  int	i;
-  int	count(1), tot(0);
-  vec2	lastPos[10] = {vec2(0, 0)};
-
-  vec3		light(10, 10, 5);
+  Texture	text(tt, 1, 1, false);
+  int		i;
+  int		count(1), tot(0);
+  vec2		lastPos[10] = {vec2(0, 0)};
+  vec3		light(30, 30, 5);
   int		render;
 
   i = 0;

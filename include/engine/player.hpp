@@ -11,6 +11,7 @@ class Player
   Player();
   Player(vec3 pos, float rot, Map *map, int id);
   void Move(vec2 dir);
+  void MoveCheat(vec3 dir);
   void Jump();
   void Fall(float time);
   void Update(Map &map, float time);

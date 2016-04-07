@@ -26,6 +26,7 @@ enum
   TRANSFORM_U,
   SHADOW_MAT_U,
   LIGHT_U,
+  MVP_U,
 
   NB_UNIFORMS
 };
