@@ -83,6 +83,7 @@ int     User::IsShooted(t_player *p, Score &advTeam, Map &map)
 	}
       if (hit.w > 0.0)
   	{
+	  printf("%.2f %.2f %.2f %.2f\n", hit.x, hit.y, hit.z, hit.w);
   	  dist = vec2(hit.x - m_player->position.x - 0.4,
   		      hit.y - m_player->position.y - 0.4);
   	  if (hit.z > m_player->position.z + 1.4 && (headshot = true))
