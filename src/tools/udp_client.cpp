@@ -88,7 +88,7 @@ int			clientLaunchUdpc(t_data *data)
     }
   data->net.udp.to_serv.sin_family = AF_INET;
   data->net.udp.to_serv.sin_port = htons(data->net.port + 1);
-  data->net.udp.to_serv.sin_addr.s_addr = inet_addr(data->net.ip);
+  data->net.udp.to_serv.sin_addr.s_addr = inet_addr(data->net.purIp);
   len = sizeof(data->net.udp.to_serv);
   tv.tv_sec = 2;
   tv.tv_usec = 0;

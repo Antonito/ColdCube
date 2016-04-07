@@ -64,6 +64,7 @@ typedef	struct		s_network
   t_udpc		udp;
   char			*ip;
   char			*pseudo;
+  char			purIp[16];
   int			port;
   int			playerIndexTcp;
   int			playerIndexUdp;
@@ -104,7 +105,7 @@ typedef	struct		s_player
   int			id; /* Le serveur defini l'id du joueur*/
   char			*pseudo;
   char			life;
-  uint32_t     		selected_weapon; /* Index du t_weapon */
+  uint32_t		selected_weapon; /* Index du t_weapon */
   t_weapon		weapons[3];
   vector3		position;
   vector3		direction;

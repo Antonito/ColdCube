@@ -7,6 +7,7 @@
 # include <stdio.h>
 # include <arpa/inet.h>
 # include <sys/socket.h>
+# include <netdb.h>
 # include <unistd.h>
 # include <pthread.h>
 # include <string.h>
@@ -15,25 +16,39 @@
 #include "common_structs.hpp"
 #include "tools.hpp"
 
+void		host_ip(char *ip, char *purIp)
+{
+  struct hostent *he;
+    struct in_addr **addr_list;
+    int i;
+
+    if ( (he = gethostbyname(ip)) == NULL)
+    {
+        herror("gethostbyname");
+        return ;
+    }
+    addr_list = (struct in_addr **) he->h_addr_list;
+    for(i = 0; addr_list[i] != NULL; i++)
+    {
+        strcpy(purIp , inet_ntoa(*addr_list[i]) );
+	fprintf(stdout, "%s was resolved in %s\n", ip, purIp);
+        return ;
+    }
+    return ;
+}
+
 void		tcp_set_pseudo(t_data *data)
 {
   int		i;
   char		**pseudo;
 
-  i = -1;
   if ((pseudo = my_str_to_wordtab(data->net.tcp.buff, '\n')) == NULL)
     return ;
-  write(1, "OOOOOOOOOO\n", 11);
-  printf("DATA %p\n", data);
-  while (pseudo[++i] != NULL && i < 10)
-    fprintf(stdout, "%s\n", pseudo [i]);
-  write(1, "kkkkk\n", 6);
   i = 0;
   while (pseudo[i] && pseudo[++i] && pseudo[i + 1])
     {
       fprintf(stdout, "#%s#\n", pseudo[i]);
       strncpy(data->players[i - 1].pseudo, pseudo[i], strlen(pseudo[i]));
-      write(1, "JJJJJJJJJJJJJ\n", 14);
     }
   i = -1;
   while (pseudo[++i] != NULL && i < 10)
@@ -78,12 +93,14 @@ int		clientLaunchTcpc(t_data *data)
         return 1;
     }
 #endif
+    memset(data->net.purIp, 0, 16);
+    host_ip(data->net.ip, data->net.purIp);
   if ((data->net.tcp.sock = socket(AF_INET, SOCK_STREAM, 0)) == -1)
     {
       fprintf(stderr, "socket creation failed\n");
       return (-1);
     }
-  data->net.tcp.to_serv.sin_addr.s_addr = inet_addr(data->net.ip);
+  data->net.tcp.to_serv.sin_addr.s_addr = inet_addr(data->net.purIp);
   data->net.tcp.to_serv.sin_family = AF_INET;
   data->net.tcp.to_serv.sin_port = htons(data->net.port);
   if (connect(data->net.tcp.sock, (struct sockaddr *)&data->net.tcp.to_serv,
