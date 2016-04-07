@@ -53,7 +53,9 @@ void		tcp_set_pseudo(t_data *data)
 #ifdef	DEBUG
       fprintf(stdout, "#%s#\n", pseudo[i]);
 #endif
-      strncpy(data->players[i - 1].pseudo, pseudo[i], strlen(pseudo[i]));
+      memset(data->players[i - 1].pseudo, 0, 21);
+      if (strncmp(pseudo[i], "/no", 3) != 0)
+	strncpy(data->players[i - 1].pseudo, pseudo[i], strlen(pseudo[i]));
     }
   i = -1;
   while (pseudo[++i] != NULL && i < 10)

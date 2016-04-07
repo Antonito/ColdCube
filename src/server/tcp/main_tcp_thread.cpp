@@ -93,6 +93,7 @@ void		server_check_msg_tcp(t_all *all)
 		all->tcp->cli_sock[i] = 0;
 		all->nb_actual -= 1;
 		all->connected[i] = 0;
+		tcps_sync_all(all);
 	      }
 	    else
 	      {
