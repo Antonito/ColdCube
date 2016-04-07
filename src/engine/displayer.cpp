@@ -345,7 +345,7 @@ int			minUdpID(t_data *data)
 {
   for (int i = 0 ; i < 10 ; ++i)
     if (*(data->players[i].pseudo))
-      return (/*std::cout << "First id = " << i << " while yours is " << data->net.playerIndexUdp << std::endl,*/ i);
+      return (i);
   return (-1);
 }
 
@@ -367,7 +367,9 @@ void			Displayer::UpdateRoom(t_data *room, SDL_Rect *pos,
 				     {1370, 773, 76, 76}};
   static SDL_Surface		*icon_connected = IMG_Load(ROOM_ICON_PLAYER),
 				*icon_ia = IMG_Load(ROOM_ICON_IA),
-				*start_button = IMG_Load(ROOM_START_BUTTON);
+				*start_button = IMG_Load(ROOM_START_BUTTON),
+				*start_hold = IMG_Load(ROOM_START_HOLD);
+  static int			clicked = 0;
 
   while (SDL_PollEvent(&event))
     {
@@ -409,6 +411,21 @@ void			Displayer::UpdateRoom(t_data *room, SDL_Rect *pos,
 	  case SDL_QUIT:
 	    room->game.running = false;
 	    break;
+	  case SDL_MOUSEBUTTONUP:
+	    if (event.button.button != SDL_BUTTON_LEFT)
+	      break;
+	    clicked = 0;
+	    if (pos->x > 1705 && pos->y > 858
+		&& pos->x < 1905 && pos->y < 1058)
+	      write(room->net.tcp.sock, "/k", 2);
+	    break;
+	  case SDL_MOUSEBUTTONDOWN:
+	    if (event.button.button != SDL_BUTTON_LEFT)
+	      break;
+	    if (pos->x > 1705 && pos->y > 858
+		&& pos->x < 1905 && pos->y < 1058)
+	      clicked = 1;
+	    break;
 	  case SDL_MOUSEMOTION:
 	    if (event.motion.x)
 	      event.motion.x -= (event.motion.xrel / 3) / WIN_RATIO;
@@ -443,7 +460,7 @@ void			Displayer::UpdateRoom(t_data *room, SDL_Rect *pos,
       SDL_BlitSurface(bg, NULL, eyes, &bg_pos);
       SetSDL_Rect(&bg_pos, 1705, 858, 200, 200);
       if (room->net.playerIndexUdp == minUdpID(room))
-	SDL_BlitSurface(start_button, NULL, eyes, &bg_pos);
+	SDL_BlitSurface(clicked ? start_hold : start_button, NULL, eyes, &bg_pos);
       SDL_BlitSurface(*(room->players[0].pseudo) ? icon_connected : icon_ia, NULL, eyes, &(players[0]));
       SDL_BlitSurface(*(room->players[1].pseudo) ? icon_connected : icon_ia, NULL, eyes, &(players[1]));
       SDL_BlitSurface(*(room->players[2].pseudo) ? icon_connected : icon_ia, NULL, eyes, &(players[2]));
@@ -473,7 +490,7 @@ void			Displayer::UpdateRoom(t_data *room, SDL_Rect *pos,
       room->tchat.display(dest, m_windowSurface);		// 25ms
       SetSDL_Rect(&bg_pos, 1705, 858, 200, 200);
       if (room->net.playerIndexUdp == minUdpID(room))
-	SDL_BlitSurface(start_button, NULL, m_windowSurface, &bg_pos);
+	SDL_BlitSurface(clicked ? start_hold : start_button, NULL, m_windowSurface, &bg_pos);
       SDL_BlitSurface(*(room->players[0].pseudo) ? icon_connected : icon_ia, NULL, m_windowSurface, &(players[0]));
       SDL_BlitSurface(*(room->players[1].pseudo) ? icon_connected : icon_ia, NULL, m_windowSurface, &(players[1]));
       SDL_BlitSurface(*(room->players[2].pseudo) ? icon_connected : icon_ia, NULL, m_windowSurface, &(players[2]));
@@ -713,10 +730,10 @@ void			Displayer::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
       SetSDL_Rect(&dest, WIN_X / 2, WIN_Y / 4, WIN_X / 2, WIN_Y / 2);
       SDL_BlitScaled(screen, NULL, m_windowSurface, &dest);
 
-      SetSDL_Rect(&dest, pos->x / 2 + 3, WIN_Y / 4 + pos->y / 2, pos->w, pos->h);
+      SetSDL_Rect(&dest, pos->x / 2 + 3, WIN_Y / 4 + pos->y / 2, 50, 50);
       SDL_BlitScaled(surface, NULL, m_windowSurface, &dest);
 
-      SetSDL_Rect(&dest, WIN_X / 2 + pos->x / 2 - 3, WIN_Y / 4 + pos->y / 2, pos->w, pos->h);
+      SetSDL_Rect(&dest, WIN_X / 2 + pos->x / 2 - 3, WIN_Y / 4 + pos->y / 2, 50, 50);
       SDL_BlitScaled(surface, NULL, m_windowSurface, &dest);
     }
   else
