@@ -8,6 +8,8 @@ void		setEvent(uint32_t *value, int event, bool stat)
   set.value = *value;
   if (event == CONNECTED)
     set.event.connected = stat;
+  else if (event == SHOOT)
+    set.event.shoot = stat;
 #ifdef	DEBUG
   else
     std::cerr << "Event doesn't exist\n";
@@ -22,6 +24,8 @@ bool		getEvent(uint32_t value, int event)
   set.value = value;
   if (event == CONNECTED)
     return (set.event.connected);
+  else if (event == SHOOT)
+    return (set.event.shoot);
 #ifdef	DEBUG
   std::cerr << "Event doesn't exist\n";
 #endif

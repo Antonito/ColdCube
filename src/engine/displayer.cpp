@@ -1,3 +1,4 @@
+#include <SDL2/SDL.h>
 #include "SDL2/SDL_image.h"
 #include "SDL2/SDL_ttf.h"
 #include <sys/time.h>
@@ -8,7 +9,6 @@
 #include <sys/time.h>
 #include "engine/displayer.hpp"
 #include <iostream>
-#include <SDL2/SDL.h>
 #include "common_structs.hpp"
 #include "game.hpp"
 #include "tools.hpp"
@@ -80,6 +80,7 @@ bool	Displayer::IsClosed()
 void	Displayer::Update(Camera &cam, Map &map, Player &player,
 			  t_data *data)
 {
+
   SDL_GL_SwapWindow(m_window);
   usleep(15800);
   static		int cur(0), old(0), tot(0), nb(0);

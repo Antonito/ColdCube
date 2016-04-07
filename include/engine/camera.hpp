@@ -29,7 +29,10 @@ class Camera
   {
     return m_perspective * lookAt(m_position, m_position + m_forward, m_up);
   }
-
+  inline mat4 GetPerspective() const
+  {
+    return m_perspective;
+  }
   bool isOculus() {return m_hmd ? true : false;}
 
   vec3 &GetPos() {return m_position;}
