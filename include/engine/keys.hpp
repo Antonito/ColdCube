@@ -10,6 +10,8 @@ enum e_eventKey
     KEY_A,
     KEY_W,
     KEY_SPACE,
+    MOUSE_LEFT,
+    MOUSE_RIGHT,
 #ifdef	CHEAT
     KEY_I,
     KEY_J,

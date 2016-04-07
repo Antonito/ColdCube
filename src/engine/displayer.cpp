@@ -103,6 +103,26 @@ void	Displayer::Update(Camera &cam, Map &map, Player &player,
 	case (SDL_QUIT):
 	  m_isClosed = true;
 	  break ;
+	case SDL_MOUSEBUTTONDOWN:
+	  switch (e.button.button)
+	    {
+	    case (SDL_BUTTON_LEFT):
+	      eventKey[MOUSE_LEFT] = true;
+	      break ;
+	    case (SDL_BUTTON_RIGHT):
+	      eventKey[MOUSE_RIGHT] = true;
+	      break ;
+	    }
+	case SDL_MOUSEBUTTONUP:
+	  switch (e.button.button)
+	    {
+	    case (SDL_BUTTON_LEFT):
+	      eventKey[MOUSE_LEFT] = false;
+	      break ;
+	    case (SDL_BUTTON_RIGHT):
+	      eventKey[MOUSE_RIGHT] = false;
+	      break ;
+	    }
 	case (SDL_KEYDOWN):
 	  switch (e.key.keysym.sym)
 	    {

@@ -29,6 +29,12 @@ void	setQwerty(t_keys *keys)
   keys->jump = KEY_SPACE;
 }
 
+void	commonKeys(t_keys *keys)
+{
+  keys->aim = MOUSE_RIGHT;
+  keys->fire = MOUSE_LEFT;
+}
+
 void	initData(t_data *data)
 {
   int	i;
@@ -44,6 +50,7 @@ void	initData(t_data *data)
   data->config.keyboard = AZERTY_MODE;
   data->config.musicVolume = 50;
   data->config.effectsVolume = 50;
+  commonKeys(&data->config.keys);
   setAzerty(&data->config.keys);
 #ifdef	CHEAT
   bzero(&cheat, sizeof(t_cheat));

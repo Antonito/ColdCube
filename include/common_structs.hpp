@@ -130,6 +130,8 @@ typedef struct		s_keys
   e_eventKey		left;
   e_eventKey		right;
   e_eventKey		jump;
+  e_eventKey		aim;
+  e_eventKey		fire;
 }			t_keys;
 
 typedef struct		s_config
