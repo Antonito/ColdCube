@@ -179,13 +179,13 @@ void Tchat::send(void *all)
   std::string	msg;
 
   data = (t_data *)all;
-  std::cout << "SENDING : " << this->input << std::endl;
   msg = data->net.pseudo;
   msg += ": ";
   msg += *this->input;
+#ifdef	DEBUG
   std::cout << "SENDING : " << msg << std::endl;
+#endif
   write(data->net.tcp.sock, msg.c_str(), strlen(msg.c_str()));
-  //  this->messages.push_back(*this->input);
   *(this->input) = "";
   this->cursor = this->cursor_pos = 0;
 }

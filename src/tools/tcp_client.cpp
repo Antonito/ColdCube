@@ -32,7 +32,9 @@ void		host_ip(char *ip, char *purIp)
     for(i = 0; addr_list[i] != NULL; i++)
     {
         strcpy(purIp , inet_ntoa(*addr_list[i]) );
+#ifdef	DEBUG
 	fprintf(stdout, "%s was resolved in %s\n", ip, purIp);
+#endif
         return ;
     }
     return ;
@@ -48,7 +50,9 @@ void		tcp_set_pseudo(t_data *data)
   i = 0;
   while (pseudo[i] && pseudo[++i] && pseudo[i + 1])
     {
+#ifdef	DEBUG
       fprintf(stdout, "#%s#\n", pseudo[i]);
+#endif
       strncpy(data->players[i - 1].pseudo, pseudo[i], strlen(pseudo[i]));
     }
   i = -1;
@@ -68,7 +72,9 @@ void		*tcp_thread(void *data)
       if ((len = read(_data->net.tcp.sock, _data->net.tcp.buff, 199)) == 0)
 	{
 	  _data->net.tcp.run = 0;
+#ifdef	DEBUG
 	  fprintf(stdout, "run thread = 0\n");
+#endif
 	}
       _data->net.tcp.buff[len] = 0;
       if (strncmp("/s", _data->net.tcp.buff, 2) == 0)
@@ -78,12 +84,16 @@ void		*tcp_thread(void *data)
 	  std::string str(_data->net.tcp.buff);
 	  _data->tchat.pushBack(str);
 	}
+#ifdef	DEBUG
       fprintf(stderr, ":%s:", _data->net.tcp.buff);
       fflush(stderr);
+#endif
       usleep(3000);
     }
   close(_data->net.tcp.sock);
+#ifdef	DEBUG
   fprintf(stdout, "stoped tcp thread\n");
+#endif
   return (NULL);
 }
 
@@ -95,7 +105,7 @@ int		clientLaunchTcpc(t_data *data)
 
     if (WSAStartup(MAKEWORD(2,2),&wsa) != 0)
     {
-        printf("Failed. Error Code : %d",WSAGetLastError());
+        printf("Failed. Error Code : %d", WSAGetLastError());
         return 1;
     }
 #endif
@@ -103,7 +113,7 @@ int		clientLaunchTcpc(t_data *data)
     host_ip(data->net.ip, data->net.purIp);
   if ((data->net.tcp.sock = socket(AF_INET, SOCK_STREAM, 0)) == -1)
     {
-      fprintf(stderr, "socket creation failed\n");
+      fprintf(stderr, "Socket creation failed\n");
       return (-1);
     }
   data->net.tcp.to_serv.sin_addr.s_addr = inet_addr(data->net.purIp);
@@ -112,14 +122,14 @@ int		clientLaunchTcpc(t_data *data)
   if (connect(data->net.tcp.sock, (struct sockaddr *)&data->net.tcp.to_serv,
 	      sizeof(data->net.tcp.to_serv)) < 0)
     {
-      fprintf(stderr, "cannot connect\n");
+      fprintf(stderr, "Cannot connect\n");
       return (-1);
     }
   snprintf(tmp, 24, "/a %s", data->net.pseudo);
   if (write(data->net.tcp.sock, tmp, strlen(tmp)) != (int)strlen(tmp))
     {
       close(data->net.tcp.sock);
-      fprintf(stderr, "error sending pseudo\n");
+      fprintf(stderr, "Error sending pseudo\n");
       return (-1);
     }
   read(data->net.tcp.sock, tmp, 29);

@@ -1,6 +1,6 @@
-DEBUG=			yes
+DEBUG=			no
 
-CHEAT=			yes
+CHEAT=			no
 
 GAME_PREFIX=		src/game/
 
@@ -106,7 +106,7 @@ endif
 
 CC=			gcc
 
-CXX=			clang
+CXX=			g++
 
 RM=			rm -f
 

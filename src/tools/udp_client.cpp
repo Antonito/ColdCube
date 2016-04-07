@@ -56,7 +56,7 @@ void			*udp_thread(void *data)
 	{
 	  if (!checkPacket(_data->net.udp.buff))
 	    {
-	      fprintf(stderr, "wrong package output");
+	      fprintf(stderr, "Wrong package output");
 	      fflush(stderr);
 	    }
 	  readUdpPacket(_data);
@@ -83,7 +83,7 @@ int			clientLaunchUdpc(t_data *data)
 #endif
   if ((data->net.udp.sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == -1)
     {
-      fprintf(stderr, "socket creation failed\n");
+      fprintf(stderr, "Socket creation failed\n");
       return (-1);
     }
   data->net.udp.to_serv.sin_family = AF_INET;
@@ -99,29 +99,39 @@ int			clientLaunchUdpc(t_data *data)
 	     (struct sockaddr *)&data->net.udp.to_serv, len) < 1)
     {
       close(data->net.udp.sock);
-      fprintf(stderr, "error sending pseudo (udp)\n");
+      fprintf(stderr, "Error sending pseudo (udp)\n");
       return (-1);
     }
+#ifdef	DEBUG
   printf("before recv ID\n");
+#endif
   tmp[0] = -1;
   recvfrom(data->net.udp.sock, tmp, 3, 0,
 	  (struct sockaddr *)&data->net.udp.to_serv, (socklen_t *)&len);
   if (tmp[0] < 0 || tmp[0] > 9)
     {
-      fprintf(stderr, "receving Id timedOut or wrong Id = %d\n", (int)tmp[0]);
+      fprintf(stderr, "Receving Id timedOut or wrong Id = %d\n", (int)tmp[0]);
       close(data->net.udp.sock);
       return (-1);
     }
+#ifdef	DEBUG
   printf("After recv ID\n");
+#endif
   data->net.playerIndexUdp = (int)tmp[0];
+#ifdef	DEBUG
   printf("Id = %d\n", data->net.playerIndexUdp);
+#endif
   data->net.udp.run = 1;
   data->net.udp.run_send = 1;
+#ifdef	DEBUG
   printf("creating thread UDP\n");
-  memset(data->net.isPackage, 0, sizeof(10) * 10);
+#endif
+  memset(data->net.isPackage, 0, sizeof(int) * 10);
   pthread_create(&data->net.udp.thread, NULL, udp_thread, (void *)data);
   pthread_create(&data->net.udp.thread_send, NULL, udp_send_thread, (void *)data);
+#ifdef	DEBUG
   printf("thread created\n");
+#endif
 #if _WIN32
   WSACleanup();
 #endif
