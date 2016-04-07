@@ -5,7 +5,11 @@ void		*send_time(void *_data)
   t_all		*all = (t_all *)_data;
   int		i;
   char		msg[30];
+  static int	game = 0;
 
+  if (game)
+    return (NULL);
+  game = 1;
   i = 6;
   memset(msg, 0, 30);
   sprintf(msg, " ");
@@ -14,18 +18,19 @@ void		*send_time(void *_data)
   memset(msg, 0, 30);
   sprintf(msg, "Game starting !");
   tcps_send_to_all_c(all, msg);
-  usleep(200);
+  usleep(300);
   while (--i > 0)
     {
       memset(msg, 0, 30);
-      sprintf(msg, "     %d", i);
+      sprintf(msg, "          %d", i);
       tcps_send_to_all_c(all, msg);
       sleep(1);
     }
-      memset(msg, 0, 30);
-      sprintf(msg, "/g");
-      tcps_send_to_all_c(all, msg);
-      return (NULL);
+  memset(msg, 0, 30);
+  sprintf(msg, "/g");
+  tcps_send_to_all_c(all, msg);
+  game = 0;
+  return (NULL);
 }
 
 void		init_tcps_cli(t_tcps *tcp)
@@ -74,7 +79,6 @@ void		tcps_check_received(t_all *all, int i)
 {
   char		tmp[3] = {0};
   pthread_t	timer;
-  static int	game = 0;
 
   if (all->tcp->buff[0] == '/')
     {
@@ -108,9 +112,8 @@ void		tcps_check_received(t_all *all, int i)
 	  memset(all->pseudo[i], 0, 21);
 	  tcps_sync_all(all);
 	 }
-      if (all->tcp->buff[1] == 'k' && !game)
+      if (all->tcp->buff[1] == 'k')
 	{
-	  game = 1;
 	  if (pthread_create(&timer, NULL, send_time, (void *)all) != 0)
 	    {
 	      fprintf(stderr, "Error: Creating the timer thread\n");
