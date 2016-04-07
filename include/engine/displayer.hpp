@@ -27,6 +27,7 @@ class Displayer
  protected:
  private:
   SDL_Window*	m_window;
+  TTF_Font	*name_font;
   SDL_GLContext	m_glContext;
   bool		m_isClosed;
   SDL_Surface*	m_windowSurface;

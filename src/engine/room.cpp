@@ -20,10 +20,7 @@ int		room(Displayer &display, t_data *data)
   bg = IMG_Load(ROOM_BACKGROUND);
 
   while (!display.IsClosed() && data->game.running && strcmp(data->net.tcp.buff, "/g"))
-    {
-      std::cout << "clicked = " << pos.w << std::endl;
-      display.UpdateRoom(data, &pos, bg, surface);
-    }
+    display.UpdateRoom(data, &pos, bg, surface);
   if (!data->game.running)
     data->game.running = true;
 

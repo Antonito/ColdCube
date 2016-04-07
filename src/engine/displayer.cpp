@@ -28,6 +28,8 @@ void	SetSDL_Rect(SDL_Rect *r, int x, int y, int w, int h)
 
 Displayer::Displayer(int width, int height, const std::string& title)
 {
+  TTF_Init();
+  name_font = TTF_OpenFont(TCHAT_FONT_TEXT, (int)(30 / WIN_RATIO));
   if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
     {
       std::cerr << "Failed to init SDL: " << SDL_GetError() << std::endl;
@@ -365,6 +367,39 @@ int			minUdpID(t_data *data)
   return (-1);
 }
 
+void			display_name(t_player *players, int pos, SDL_Surface *to, TTF_Font *font)
+{
+  SDL_Rect		positions[] = {{1406, 61, 200, 200},
+				       {1581, 157, 200, 200},
+				       {1113, 198, 200, 200},
+				       {1700, 330, 200, 200},
+				       {983, 373, 200, 200},
+				       {1706, 676, 200, 200},
+				       {983, 634, 200, 200},
+				       {1583, 796, 200, 200},
+				       {1116, 809, 200, 200},
+				       {1265, 865, 200, 200}};
+  SDL_Rect		point = positions[pos];
+  char			path[64];
+  SDL_Surface		*link;
+  SDL_Color		black = {0, 0, 0, 0};
+
+  sprintf(path, "./assets/imgs/room/players/%d.png", pos);
+  link = IMG_Load(path);
+  SDL_BlitSurface(link, NULL, to, &point);
+  if (((pos % 2) || !pos) && pos != 9)
+    point.x += link->w + 10;
+  if (pos > 4)
+    point.y += link->h;
+  SDL_FreeSurface(link);
+  link = TTF_RenderUTF8_Blended(font, players[pos].pseudo, black);
+  point.y -= link->h / 2;
+  if ((!(pos % 2) || pos == 9) && pos)
+    point.x -= link->w + 20;
+  SDL_BlitSurface(link, NULL, to, &point);
+  SDL_FreeSurface(link);
+}
+
 void			Displayer::UpdateRoom(t_data *room, SDL_Rect *pos,
 					      SDL_Surface *bg, SDL_Surface *surface)
 {
@@ -481,16 +516,10 @@ void			Displayer::UpdateRoom(t_data *room, SDL_Rect *pos,
       SetSDL_Rect(&bg_pos, 1705, 858, 200, 200);
       if (room->net.playerIndexUdp == minUdpID(room))
 	SDL_BlitSurface(clicked ? start_hold : start_button, NULL, eyes, &bg_pos);
-      SDL_BlitSurface(*(room->players[0].pseudo) ? icon_connected : icon_ia, NULL, eyes, &(players[0]));
-      SDL_BlitSurface(*(room->players[1].pseudo) ? icon_connected : icon_ia, NULL, eyes, &(players[1]));
-      SDL_BlitSurface(*(room->players[2].pseudo) ? icon_connected : icon_ia, NULL, eyes, &(players[2]));
-      SDL_BlitSurface(*(room->players[3].pseudo) ? icon_connected : icon_ia, NULL, eyes, &(players[3]));
-      SDL_BlitSurface(*(room->players[4].pseudo) ? icon_connected : icon_ia, NULL, eyes, &(players[4]));
-      SDL_BlitSurface(*(room->players[5].pseudo) ? icon_connected : icon_ia, NULL, eyes, &(players[5]));
-      SDL_BlitSurface(*(room->players[6].pseudo) ? icon_connected : icon_ia, NULL, eyes, &(players[6]));
-      SDL_BlitSurface(*(room->players[7].pseudo) ? icon_connected : icon_ia, NULL, eyes, &(players[7]));
-      SDL_BlitSurface(*(room->players[8].pseudo) ? icon_connected : icon_ia, NULL, eyes, &(players[8]));
-      SDL_BlitSurface(*(room->players[9].pseudo) ? icon_connected : icon_ia, NULL, eyes, &(players[9]));
+
+      for (int i = 0 ; i < 10 ; ++i)
+	SDL_BlitSurface(*(room->players[i].pseudo) ? icon_connected : icon_ia, NULL, eyes, &(players[i]));
+
       SetSDL_Rect(&dest, 0, WIN_Y / 4, WIN_X / 2, WIN_Y / 2);
       SDL_BlitScaled(eyes, NULL, m_windowSurface, &dest);
 
@@ -511,17 +540,16 @@ void			Displayer::UpdateRoom(t_data *room, SDL_Rect *pos,
       SetSDL_Rect(&bg_pos, 1705, 858, 200, 200);
       if (room->net.playerIndexUdp == minUdpID(room))
 	SDL_BlitSurface(clicked ? start_hold : start_button, NULL, m_windowSurface, &bg_pos);
-      SDL_BlitSurface(*(room->players[0].pseudo) ? icon_connected : icon_ia, NULL, m_windowSurface, &(players[0]));
-      SDL_BlitSurface(*(room->players[1].pseudo) ? icon_connected : icon_ia, NULL, m_windowSurface, &(players[1]));
-      SDL_BlitSurface(*(room->players[2].pseudo) ? icon_connected : icon_ia, NULL, m_windowSurface, &(players[2]));
-      SDL_BlitSurface(*(room->players[3].pseudo) ? icon_connected : icon_ia, NULL, m_windowSurface, &(players[3]));
-      SDL_BlitSurface(*(room->players[4].pseudo) ? icon_connected : icon_ia, NULL, m_windowSurface, &(players[4]));
-      SDL_BlitSurface(*(room->players[5].pseudo) ? icon_connected : icon_ia, NULL, m_windowSurface, &(players[5]));
-      SDL_BlitSurface(*(room->players[6].pseudo) ? icon_connected : icon_ia, NULL, m_windowSurface, &(players[6]));
-      SDL_BlitSurface(*(room->players[7].pseudo) ? icon_connected : icon_ia, NULL, m_windowSurface, &(players[7]));
-      SDL_BlitSurface(*(room->players[8].pseudo) ? icon_connected : icon_ia, NULL, m_windowSurface, &(players[8]));
-      SDL_BlitSurface(*(room->players[9].pseudo) ? icon_connected : icon_ia, NULL, m_windowSurface, &(players[9]));
-
+      for (int i = 0 ; i < 10 ; ++i)
+	{
+	  if (*(room->players[i].pseudo))
+	    {
+	      SDL_BlitSurface(icon_connected, NULL, m_windowSurface, &(players[i]));
+	      display_name(room->players, i, m_windowSurface, this->name_font);
+	    }
+	  else
+	    SDL_BlitSurface(icon_ia, NULL, m_windowSurface, &(players[i]));
+	}
 								// 2ms
       SDL_BlitSurface(surface, NULL, m_windowSurface, pos);	// 3ms
     }
