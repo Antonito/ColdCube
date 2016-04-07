@@ -13,7 +13,7 @@ int		room(Displayer &display, t_data *data)
 {
   SDL_Surface		*bg,
 			*surface;
-  SDL_Rect	pos = {WIN_X / 2, WIN_Y / 2, WIN_X, WIN_Y};
+  SDL_Rect	pos = {WIN_X / 2, WIN_Y / 2, 0, 0};
 
   surface = IMG_Load(CURSOR_IMG);
   data->tchat.constructor();
@@ -21,6 +21,7 @@ int		room(Displayer &display, t_data *data)
 
   while (!display.IsClosed() && data->game.running)
     {
+      std::cout << "clicked = " << pos.w << std::endl;
       display.UpdateRoom(data, &pos, bg, surface);
     }
   if (!data->game.running)
