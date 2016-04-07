@@ -33,6 +33,7 @@ Tchat::Tchat(unsigned char transparency)
 
 void Tchat::constructor()
 {
+  this->isFocused = false;
   this->messages = std::vector<std::string>();
   this->messages.push_back("Server: Welcome to the room");
   this->maxlen = 640;

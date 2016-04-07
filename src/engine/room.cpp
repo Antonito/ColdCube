@@ -23,6 +23,7 @@ int		room(Displayer &display, t_data *data)
     display.UpdateRoom(data, &pos, bg, surface);
   if (!data->game.running)
     data->game.running = true;
+  data->tchat.isFocus(false);
 
   SDL_FreeSurface(surface);
   SDL_FreeSurface(bg);
