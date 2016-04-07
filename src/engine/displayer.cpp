@@ -13,6 +13,7 @@
 #include "game.hpp"
 #include "tools.hpp"
 #include "Menu.h"
+#include <algorithm>
 
 #ifdef	CHEAT
 # include "cheat.hpp"
@@ -371,16 +372,16 @@ int			minUdpID(t_data *data)
 
 void			display_name(t_player *players, int pos, SDL_Surface *to, TTF_Font *font)
 {
-  SDL_Rect		positions[] = {{1406, 61, 200, 200},
-				       {1581, 157, 200, 200},
-				       {1113, 198, 200, 200},
-				       {1700, 330, 200, 200},
-				       {983, 373, 200, 200},
-				       {1706, 676, 200, 200},
-				       {983, 634, 200, 200},
-				       {1583, 796, 200, 200},
-				       {1116, 809, 200, 200},
-				       {1265, 865, 200, 200}};
+  SDL_Rect		positions[] = {{1356, 61, 200, 200},
+				       {1531, 157, 200, 200},
+				       {1063, 198, 200, 200},
+				       {1650, 330, 200, 200},
+				       {933, 373, 200, 200},
+				       {1656, 676, 200, 200},
+				       {933, 634, 200, 200},
+				       {1533, 796, 200, 200},
+				       {1066, 809, 200, 200},
+				       {1215, 865, 200, 200}};
   SDL_Rect		point = positions[pos];
   char			path[64];
   SDL_Surface		*link;
@@ -407,21 +408,23 @@ void			Displayer::UpdateRoom(t_data *room, SDL_Rect *pos,
 {
   SDL_Event		event;
   SDL_Rect		dest = {0, 0, WIN_X, WIN_Y};
-  SDL_Rect		bg_pos = {996, 138, 819, 800};
-  SDL_Rect		players[] = {{1370, 215, 76, 76},
-				     {1535, 270, 76, 76},
-				     {1205, 270, 76, 76},
-				     {1635, 410, 76, 76},
-				     {1110, 410, 76, 76},
-				     {1635, 578, 76, 76},
-				     {1110, 578, 76, 76},
-				     {1535, 718, 76, 76},
-				     {1205, 718, 76, 76},
-				     {1370, 773, 76, 76}};
+  SDL_Rect		bg_pos = {946, 138, 819, 800};
+  SDL_Rect		players[] = {{1320, 215, 76, 76},
+				     {1485, 270, 76, 76},
+				     {1155, 270, 76, 76},
+				     {1585, 410, 76, 76},
+				     {1060, 410, 76, 76},
+				     {1585, 578, 76, 76},
+				     {1060, 578, 76, 76},
+				     {1485, 718, 76, 76},
+				     {1155, 718, 76, 76},
+				     {1320, 773, 76, 76}};
   static SDL_Surface		*icon_connected = IMG_Load(ROOM_ICON_PLAYER),
 				*icon_ia = IMG_Load(ROOM_ICON_IA),
 				*start_button = IMG_Load(ROOM_START_BUTTON),
-				*start_hold = IMG_Load(ROOM_START_HOLD);
+				*start_hold = IMG_Load(ROOM_START_HOLD),
+				*logo = IMG_Load(ROOM_LOGO);
+  static int			height = 0;
   static int			clicked = 0;
 
   while (SDL_PollEvent(&event))
@@ -515,12 +518,22 @@ void			Displayer::UpdateRoom(t_data *room, SDL_Rect *pos,
       SDL_FillRect(eyes, NULL, SDL_MapRGB(eyes->format, 243, 237, 211));
       room->tchat.display(dest, eyes);
       SDL_BlitSurface(bg, NULL, eyes, &bg_pos);
+      SetSDL_Rect(&bg_pos, 1255, 420 + sin((float)++height / 30.0), 200, 200);
+      SDL_BlitSurface(logo, NULL, eyes, &bg_pos);
       SetSDL_Rect(&bg_pos, 1705, 858, 200, 200);
       if (room->net.playerIndexUdp == minUdpID(room))
 	SDL_BlitSurface(clicked ? start_hold : start_button, NULL, eyes, &bg_pos);
 
       for (int i = 0 ; i < 10 ; ++i)
-	SDL_BlitSurface(*(room->players[i].pseudo) ? icon_connected : icon_ia, NULL, eyes, &(players[i]));
+	{
+	  if (*(room->players[i].pseudo))
+	    {
+	      SDL_BlitSurface(icon_connected, NULL, eyes, &(players[i]));
+	      display_name(room->players, i, eyes, this->name_font);
+	    }
+	  else
+	    SDL_BlitSurface(icon_ia, NULL, eyes, &(players[i]));
+	}
 
       SetSDL_Rect(&dest, 0, WIN_Y / 4, WIN_X / 2, WIN_Y / 2);
       SDL_BlitScaled(eyes, NULL, m_windowSurface, &dest);
@@ -539,7 +552,11 @@ void			Displayer::UpdateRoom(t_data *room, SDL_Rect *pos,
     {
       SDL_BlitSurface(bg, NULL, m_windowSurface, &bg_pos);	// 11ms
       room->tchat.display(dest, m_windowSurface);		// 25ms
-      SetSDL_Rect(&bg_pos, 1705, 858, 200, 200);
+      SetSDL_Rect(&bg_pos, 1245, 425 + sin((float)++height / 10.0) * 8.0, 200, 200);
+      if ((height / 20.0) == 2 * M_PI)
+	height = 0;
+      SDL_BlitSurface(logo, NULL, m_windowSurface, &bg_pos);
+      SetSDL_Rect(&bg_pos, 1655, 858, 200, 200);
       if (room->net.playerIndexUdp == minUdpID(room))
 	SDL_BlitSurface(clicked ? start_hold : start_button, NULL, m_windowSurface, &bg_pos);
       for (int i = 0 ; i < 10 ; ++i)
@@ -752,7 +769,8 @@ void			Displayer::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
 	  break;
 	case SDL_TEXTINPUT:
 	  if (items[menu->currentItem].type == MENU_TEXTINPUT &&
-	      items[menu->currentItem].text.length() < 15)
+	      (   (menu->currentItem != 1 && items[menu->currentItem].text.length() < 16)
+	       || (menu->currentItem == 1 && items[menu->currentItem].text.length() < 10)))
 	    {
 	      if (items[menu->currentItem].text == " ")
 		items[menu->currentItem].text = "";
