@@ -13,6 +13,7 @@
 # include <string.h>
 #endif
 #include <iostream>
+#include <string>
 #include "common_structs.hpp"
 #include "tools.hpp"
 
@@ -72,6 +73,11 @@ void		*tcp_thread(void *data)
       _data->net.tcp.buff[len] = 0;
       if (strncmp("/s", _data->net.tcp.buff, 2) == 0)
 	tcp_set_pseudo(_data);
+      else
+	{
+	  std::string str(_data->net.tcp.buff);
+	  _data->tchat.pushBack(str);
+	}
       fprintf(stderr, ":%s:", _data->net.tcp.buff);
       fflush(stderr);
       usleep(3000);

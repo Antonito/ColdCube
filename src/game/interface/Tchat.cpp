@@ -3,6 +3,7 @@
 #include "SDL2/SDL_image.h"
 #include "game.hpp"
 #include "Tchat.hpp"
+#include "common_structs.hpp"
 #include <vector>
 #include <string>
 #include <time.h>
@@ -33,11 +34,7 @@ Tchat::Tchat(unsigned char transparency)
 void Tchat::constructor()
 {
   this->messages = std::vector<std::string>();
-  this->messages.push_back("Server: Hello there!");
-  this->messages.push_back("I'm a barbie girl");
-  this->messages.push_back("in a barbie woooorld");
-  this->messages.push_back("life in plastic");
-  this->messages.push_back("is fantastic");
+  this->messages.push_back("Server: Welcome to the room");
   this->maxlen = 640;
   this->header = IMG_Load(TCHAT_HEADER);
   this->footer = IMG_Load(TCHAT_FOOTER);
@@ -176,10 +173,19 @@ void Tchat::write_text(const char *text)
   SDL_FreeSurface(tot);
 }
 
-void Tchat::send()
+void Tchat::send(void *all)
 {
+  t_data	*data;
+  std::string	msg;
+
+  data = (t_data *)all;
   std::cout << "SENDING : " << this->input << std::endl;
-  this->messages.push_back(*this->input);
+  msg = data->net.pseudo;
+  msg += ": ";
+  msg += *this->input;
+  std::cout << "SENDING : " << msg << std::endl;
+  write(data->net.tcp.sock, msg.c_str(), strlen(msg.c_str()));
+  //  this->messages.push_back(*this->input);
   *(this->input) = "";
   this->cursor = this->cursor_pos = 0;
 }
@@ -187,4 +193,9 @@ void Tchat::send()
 void Tchat::setTransparency(int transparency)
 {
   this->transparency = transparency;
+}
+
+void Tchat::pushBack(std::string &message)
+{
+  this->messages.push_back(message);;
 }

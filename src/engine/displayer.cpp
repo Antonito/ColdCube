@@ -346,7 +346,7 @@ void			Displayer::UpdateRoom(t_data *room, SDL_Rect *pos,
 		  room->tchat.moveRight();
 		  break;
 		case SDLK_RETURN:
-		  room->tchat.send();
+		  room->tchat.send(room);
 		  break;
 	      }
 	    break;
@@ -378,25 +378,25 @@ void			Displayer::UpdateRoom(t_data *room, SDL_Rect *pos,
   icon_ia = IMG_Load(ROOM_ICON_IA);
   SDL_FillRect(m_windowSurface, NULL, SDL_MapRGB(m_windowSurface->format, 243, 237, 211));
   room->tchat.display(dest, bg);
-  SDL_BlitSurface(*(room->players[0].pseudo) ? icon_connected : icon_ia, 
+  SDL_BlitSurface(*(room->players[0].pseudo) ? icon_connected : icon_ia,
 NULL, bg, &(players[0]));
-  SDL_BlitSurface(*(room->players[1].pseudo) ? icon_connected : icon_ia, 
+  SDL_BlitSurface(*(room->players[1].pseudo) ? icon_connected : icon_ia,
 NULL, bg, &(players[1]));
-  SDL_BlitSurface(*(room->players[2].pseudo) ? icon_connected : icon_ia, 
+  SDL_BlitSurface(*(room->players[2].pseudo) ? icon_connected : icon_ia,
 NULL, bg, &(players[2]));
-  SDL_BlitSurface(*(room->players[3].pseudo) ? icon_connected : icon_ia, 
+  SDL_BlitSurface(*(room->players[3].pseudo) ? icon_connected : icon_ia,
 NULL, bg, &(players[3]));
-  SDL_BlitSurface(*(room->players[4].pseudo) ? icon_connected : icon_ia, 
+  SDL_BlitSurface(*(room->players[4].pseudo) ? icon_connected : icon_ia,
 NULL, bg, &(players[4]));
-  SDL_BlitSurface(*(room->players[5].pseudo) ? icon_connected : icon_ia, 
+  SDL_BlitSurface(*(room->players[5].pseudo) ? icon_connected : icon_ia,
 NULL, bg, &(players[5]));
-  SDL_BlitSurface(*(room->players[6].pseudo) ? icon_connected : icon_ia, 
+  SDL_BlitSurface(*(room->players[6].pseudo) ? icon_connected : icon_ia,
 NULL, bg, &(players[6]));
-  SDL_BlitSurface(*(room->players[7].pseudo) ? icon_connected : icon_ia, 
+  SDL_BlitSurface(*(room->players[7].pseudo) ? icon_connected : icon_ia,
 NULL, bg, &(players[7]));
-  SDL_BlitSurface(*(room->players[8].pseudo) ? icon_connected : icon_ia, 
+  SDL_BlitSurface(*(room->players[8].pseudo) ? icon_connected : icon_ia,
 NULL, bg, &(players[8]));
-  SDL_BlitSurface(*(room->players[9].pseudo) ? icon_connected : icon_ia, 
+  SDL_BlitSurface(*(room->players[9].pseudo) ? icon_connected : icon_ia,
 NULL, bg, &(players[9]));
   if (room->config.oculus)
     {
