@@ -80,9 +80,11 @@ bool	Displayer::IsClosed()
 void	Displayer::Update(Camera &cam, Map &map, Player &player,
 			  t_data *data)
 {
+  SDL_Rect		tchat_pos = {0, 2 * WIN_Y / 3, 854, WIN_Y / 3};
 
+  data->tchat.display(tchat_pos, m_windowSurface);
   SDL_GL_SwapWindow(m_window);
-  usleep(15800);
+  usleep(5800);
   static		int cur(0), old(0), tot(0), nb(0);
   cur = SDL_GetTicks();
   int			t = cur - old + 1;
@@ -157,6 +159,12 @@ void	Displayer::Update(Camera &cam, Map &map, Player &player,
 	    case (SDLK_ESCAPE):
 	      m_isClosed = true;
 	      break ;
+	    case (SDLK_RETURN):
+	      if (!data->tchat.isFocus())
+		data->tchat.focus(true);
+	      else
+		data->tchat.send(data);
+	      break;
 	    case (SDLK_p):
 	      player.Jump();
 	      break ;
@@ -307,13 +315,13 @@ int	startGame(t_data *data, std::vector<menuItem> &items, Displayer &disp)
 #ifdef	DEBUG
       std::clog << "TCP OK\n";
 #endif
+      room(disp, data);
       usleep(2000);
       if (!clientLaunchUdpc(data))
 	{
 #ifdef	DEBUG
 	  std::clog << "UDP OK\n";
 #endif
-	  room(disp, data);
 	  setEvent(&data->players[data->net.playerIndexUdp].events, CONNECTED, true);
 	  engineMain(disp, data);
 	  write(data->net.tcp.sock, "/r", 2);
@@ -334,33 +342,55 @@ int	startGame(t_data *data, std::vector<menuItem> &items, Displayer &disp)
   return (0);
 }
 
+int			minUdpID(t_data *data)
+{
+  for (int i = 0 ; i < 10 ; ++i)
+    if (*(data->players[i].pseudo))
+      return (std::cout << "First id = " << i << " while yours is " << data->net.playerIndexUdp << std::endl, i);
+  return (-1);
+}
+
 void			Displayer::UpdateRoom(t_data *room, SDL_Rect *pos,
 					      SDL_Surface *bg, SDL_Surface *surface)
 {
   SDL_Event		event;
   SDL_Rect		dest = {0, 0, WIN_X, WIN_Y};
-  SDL_Rect		players[] = {{1370, 215, WIN_X, WIN_Y},
-				     {1535, 270, WIN_X, WIN_Y},
-				     {1205, 270, WIN_X, WIN_Y},
-				     {1635, 410, WIN_X, WIN_Y},
-				     {1110, 410, WIN_X, WIN_Y},
-				     {1635, 578, WIN_X, WIN_Y},
-				     {1110, 578, WIN_X, WIN_Y},
-				     {1535, 718, WIN_X, WIN_Y},
-				     {1205, 718, WIN_X, WIN_Y},
-				     {1370, 773, WIN_X, WIN_Y}};
-  SDL_Surface		*icon_connected,
-    *icon_ia;
+  SDL_Rect		bg_pos = {996, 138, 819, 800};
+  SDL_Rect		players[] = {{1370, 215, 76, 76},
+				     {1535, 270, 76, 76},
+				     {1205, 270, 76, 76},
+				     {1635, 410, 76, 76},
+				     {1110, 410, 76, 76},
+				     {1635, 578, 76, 76},
+				     {1110, 578, 76, 76},
+				     {1535, 718, 76, 76},
+				     {1205, 718, 76, 76},
+				     {1370, 773, 76, 76}};
+  static SDL_Surface		*icon_connected = IMG_Load(ROOM_ICON_PLAYER),
+				*icon_ia = IMG_Load(ROOM_ICON_IA),
+				*start_button = IMG_Load(ROOM_START_BUTTON);
 
   while (SDL_PollEvent(&event))
     {
       switch(event.type)
 	{
 	  case SDL_KEYUP:
+	    if (!room->tchat.isFocus() && event.key.keysym.sym == SDLK_RETURN)
+	      {
+		room->tchat.focus(true);
+		break;
+	      }
+	    if (!room->tchat.isFocus() && event.key.keysym.sym == SDLK_ESCAPE)
+	      {
+		room->game.running = false;
+		break;
+	      }
 	    if (event.key.keysym.sym == SDLK_ESCAPE)
-	      room->game.running = false;
+	      room->tchat.focus(false);
 	    break;
 	  case SDL_KEYDOWN:
+	    if (!room->tchat.isFocus())
+	      break;
 	    switch (event.key.keysym.sym)
 	      {
 		case SDLK_BACKSPACE:
@@ -395,59 +425,71 @@ void			Displayer::UpdateRoom(t_data *room, SDL_Rect *pos,
 	      pos->y = WIN_Y;
 	    else if (pos->y < 0)
 	      pos->y = 0;
+	    if (!room->tchat.isFocus())
+	      break;
 	    break;
 	  case SDL_TEXTINPUT:
+	    if (!room->tchat.isFocus())
+	      break;
 	    room->tchat.write_text(event.text.text);
 	    break;
 	}
     }
-  icon_connected = IMG_Load(ROOM_ICON_PLAYER);
-  icon_ia = IMG_Load(ROOM_ICON_IA);
   SDL_FillRect(m_windowSurface, NULL, SDL_MapRGB(m_windowSurface->format, 243, 237, 211));
-  room->tchat.display(dest, bg);
-  SDL_BlitSurface(*(room->players[0].pseudo) ? icon_connected : icon_ia,
-NULL, bg, &(players[0]));
-  SDL_BlitSurface(*(room->players[1].pseudo) ? icon_connected : icon_ia,
-NULL, bg, &(players[1]));
-  SDL_BlitSurface(*(room->players[2].pseudo) ? icon_connected : icon_ia,
-NULL, bg, &(players[2]));
-  SDL_BlitSurface(*(room->players[3].pseudo) ? icon_connected : icon_ia,
-NULL, bg, &(players[3]));
-  SDL_BlitSurface(*(room->players[4].pseudo) ? icon_connected : icon_ia,
-NULL, bg, &(players[4]));
-  SDL_BlitSurface(*(room->players[5].pseudo) ? icon_connected : icon_ia,
-NULL, bg, &(players[5]));
-  SDL_BlitSurface(*(room->players[6].pseudo) ? icon_connected : icon_ia,
-NULL, bg, &(players[6]));
-  SDL_BlitSurface(*(room->players[7].pseudo) ? icon_connected : icon_ia,
-NULL, bg, &(players[7]));
-  SDL_BlitSurface(*(room->players[8].pseudo) ? icon_connected : icon_ia,
-NULL, bg, &(players[8]));
-  SDL_BlitSurface(*(room->players[9].pseudo) ? icon_connected : icon_ia,
-NULL, bg, &(players[9]));
   if (room->config.oculus)
     {
+      SDL_Surface *eyes = SDL_CreateRGBSurface(0, WIN_X, WIN_Y, 32, 0, 0, 0, 0);
+      SDL_FillRect(eyes, NULL, SDL_MapRGB(eyes->format, 243, 237, 211));
+      room->tchat.display(dest, eyes);
+      SDL_BlitSurface(bg, NULL, eyes, &bg_pos);
+      SetSDL_Rect(&bg_pos, 1705, 858, 200, 200);
+      if (room->net.playerIndexUdp == minUdpID(room))
+	SDL_BlitSurface(start_button, NULL, eyes, &bg_pos);
+      SDL_BlitSurface(*(room->players[0].pseudo) ? icon_connected : icon_ia, NULL, eyes, &(players[0]));
+      SDL_BlitSurface(*(room->players[1].pseudo) ? icon_connected : icon_ia, NULL, eyes, &(players[1]));
+      SDL_BlitSurface(*(room->players[2].pseudo) ? icon_connected : icon_ia, NULL, eyes, &(players[2]));
+      SDL_BlitSurface(*(room->players[3].pseudo) ? icon_connected : icon_ia, NULL, eyes, &(players[3]));
+      SDL_BlitSurface(*(room->players[4].pseudo) ? icon_connected : icon_ia, NULL, eyes, &(players[4]));
+      SDL_BlitSurface(*(room->players[5].pseudo) ? icon_connected : icon_ia, NULL, eyes, &(players[5]));
+      SDL_BlitSurface(*(room->players[6].pseudo) ? icon_connected : icon_ia, NULL, eyes, &(players[6]));
+      SDL_BlitSurface(*(room->players[7].pseudo) ? icon_connected : icon_ia, NULL, eyes, &(players[7]));
+      SDL_BlitSurface(*(room->players[8].pseudo) ? icon_connected : icon_ia, NULL, eyes, &(players[8]));
+      SDL_BlitSurface(*(room->players[9].pseudo) ? icon_connected : icon_ia, NULL, eyes, &(players[9]));
       SetSDL_Rect(&dest, 0, WIN_Y / 4, WIN_X / 2, WIN_Y / 2);
-      SDL_BlitScaled(bg, NULL, m_windowSurface, &dest);
+      SDL_BlitScaled(eyes, NULL, m_windowSurface, &dest);
 
       SetSDL_Rect(&dest, pos->x / 2 + 3, WIN_Y / 4 + pos->y / 2, surface->w, surface->h);
       SDL_BlitScaled(surface, NULL, m_windowSurface, &dest);
 
       SetSDL_Rect(&dest, WIN_X / 2, WIN_Y / 4, WIN_X / 2, WIN_Y / 2);
-      SDL_BlitScaled(bg, NULL, m_windowSurface, &dest);
+      SDL_BlitScaled(eyes, NULL, m_windowSurface, &dest);
 
       SetSDL_Rect(&dest, WIN_X / 2 + pos->x / 2 - 3, WIN_Y / 4 + pos->y / 2, surface->w, surface->h);
       SDL_BlitScaled(surface, NULL, m_windowSurface, &dest);
+      SDL_FreeSurface(eyes);
     }
   else
     {
-      SDL_BlitSurface(bg, NULL, m_windowSurface, &dest);
-      SDL_BlitSurface(surface, NULL, m_windowSurface, pos);
+      SDL_BlitSurface(bg, NULL, m_windowSurface, &bg_pos);	// 11ms
+      room->tchat.display(dest, m_windowSurface);		// 25ms
+      SetSDL_Rect(&bg_pos, 1705, 858, 200, 200);
+      if (room->net.playerIndexUdp == minUdpID(room))
+	SDL_BlitSurface(start_button, NULL, m_windowSurface, &bg_pos);
+      SDL_BlitSurface(*(room->players[0].pseudo) ? icon_connected : icon_ia, NULL, m_windowSurface, &(players[0]));
+      SDL_BlitSurface(*(room->players[1].pseudo) ? icon_connected : icon_ia, NULL, m_windowSurface, &(players[1]));
+      SDL_BlitSurface(*(room->players[2].pseudo) ? icon_connected : icon_ia, NULL, m_windowSurface, &(players[2]));
+      SDL_BlitSurface(*(room->players[3].pseudo) ? icon_connected : icon_ia, NULL, m_windowSurface, &(players[3]));
+      SDL_BlitSurface(*(room->players[4].pseudo) ? icon_connected : icon_ia, NULL, m_windowSurface, &(players[4]));
+      SDL_BlitSurface(*(room->players[5].pseudo) ? icon_connected : icon_ia, NULL, m_windowSurface, &(players[5]));
+      SDL_BlitSurface(*(room->players[6].pseudo) ? icon_connected : icon_ia, NULL, m_windowSurface, &(players[6]));
+      SDL_BlitSurface(*(room->players[7].pseudo) ? icon_connected : icon_ia, NULL, m_windowSurface, &(players[7]));
+      SDL_BlitSurface(*(room->players[8].pseudo) ? icon_connected : icon_ia, NULL, m_windowSurface, &(players[8]));
+      SDL_BlitSurface(*(room->players[9].pseudo) ? icon_connected : icon_ia, NULL, m_windowSurface, &(players[9]));
+
+								// 2ms
+      SDL_BlitSurface(surface, NULL, m_windowSurface, pos);	// 3ms
     }
   SDL_UpdateWindowSurface(m_window);
-  SDL_FreeSurface(icon_connected);
-  SDL_FreeSurface(icon_ia);
-  usleep(16000);
 }
 
 void			Displayer::UpdateMenu(Menu *menu, std::vector<menuItem> &items,

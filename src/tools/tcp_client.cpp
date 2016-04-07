@@ -90,7 +90,6 @@ void		*tcp_thread(void *data)
       fprintf(stderr, ":%s:", _data->net.tcp.buff);
       fflush(stderr);
 #endif
-      usleep(8000);
     }
   close(_data->net.tcp.sock);
 #ifdef	DEBUG
@@ -134,15 +133,16 @@ int		clientLaunchTcpc(t_data *data)
       fprintf(stderr, "Error sending pseudo\n");
       return (-1);
     }
-  read(data->net.tcp.sock, tmp, 29);
-  fprintf(stdout, ":%s:\n", tmp);
+  read(data->net.tcp.sock, tmp, 3);
+  fprintf(stdout, "the tcp index :%d:\n", (int)tmp[0]);
   if (tmp[0] == 's')
     {
       close(data->net.tcp.sock);
       return (-1);
     }
+  data->net.playerIndexTcp = (int)tmp[0];
   data->net.tcp.run = 1;
-  data->net.playerIndexTcp = atoi(tmp);
+  data->net.playerIndexTcp = (int)tmp[0];
   pthread_create(&data->net.tcp.thread, NULL, tcp_thread, (void *)data);
 #ifdef _WIN32
   WSACleanup();
