@@ -81,6 +81,7 @@ int     User::IsShooted(t_player *p, Score &advTeam, Map &map)
   	hit = this->IsHit(p + i, map);
       if (hit.w > 0.0)
   	{
+	  printf("%.2f %.2f %.2f %.2f\n", hit.x, hit.y, hit.z, hit.w);
   	  dist = vec2(hit.x - m_player->position.x - 0.4,
   		      hit.y - m_player->position.y - 0.4);
   	  if (hit.z > m_player->position.z + 1.4 && (headshot = true))
@@ -96,7 +97,7 @@ int     User::IsShooted(t_player *p, Score &advTeam, Map &map)
   	    advTeam.updateScore(weapon, headshot, length(vec3(hit) - p[i].position));
   	}
       if (getEvent(p[i].events, SHOOT))
-  	setEvent(&p[i].events, SHOOT, true);
+  	setEvent(&p[i].events, SHOOT, false);
       i++;
     }
   return (0);
