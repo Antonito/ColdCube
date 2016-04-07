@@ -47,22 +47,20 @@ class Camera
 	pose[1] = ovrHmd_GetHmdPosePerEye(m_hmd, m_hmd->EyeRenderOrder[1]);
 	// if (pose[0].Orientation.x >= 0.5)
 	// 	pose[0].Orientation.x = 0.499;
-	finalRot.x = pose[0].Orientation.x * 90.0 * 2;
-	finalRot.y = pose[0].Orientation.y * 90.0 * 2;
+	finalRot.x = pose[0].Orientation.x * 90.0 * 1.3;
+	finalRot.y += pose[0].Orientation.y * 90.0 * 1.3;
 	if (finalRot.x > 89.99)
 	  finalRot.x = 89.99;
 	if (finalRot.x < -89.99)
 	  finalRot.x = -89.99;
-	m_rotation.x = finalRot.x;
-	m_rotation.y = finalRot.y;
       }
     else
       finalRot = m_rotation;
 
     vec4	forward(0, 1, 0, 0);
-    mat4	rz = rotate((typeof(m_rotation.y))(m_rotation.y * M_PI / 180), vec3(0, 0, 1));
+    mat4	rz = rotate((GLfloat)(finalRot.y * M_PI / 180), vec3(0, 0, 1));
     vec3	axis(rz * vec4(1, 0, 0, 0));
-    mat4	rx = rotate((typeof(m_rotation.x))(m_rotation.x * M_PI / 180), axis);
+    mat4	rx = rotate((GLfloat)(finalRot.x * M_PI / 180), axis);
     vec3	res(rx * rz * forward);
     m_forward = normalize(res);
   }
