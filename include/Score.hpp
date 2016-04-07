@@ -8,10 +8,13 @@ class Score
 public:
   Score();
   ~Score();
-  void		updateScore(int weapon, bool headshot, double dist);
+  void		printScore(const int team);
+  void		checkWin(const int team);
+  void		updateScore(const int weapon, const bool headshot,
+			    const double dist);
   void		updateTime(void);
   void		resetStreak(void);
-  void		updateStreakMult(int weapon);
+  void		updateStreakMult(const int weapon);
 
   int		getScore(void);
 

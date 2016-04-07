@@ -43,6 +43,7 @@ void	initData(t_data *data)
   i = -1;
   while (++i < 10)
     {
+      data->players[i].events = 0;
       data->players[i].pseudo = new char [21];
       data->players[i].selected_weapon = 0;
       memset(data->players[i].pseudo, 0, 21);
@@ -96,8 +97,6 @@ int	game()
     {
       display.UpdateMenu(menu, items, &pos, screen, surface, data);
     }
-  for(int i = 0; i < 10; i++)
-    free(data->players[i].pseudo);
   if (hmd)
     ovrHmd_Destroy(hmd);
   return (0);
