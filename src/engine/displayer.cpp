@@ -83,10 +83,33 @@ bool	Displayer::IsClosed()
 void	Displayer::Update(Camera &cam, Map &map, Player &player,
 			  t_data *data, User &user)
 {
-  SDL_Rect		tchat_pos = {0, 2 * WIN_Y / 3, 854, WIN_Y / 3};
+  SDL_Rect		tchat_pos = {0, data->tchat.isFocus() ? (WIN_Y / 2) : (3 * WIN_Y / 4), 854, data->tchat.isFocus() ? (WIN_Y / 2) : (WIN_Y / 4)};
+  SDL_Rect		origin = {42, 10, WIN_X, WIN_Y};
+  SDL_Rect		center = {(WIN_X - 270) / 2, (WIN_Y - 270) / 2, 270, 270};
+  SDL_Surface		*life;
+  char			lifebar[32];
+  SDL_Color		black = {0, 0, 0, 0};
+  static TTF_Font	*font = TTF_OpenFont(TCHAT_FONT_NAME, (int)(40 / WIN_RATIO));
+  static SDL_Surface	*crosshair = IMG_Load("./assets/imgs/crosshair.png");
+  static bool		rendering = true;
 
+  SDL_FillRect(m_windowSurface, NULL, SDL_MapRGB(m_windowSurface->format, 255, 255, 255));
+  SDL_BlitSurface(crosshair, NULL, m_windowSurface, &center);
+  sprintf(lifebar, "./assets/imgs/lifebar/%03d.png", data->players[data->net.playerIndexUdp].life);
+  life = IMG_Load(lifebar);
+  SDL_BlitSurface(life, NULL, m_windowSurface, &origin);
   data->tchat.display(tchat_pos, m_windowSurface);
-  SDL_GL_SwapWindow(m_window);
+  SDL_FreeSurface(life);
+  life = TTF_RenderUTF8_Blended(font, data->players[data->net.playerIndexUdp].pseudo, black);
+  origin.x = 470;
+  origin.y = 105;
+  SDL_BlitSurface(life, NULL, m_windowSurface, &origin);
+  SDL_FreeSurface(life);
+  if (rendering)
+    SDL_GL_SwapWindow(m_window);
+  else
+    SDL_UpdateWindowSurface(m_window);
+
   usleep(5800);
   static		int cur(0), old(0), tot(0), nb(0);
   cur = SDL_GetTicks();
@@ -129,95 +152,127 @@ void	Displayer::Update(Camera &cam, Map &map, Player &player,
 	      eventKey[MOUSE_RIGHT] = false;
 	      break ;
 	    }
+	case (SDL_TEXTINPUT):
+	  if (data->tchat.isFocus())
+	    data->tchat.write_text(e.text.text);
+	  break;
 	case (SDL_KEYDOWN):
-	  switch (e.key.keysym.sym)
-	    {
-	    case (SDLK_z):
-	      eventKey[KEY_Z] = true;
-	      break ;
-	    case (SDLK_s):
-	      eventKey[KEY_S] = true;
-	      break ;
-	    case (SDLK_q):
-	      eventKey[KEY_Q] = true;
-	      break ;
-	    case (SDLK_d):
-	      eventKey[KEY_D] = true;
-	      break ;
-	    case (SDLK_a):
-	      eventKey[KEY_A] = true;
-	      break ;
-	    case (SDLK_w):
-	      eventKey[KEY_W] = true;
-	      break ;
-	    case (SDLK_SPACE):
-	      eventKey[KEY_SPACE] = true;
-	      break ;
-	      // case (SDLK_q):
-	      //   player.GetPos() += normalize(vec3((cross(cam.GetFor(), vec3(0, 1, 0))).x, (cross(cam.GetFor(), vec3(0, 1, 0))).y, 0));
-	      //   break ;
-	      // case (SDLK_d):
-	      //   player.GetPos() -= normalize(vec3((cross(cam.GetFor(), vec3(0, 1, 0))).x, (cross(cam.GetFor(), vec3(0, 1, 0))).y, 0));
-	      //   break ;
-	    case (SDLK_ESCAPE):
-	      m_isClosed = true;
-	      break ;
-	    case (SDLK_RETURN):
-	      if (!data->tchat.isFocus())
-		data->tchat.focus(true);
-	      else
-		data->tchat.send(data);
-	      break;
-	    case (SDLK_p):
-	      player.Jump();
-	      break ;
+	  if (data->tchat.isFocus())
+	    switch (e.key.keysym.sym)
+	      {
+		case (SDLK_RETURN):
+		  data->tchat.send(data);
+		  break;
+		case (SDLK_ESCAPE):
+		  data->tchat.focus(false);
+		  break;
+		case (SDLK_BACKSPACE):
+		  data->tchat.backspace();
+		  break;
+		case (SDLK_LEFT):
+		  data->tchat.moveLeft();
+		  break;
+		case (SDLK_RIGHT):
+		  data->tchat.moveRight();
+		  break;
+	      }
+	  else
+	    switch (e.key.keysym.sym)
+	      {
+		case (SDLK_SEMICOLON):
+		  rendering = !rendering;
+		  break;
+		case (SDLK_RETURN):
+		  data->tchat.focus(true);
+		  break ;
+		case (SDLK_z):
+		  eventKey[KEY_Z] = true;
+		  break ;
+		case (SDLK_s):
+		  eventKey[KEY_S] = true;
+		  break ;
+		case (SDLK_q):
+		  eventKey[KEY_Q] = true;
+		  break ;
+		case (SDLK_d):
+		  eventKey[KEY_D] = true;
+		  break ;
+		case (SDLK_a):
+		  eventKey[KEY_A] = true;
+		  break ;
+		case (SDLK_w):
+		  eventKey[KEY_W] = true;
+		  break ;
+		case (SDLK_SPACE):
+		  eventKey[KEY_SPACE] = true;
+		  break ;
+		  // case (SDLK_q):
+		  //   player.GetPos() += normalize(vec3((cross(cam.GetFor(), vec3(0, 1, 0))).x, (cross(cam.GetFor(), vec3(0, 1, 0))).y, 0));
+		  //   break ;
+		  // case (SDLK_d):
+		  //   player.GetPos() -= normalize(vec3((cross(cam.GetFor(), vec3(0, 1, 0))).x, (cross(cam.GetFor(), vec3(0, 1, 0))).y, 0));
+		  //   break ;
+		case (SDLK_ESCAPE):
+		  m_isClosed = true;
+		  break ;
+		case (SDLK_p):
+		  player.Jump();
+		  break ;
 #ifdef	DEBUG
 
-	    case (SDLK_F1):
-	      map.PutCube(1, ivec3(cam.GetPos() + cam.GetFor() * 2.0f));
-	      break ;
-	    case (SDLK_F2):
-	      map.PutCube(2, ivec3(cam.GetPos() + cam.GetFor() * 2.0f));
-	      break ;
-	    case (SDLK_F3):
-	      map.PutCube(3, ivec3(cam.GetPos() + cam.GetFor() * 2.0f));
-	      break ;
-	    case (SDLK_F4):
-	      map.PutCube(4, ivec3(cam.GetPos() + cam.GetFor() * 2.0f));
-	      break ;
-	    case (SDLK_F5):
-	      map.PutCube(5, ivec3(cam.GetPos() + cam.GetFor() * 2.0f));
-	      break ;
-	    case (SDLK_F6):
-	      map.PutCube(6, ivec3(cam.GetPos() + cam.GetFor() * 2.0f));
-	      break ;
-	    case (SDLK_F10):
-	      map.PutCube(0, ivec3(cam.GetPos() + cam.GetFor() * 2.0f));
-	      break ;
-	    case (SDLK_v):
-	      map.Save();
-	      break ;
-	    case (SDLK_t):
-	      player.GetThird() = !player.GetThird();
-	      break ;
+		case (SDLK_F1):
+		  map.PutCube(1, ivec3(cam.GetPos() + cam.GetFor() * 2.0f));
+		  break ;
+		case (SDLK_F2):
+		  map.PutCube(2, ivec3(cam.GetPos() + cam.GetFor() * 2.0f));
+		  break ;
+		case (SDLK_F3):
+		  map.PutCube(3, ivec3(cam.GetPos() + cam.GetFor() * 2.0f));
+		  break ;
+		case (SDLK_F4):
+		  map.PutCube(4, ivec3(cam.GetPos() + cam.GetFor() * 2.0f));
+		  break ;
+		case (SDLK_F5):
+		  map.PutCube(5, ivec3(cam.GetPos() + cam.GetFor() * 2.0f));
+		  break ;
+		case (SDLK_F6):
+		  map.PutCube(6, ivec3(cam.GetPos() + cam.GetFor() * 2.0f));
+		  break ;
+		case (SDLK_F10):
+		  map.PutCube(0, ivec3(cam.GetPos() + cam.GetFor() * 2.0f));
+		  break ;
+		case (SDLK_v):
+		  map.Save();
+		  break ;
+		case (SDLK_t):
+		  player.GetThird() = !player.GetThird();
+		  break ;
 #endif
 #ifdef	CHEAT
-	    case(SDLK_i):
-	      cheat.selected.ammo = (cheat.selected.ammo) ?  false : true;
-	      break ;
-	    case(SDLK_j):
-	      cheat.selected.life = (cheat.selected.life) ?  false : true;
-	      break ;
-	    case(SDLK_k):
-	      cheat.selected.fly = (cheat.selected.fly) ?  false : true;
-	      cheat.selected.collisions = cheat.selected.fly;
-	      break ;
-	    case(SDLK_l):
-	      cheat.selected.collisions =
-		(cheat.selected.collisions) ?  false : true;
-	      break ;
+		case (SDLK_EQUALS):
+		  if (data->players[data->net.playerIndexUdp].life < 100)
+		    ++data->players[data->net.playerIndexUdp].life;
+		  break ;
+		case (SDLK_MINUS):
+		  if (data->players[data->net.playerIndexUdp].life)
+		    --data->players[data->net.playerIndexUdp].life;
+		  break ;
+		case(SDLK_i):
+		  cheat.selected.ammo = (cheat.selected.ammo) ?  false : true;
+		  break ;
+		case(SDLK_j):
+		  cheat.selected.life = (cheat.selected.life) ?  false : true;
+		  break ;
+		case(SDLK_k):
+		  cheat.selected.fly = (cheat.selected.fly) ?  false : true;
+		  cheat.selected.collisions = cheat.selected.fly;
+		  break ;
+		case(SDLK_l):
+		  cheat.selected.collisions =
+		    (cheat.selected.collisions) ?  false : true;
+		  break ;
 #endif
-	    }
+	      }
 	  break ;
 	case (SDL_KEYUP):
 	  switch (e.key.keysym.sym)
@@ -471,8 +526,8 @@ void			Displayer::UpdateRoom(t_data *room, SDL_Rect *pos,
 	    if (event.button.button != SDL_BUTTON_LEFT)
 	      break;
 	    clicked = 0;
-	    if (pos->x > 1705 && pos->y > 858
-		&& pos->x < 1905 && pos->y < 1058)
+	    if (pos->x > 1655 && pos->y > 858
+		&& pos->x < 1855 && pos->y < 1058)
 	      write(room->net.tcp.sock, "/k", 2);
 	    break;
 	  case SDL_MOUSEBUTTONDOWN:
@@ -518,7 +573,9 @@ void			Displayer::UpdateRoom(t_data *room, SDL_Rect *pos,
       SDL_FillRect(eyes, NULL, SDL_MapRGB(eyes->format, 243, 237, 211));
       room->tchat.display(dest, eyes);
       SDL_BlitSurface(bg, NULL, eyes, &bg_pos);
-      SetSDL_Rect(&bg_pos, 1255, 420 + sin((float)++height / 30.0), 200, 200);
+      SetSDL_Rect(&bg_pos, 1245, 425 + sin((float)++height / 10.0) * 8.0, 200, 200);
+      if ((height / 20.0) == 2 * M_PI)
+	height = 0;
       SDL_BlitSurface(logo, NULL, eyes, &bg_pos);
       SetSDL_Rect(&bg_pos, 1705, 858, 200, 200);
       if (room->net.playerIndexUdp == minUdpID(room))

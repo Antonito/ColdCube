@@ -38,7 +38,6 @@ void Tchat::constructor()
   this->maxlen = 640;
   this->header = IMG_Load(TCHAT_HEADER);
   this->footer = IMG_Load(TCHAT_FOOTER);
-  this->background = IMG_Load(TCHAT_BACKGROUND);
   this->name_font = TTF_OpenFont(TCHAT_FONT_TEXT, (int)(30 / WIN_RATIO));
   this->text_font = TTF_OpenFont(TCHAT_FONT_TEXT, (int)(30 / WIN_RATIO));
   this->isFocused = false;
@@ -53,23 +52,22 @@ Tchat::~Tchat()
 {
   TTF_CloseFont(this->name_font);
   TTF_CloseFont(this->text_font);
-  SDL_FreeSurface(this->background);
   SDL_FreeSurface(this->header);
   SDL_FreeSurface(this->footer);
 }
 
 void Tchat::display(SDL_Rect pos, SDL_Surface *to)
 {
-  SDL_Rect text_pos = {42, pos.h - this->footer->h - 50, pos.w, pos.h};
+  SDL_Rect text_pos = {pos.x + 42, pos.h - this->footer->h - 40, pos.w, pos.h};
   SDL_Surface *text, *pseudo;
   SDL_Color grey = {82, 82, 82, 0},
 	    black = {0, 0, 0, 0};
   std::string pseudonym, msg;
+  this->background = IMG_Load(TCHAT_BACKGROUND);
   size_t position;
   struct timeval tv;
 
-  SDL_BlitSurface(this->background, NULL, to, &pos);
-  for (long i = this->messages.size() ; i-- ;)
+  for (long i = this->messages.size() ; i-- && text_pos.y > 0 ;)
   {
     msg = this->messages[i];
     position = this->messages[i].find(":");
@@ -79,18 +77,20 @@ void Tchat::display(SDL_Rect pos, SDL_Surface *to)
 	pseudonym = this->messages[i].substr(0, position + 1);
 	msg = this->messages[i].substr(position + 1);
 	pseudo = TTF_RenderUTF8_Blended(this->name_font, pseudonym.c_str(), black);
-	SDL_BlitSurface(pseudo, NULL, to, &text_pos);
+	SDL_BlitSurface(pseudo, NULL, this->background, &text_pos);
 	text_pos.x += pseudo->w + 10;
       }
     text = TTF_RenderUTF8_Blended(this->text_font, msg.c_str(), grey);
-    SDL_BlitSurface(text, NULL, to, &text_pos);
+    SDL_BlitSurface(text, NULL, this->background, &text_pos);
     text_pos.x = 42;
     text_pos.y -= 35;
     SDL_FreeSurface(text);
     if (pseudo)
       SDL_FreeSurface(pseudo);
   }
-  SDL_BlitSurface(this->header, NULL, to, &pos);
+  SDL_BlitSurface(this->background, NULL, to, &pos);
+  if (!pos.y)
+    SDL_BlitSurface(this->header, NULL, to, &pos);
   pos.y = this->background->h - this->footer->h;
   SDL_BlitSurface(this->footer, NULL, to, &pos);
   pos.y += 2 * this->footer->h / 3 - 12;
@@ -102,6 +102,7 @@ void Tchat::display(SDL_Rect pos, SDL_Surface *to)
   if (this->isFocused && (tv.tv_usec > 500000))
     SDL_BlitSurface(this->cursor_img, NULL, to, &pos);
   SDL_FreeSurface(text);
+  SDL_FreeSurface(this->background);
 }
 
 bool Tchat::isFocus()
@@ -157,6 +158,8 @@ void Tchat::write_text(const char *text)
   SDL_Color black = {0, 0, 0, 0};
   std::string before;
 
+  if (*text == '/')
+    return;
   if (*text)
     this->input->replace(this->cursor, 0, text);
   this->cursor += strlen(text);
@@ -176,6 +179,8 @@ void Tchat::send(void *all)
   t_data	*data;
   std::string	msg;
 
+  if (!(*this->input->c_str()))
+    return;
   data = (t_data *)all;
   msg = data->net.pseudo;
   msg += ": ";
