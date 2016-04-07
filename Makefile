@@ -189,6 +189,7 @@ clean:
 	@echo "Removing OBJ files ..."
 	@$(RM) $(OBJ)
 	@$(RM) $(OBJSERV)
+	@$(RM) $(OBJGEN)
 
 fclean:	clean
 	@echo -n "[ "
@@ -197,6 +198,7 @@ fclean:	clean
 	@echo "Deleting binaries ..."
 	@$(RM) $(NAME)
 	@$(RM) $(NAMESERV)
+	@$(RM) $(NAMEGEN)
 
 re:	fclean all
 
