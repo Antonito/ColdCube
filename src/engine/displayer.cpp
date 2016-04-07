@@ -262,8 +262,10 @@ void	Displayer::Update(Camera &cam, Map &map, Player &player,
   if (eventKey[data->config.keys.jump])
     player.Jump();
   #ifdef CHEAT
-  if (cheat.selected.fly)
+  if (cheat.selected.fly && eventKey[data->config.keys.forward])
     player.MoveCheat(cam.GetFor());
+  else if (cheat.selected.fly && eventKey[data->config.keys.backward])
+    player.MoveCheat(-cam.GetFor());
   else
     player.Update(map, dTime);
   #else
