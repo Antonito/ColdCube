@@ -80,6 +80,8 @@ bool	Displayer::IsClosed()
 void	Displayer::Update(Camera &cam, Map &map, Player &player,
 			  t_data *data)
 {
+  SDL_Rect		tchat_pos = {0, 2 * WIN_Y / 3, 854, WIN_Y / 3};
+  data->tchat.display(tchat_pos, m_windowSurface);
   SDL_GL_SwapWindow(m_window);
   usleep(15800);
   static		int cur(0), old(0), tot(0), nb(0);
@@ -89,7 +91,6 @@ void	Displayer::Update(Camera &cam, Map &map, Player &player,
   old = cur;
   SDL_Event	e;
   static bool		eventKey[NB_KEY_EVENT];
-  SDL_Rect		tchat_pos = {0, 2 * WIN_Y / 3, 854, WIN_Y / 3};
 
   tot += 1000 / t;
   nb++;
@@ -268,7 +269,6 @@ void	Displayer::Update(Camera &cam, Map &map, Player &player,
   player.Update(map, dTime);
   #endif
   player.SetCam(cam, player.GetThird(), data->players + player.GetId());
-  data->tchat.display(tchat_pos, m_windowSurface);
 }
 
 int	startGame(t_data *data, std::vector<menuItem> &items, Displayer &disp)
