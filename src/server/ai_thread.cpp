@@ -220,6 +220,7 @@ void	*main_ai_thread(void *all)
       AIs[i].setPlayer(&data->ai[i]);
       AIs[i].setId(i);
     }
+  usleep(2000);
   while (1)
     {
       i = -1;
