@@ -1,5 +1,19 @@
 #include "server.hpp"
 
+void		tcps_send_to_all_c(t_all *all, char *msg)
+{
+  int		i;
+
+  i = -1;
+  while (++i < 10)
+    {
+      if (all->connected[i] == 0)
+	continue;
+      if (all->tcp->cli_sock[i] != 0)
+	write(all->tcp->cli_sock[i], msg, strlen(msg));
+    }
+}
+
 void		tcps_send_to_all(t_all *all)
 {
   int		i;
