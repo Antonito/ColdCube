@@ -44,9 +44,12 @@ void	initData(t_data *data)
   while (++i < 10)
     {
       data->players[i].pseudo = new char [21];
+      data->players[i].selected_weapon = 0;
       memset(data->players[i].pseudo, 0, 21);
     }
   data->game.running = true;
+  data->game.Team1 = Score();
+  data->game.Team2 = Score();
   data->config.keyboard = AZERTY_MODE;
   data->config.musicVolume = 50;
   data->config.effectsVolume = 50;

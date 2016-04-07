@@ -78,25 +78,26 @@ int     User::IsShooted(t_player *p, Score &advTeam, Map &map)
       weapon = p[i].selected_weapon;
       headshot = false;
       if (getEvent(p[i].events, SHOOT) && id % 2 != i % 2)
-	hit = this->IsHit(p + i, map);
+  	hit = this->IsHit(p + i, map);
       if (hit.w > 0.0)
-	{
-	  dist = vec2(hit.x - m_player->position.x - 0.4,
-		      hit.y - m_player->position.y - 0.4);
-	  if (hit.z > m_player->position.z + 1.4 && (headshot = true))
-	    damage = getDamage(weapon, HEAD_HIT);
-	  else if (hit.z < m_player->position.z + 0.8)
-	    damage = getDamage(weapon, LEG_HIT);
-	  else if (length(dist) < 0.2)
-	    damage = getDamage(weapon, BODY_HIT);
-	  else
-	    damage = getDamage(weapon, ARM_HIT);
-	  m_player->life -= damage;
-	  if (m_player->life <= 0)
-	    advTeam.updateScore(weapon, headshot, length(vec3(hit) - p[i].position));
-	}
+  	{
+  	  dist = vec2(hit.x - m_player->position.x - 0.4,
+  		      hit.y - m_player->position.y - 0.4);
+  	  if (hit.z > m_player->position.z + 1.4 && (headshot = true))
+  	    damage = getDamage(weapon, HEAD_HIT);
+  	  else if (hit.z < m_player->position.z + 0.8)
+  	    damage = getDamage(weapon, LEG_HIT);
+  	  else if (length(dist) < 0.2)
+  	    damage = getDamage(weapon, BODY_HIT);
+  	  else
+  	    damage = getDamage(weapon, ARM_HIT);
+  	  m_player->life -= damage;
+  	  if (m_player->life <= 0)
+  	    advTeam.updateScore(weapon, headshot, length(vec3(hit) - p[i].position));
+  	}
       if (getEvent(p[i].events, SHOOT))
-	setEvent(&p[i].events, SHOOT, true);
+  	setEvent(&p[i].events, SHOOT, true);
       i++;
     }
+  return (0);
 }
