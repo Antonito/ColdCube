@@ -47,23 +47,18 @@ bool Player::IsOnBlock()
 
 void Player::Move(vec2 dir)
 {
-#ifdef	CHEAT
-  if (!cheat.selected.fly)
-    {
-      if (this->IsOnBlock())
-	m_move += normalize(dir);
-    }
-  else
-    m_move += normalize(dir);
-#else
   if (this->IsOnBlock())
     m_move += normalize(dir);
-#endif
   if (m_move.length() > 5.0)
     {
       m_move = normalize(m_move);
       m_move *= 4.5;
     }
+}
+
+void Player::MoveCheat(vec3 dir)
+{
+  m_pos += dir;
 }
 
 void Player::Jump()
