@@ -335,45 +335,75 @@ void			Displayer::UpdateRoom(t_data *room, SDL_Rect *pos,
     {
       switch(event.type)
 	{
-	case SDL_KEYUP:
-	  if (event.key.keysym.sym == SDLK_ESCAPE)
+	  case SDL_KEYUP:
+	    if (event.key.keysym.sym == SDLK_ESCAPE)
+	      room->game.running = false;
+	    break;
+	  case SDL_KEYDOWN:
+	    switch (event.key.keysym.sym)
+	      {
+		case SDLK_BACKSPACE:
+		  room->tchat.backspace();
+		  break;
+		case SDLK_LEFT:
+		  room->tchat.moveLeft();
+		  break;
+		case SDLK_RIGHT:
+		  room->tchat.moveRight();
+		  break;
+		case SDLK_RETURN:
+		  room->tchat.send();
+		  break;
+	      }
+	    break;
+	  case SDL_QUIT:
 	    room->game.running = false;
-	  break;
-	case SDL_QUIT:
-	  room->game.running = false;
-	  break;
-	case SDL_MOUSEMOTION:
-	  if (event.motion.x)
-	    event.motion.x -= (event.motion.xrel / 3) / WIN_RATIO;
-	  if (event.motion.y)
-	    event.motion.y -= (event.motion.yrel / 3) / WIN_RATIO;
-	  pos->x += (event.motion.xrel / 2) / WIN_RATIO;
-	  pos->y += (event.motion.yrel / 2) / WIN_RATIO;
-	  if (pos->x > WIN_X)
-	    pos->x = WIN_X;
-	  else if (pos->x < 0)
-	    pos->x = 0;
-	  if (pos->y > WIN_Y)
-	    pos->y = WIN_Y;
-	  else if (pos->y < 0)
-	    pos->y = 0;
-	  break;
+	    break;
+	  case SDL_MOUSEMOTION:
+	    if (event.motion.x)
+	      event.motion.x -= (event.motion.xrel / 3) / WIN_RATIO;
+	    if (event.motion.y)
+	      event.motion.y -= (event.motion.yrel / 3) / WIN_RATIO;
+	    pos->x += (event.motion.xrel / 2) / WIN_RATIO;
+	    pos->y += (event.motion.yrel / 2) / WIN_RATIO;
+	    if (pos->x > WIN_X)
+	      pos->x = WIN_X;
+	    else if (pos->x < 0)
+	      pos->x = 0;
+	    if (pos->y > WIN_Y)
+	      pos->y = WIN_Y;
+	    else if (pos->y < 0)
+	      pos->y = 0;
+	    break;
+	  case SDL_TEXTINPUT:
+	    room->tchat.write_text(event.text.text);
+	    break;
 	}
     }
   icon_connected = IMG_Load(ROOM_ICON_PLAYER);
   icon_ia = IMG_Load(ROOM_ICON_IA);
   SDL_FillRect(m_windowSurface, NULL, SDL_MapRGB(m_windowSurface->format, 243, 237, 211));
   room->tchat.display(dest, bg);
-  SDL_BlitSurface((room->players[0].pseudo) ? icon_connected : icon_ia, NULL, bg, &(players[0]));
-  SDL_BlitSurface((room->players[1].pseudo) ? icon_connected : icon_ia, NULL, bg, &(players[1]));
-  SDL_BlitSurface((room->players[2].pseudo) ? icon_connected : icon_ia, NULL, bg, &(players[2]));
-  SDL_BlitSurface((room->players[3].pseudo) ? icon_connected : icon_ia, NULL, bg, &(players[3]));
-  SDL_BlitSurface((room->players[4].pseudo) ? icon_connected : icon_ia, NULL, bg, &(players[4]));
-  SDL_BlitSurface((room->players[5].pseudo) ? icon_connected : icon_ia, NULL, bg, &(players[5]));
-  SDL_BlitSurface((room->players[6].pseudo) ? icon_connected : icon_ia, NULL, bg, &(players[6]));
-  SDL_BlitSurface((room->players[7].pseudo) ? icon_connected : icon_ia, NULL, bg, &(players[7]));
-  SDL_BlitSurface((room->players[8].pseudo) ? icon_connected : icon_ia, NULL, bg, &(players[8]));
-  SDL_BlitSurface((room->players[9].pseudo) ? icon_connected : icon_ia, NULL, bg, &(players[9]));
+  SDL_BlitSurface(*(room->players[0].pseudo) ? icon_connected : icon_ia, 
+NULL, bg, &(players[0]));
+  SDL_BlitSurface(*(room->players[1].pseudo) ? icon_connected : icon_ia, 
+NULL, bg, &(players[1]));
+  SDL_BlitSurface(*(room->players[2].pseudo) ? icon_connected : icon_ia, 
+NULL, bg, &(players[2]));
+  SDL_BlitSurface(*(room->players[3].pseudo) ? icon_connected : icon_ia, 
+NULL, bg, &(players[3]));
+  SDL_BlitSurface(*(room->players[4].pseudo) ? icon_connected : icon_ia, 
+NULL, bg, &(players[4]));
+  SDL_BlitSurface(*(room->players[5].pseudo) ? icon_connected : icon_ia, 
+NULL, bg, &(players[5]));
+  SDL_BlitSurface(*(room->players[6].pseudo) ? icon_connected : icon_ia, 
+NULL, bg, &(players[6]));
+  SDL_BlitSurface(*(room->players[7].pseudo) ? icon_connected : icon_ia, 
+NULL, bg, &(players[7]));
+  SDL_BlitSurface(*(room->players[8].pseudo) ? icon_connected : icon_ia, 
+NULL, bg, &(players[8]));
+  SDL_BlitSurface(*(room->players[9].pseudo) ? icon_connected : icon_ia, 
+NULL, bg, &(players[9]));
   if (room->config.oculus)
     {
       SetSDL_Rect(&dest, 0, WIN_Y / 4, WIN_X / 2, WIN_Y / 2);
@@ -618,11 +648,11 @@ void			Displayer::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
       SetSDL_Rect(&dest, 0, WIN_Y / 4, WIN_X / 2, WIN_Y / 2);
       SDL_BlitScaled(screen, NULL, m_windowSurface, &dest);
 
-      SetSDL_Rect(&dest, pos->x / 2 + 3, WIN_Y / 4 + pos->y / 2, pos->w, pos->h);
-      SDL_BlitScaled(surface, NULL, m_windowSurface, &dest);
-
       SetSDL_Rect(&dest, WIN_X / 2, WIN_Y / 4, WIN_X / 2, WIN_Y / 2);
       SDL_BlitScaled(screen, NULL, m_windowSurface, &dest);
+
+      SetSDL_Rect(&dest, pos->x / 2 + 3, WIN_Y / 4 + pos->y / 2, pos->w, pos->h);
+      SDL_BlitScaled(surface, NULL, m_windowSurface, &dest);
 
       SetSDL_Rect(&dest, WIN_X / 2 + pos->x / 2 - 3, WIN_Y / 4 + pos->y / 2, pos->w, pos->h);
       SDL_BlitScaled(surface, NULL, m_windowSurface, &dest);
