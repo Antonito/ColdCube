@@ -14,6 +14,12 @@ Score::~Score()
 {
 }
 
+void		Score::checkWin(int team)
+{
+  std::cout << "Team " << team << " wins !\n";
+  exit(0);
+}
+
 void		Score::updateScore(int weapon, bool headShot, double dist)
 {
   if (weapon == RIFLE_WEAPON)
