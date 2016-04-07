@@ -446,7 +446,7 @@ NULL, bg, &(players[9]));
   SDL_UpdateWindowSurface(m_window);
   SDL_FreeSurface(icon_connected);
   SDL_FreeSurface(icon_ia);
-  usleep(1000);
+  usleep(16000);
 }
 
 void			Displayer::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
@@ -685,4 +685,5 @@ void			Displayer::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
   SDL_UpdateWindowSurface(m_window);
   if (items[menu->currentItem].type == MENU_TEXTINPUT)
     items[menu->currentItem].text.erase(items[menu->currentItem].text.length() - 1);
+  usleep(16000);
 }
