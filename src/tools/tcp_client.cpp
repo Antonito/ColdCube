@@ -90,7 +90,6 @@ void		*tcp_thread(void *data)
       fprintf(stderr, ":%s:", _data->net.tcp.buff);
       fflush(stderr);
 #endif
-      usleep(200);
     }
   close(_data->net.tcp.sock);
 #ifdef	DEBUG

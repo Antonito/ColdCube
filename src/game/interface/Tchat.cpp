@@ -99,19 +99,19 @@ void Tchat::display(SDL_Rect pos, SDL_Surface *to)
   text = TTF_RenderUTF8_Blended(this->text_font, this->input->c_str(), black);
   SDL_BlitSurface(text, NULL, to, &pos);
   pos.x += this->cursor_pos;
-  if (!this->isFocused && (tv.tv_usec > 500000))
+  if (this->isFocused && (tv.tv_usec > 500000))
     SDL_BlitSurface(this->cursor_img, NULL, to, &pos);
   SDL_FreeSurface(text);
 }
 
 bool Tchat::isFocus()
 {
-  return isFocused;
+  return this->isFocused;
 }
 
-void Tchat::focus()
+void Tchat::focus(bool value)
 {
-  this->isFocused = !this->isFocused;
+  this->isFocused = value;
 }
 
 void Tchat::moveRight()
