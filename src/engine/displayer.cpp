@@ -642,11 +642,11 @@ void			Displayer::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
       SetSDL_Rect(&dest, 0, WIN_Y / 4, WIN_X / 2, WIN_Y / 2);
       SDL_BlitScaled(screen, NULL, m_windowSurface, &dest);
 
-      SetSDL_Rect(&dest, pos->x / 2 + 3, WIN_Y / 4 + pos->y / 2, pos->w, pos->h);
-      SDL_BlitScaled(surface, NULL, m_windowSurface, &dest);
-
       SetSDL_Rect(&dest, WIN_X / 2, WIN_Y / 4, WIN_X / 2, WIN_Y / 2);
       SDL_BlitScaled(screen, NULL, m_windowSurface, &dest);
+
+      SetSDL_Rect(&dest, pos->x / 2 + 3, WIN_Y / 4 + pos->y / 2, pos->w, pos->h);
+      SDL_BlitScaled(surface, NULL, m_windowSurface, &dest);
 
       SetSDL_Rect(&dest, WIN_X / 2 + pos->x / 2 - 3, WIN_Y / 4 + pos->y / 2, pos->w, pos->h);
       SDL_BlitScaled(surface, NULL, m_windowSurface, &dest);
