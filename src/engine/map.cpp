@@ -32,7 +32,7 @@ void Map::Draw()
   int	i;
 
   i = 0;
-  while (i < m_nbChunk)
+  while (i < 30)
     {
       if (m_chunks[i]->IsLoaded())
 	m_chunks[i]->Draw();

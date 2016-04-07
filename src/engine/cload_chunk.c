@@ -26,7 +26,8 @@ char	*LoadChunk(char *dir, int chunk, int *height, int *pos)
   sprintf(file, "%s/chunk_%03d", dir, chunk);
   if ((fd = open(file, O_RDONLY)) == -1)
     {
-      exit(1);
+      dprintf(2, "Error: Open failed\n");
+      return (NULL);
     }
   if (read(fd, height, 4) < 4 || read(fd, pos, 12) < 12)
     {
