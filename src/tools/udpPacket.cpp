@@ -172,8 +172,8 @@ int		readUdpPacket(t_data *data)
       ++i;
     }
   data->players[(int)data->net.udp.buff[0]].events = tlo;
-  /*printf("x = %f, y = %f, z = %f\n", data->players[(int)data->net.udp.buff[0]].position.x,
-    data->players[(int)data->net.udp.buff[0]].position.y,
-    data->players[(int)data->net.udp.buff[0]].position.z);*/
+
+  // printf("x = %d, y = %d\n", data->players[(int)data->net.udp.buff[0]].selected_weapon,
+  //   data->players[(int)data->net.udp.buff[0]].events);
   return (0);
 }
