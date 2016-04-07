@@ -329,7 +329,6 @@ void			Displayer::UpdateRoom(t_data *room, SDL_Rect *pos,
     {
       switch(event.type)
 	{
-<<<<<<< HEAD:src/engine/display.cpp
 	  case SDL_KEYUP:
 	    if (event.key.keysym.sym == SDLK_ESCAPE)
 	      room->game.running = false;
@@ -373,31 +372,6 @@ void			Displayer::UpdateRoom(t_data *room, SDL_Rect *pos,
 	  case SDL_TEXTINPUT:
 	    room->tchat.write_text(event.text.text);
 	    break;
-=======
-	case SDL_KEYUP:
-	  if (event.key.keysym.sym == SDLK_ESCAPE)
-	    room->game.running = false;
-	  break;
-	case SDL_QUIT:
-	  room->game.running = false;
-	  break;
-	case SDL_MOUSEMOTION:
-	  if (event.motion.x)
-	    event.motion.x -= (event.motion.xrel / 3) / WIN_RATIO;
-	  if (event.motion.y)
-	    event.motion.y -= (event.motion.yrel / 3) / WIN_RATIO;
-	  pos->x += (event.motion.xrel / 2) / WIN_RATIO;
-	  pos->y += (event.motion.yrel / 2) / WIN_RATIO;
-	  if (pos->x > WIN_X)
-	    pos->x = WIN_X;
-	  else if (pos->x < 0)
-	    pos->x = 0;
-	  if (pos->y > WIN_Y)
-	    pos->y = WIN_Y;
-	  else if (pos->y < 0)
-	    pos->y = 0;
-	  break;
->>>>>>> 2abe1e012f7d33274fdbeb858b9d02be366c83c2:src/engine/displayer.cpp
 	}
     }
   icon_connected = IMG_Load(ROOM_ICON_PLAYER);
