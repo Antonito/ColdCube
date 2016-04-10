@@ -84,6 +84,7 @@ void Player::Fall(float time)
 {
   ivec3	p(m_pos);
 
+  (void)time;
 #ifdef	CHEAT
   if (!cheat.selected.fly)
     {

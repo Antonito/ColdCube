@@ -29,7 +29,6 @@ int	engineMain(Displayer &display, t_data *data)
   Transform	transform;
   int		i;
   vec2		lastPos[10] = {vec2(0, 0)};
-  vec2		lastPos2[10] = {vec2(0, 0)};
   vec3		lastPredict[10] = {vec3(0, 0, 0)};
   vec3		light(15, 15, 5);
   int		render;
