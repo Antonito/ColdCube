@@ -24,10 +24,10 @@
 # define		KNIFE_AMMO		-1
 # define		KNIFE_LOAD		1
 
-# define		PISTOL_AMMO		50
+# define		PISTOL_AMMO		-1
 # define		PISTOL_LOAD		15
 
-# define		RIFLE_AMMO		100
+# define		RIFLE_AMMO		-1
 # define		RIFLE_LOAD		30
 
 typedef enum		e_state

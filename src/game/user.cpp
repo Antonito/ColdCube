@@ -38,7 +38,22 @@ void	User::sprint(int state)
 
 void	User::shoot(bool shoot)
 {
-  setEvent(&m_player->events, SHOOT, shoot);
+  if (m_player->weapons[m_player->selected_weapon].loaded < 0)
+    setEvent(&m_player->events, SHOOT, shoot);
+  else
+    {
+      if (m_player->weapons[m_player->selected_weapon].loaded > 0)
+	{
+	  //Play shoot sound
+	  --m_player->weapons[m_player->selected_weapon].loaded;
+	  setEvent(&m_player->events, SHOOT, shoot);
+	}
+      else
+	{
+	  //Play no ammo sound
+	  ;
+	}
+    }
 }
 
 
