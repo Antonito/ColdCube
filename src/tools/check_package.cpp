@@ -11,9 +11,9 @@ bool	checkPacket(char *str)
 
   i = 1;
   if (str[i++] || str[sizeof(GLfloat) + i++] ||
-      str[(sizeof(GLfloat) << 1) + i++] ||
+      str[(sizeof(GLfloat) * 2) + i++] ||
       str[(sizeof(GLfloat) * 3) + i++] ||
-      str[((sizeof(GLfloat) << 2)) + i++] ||
+      str[((sizeof(GLfloat) * 4)) + i++] ||
       str[sizeof(GLfloat) * 5 + i++] ||
       str[sizeof(GLfloat) * 6 + i++] ||
       str[sizeof(GLfloat) * 6 + sizeof(uint32_t) + i++] ||
