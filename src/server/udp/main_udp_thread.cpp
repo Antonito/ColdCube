@@ -8,11 +8,11 @@ void		*main_udp_thread(void *data)
   all = (t_all *)data;
   all->udp = new t_udps;
   if ((all->udp->port = all->port + 1) < 1024)
-    return ((void *)0);
+    return (NULL);
   if ((all->udp->main_sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == -1)
     {
       fprintf(stderr, "Cannot create socket\n");
-      return ((void *)0);
+      return (NULL);
     }
   all->udp->my_addr.sin_family = AF_INET;
   printf("The port used = %d\n", all->udp->port);
@@ -22,10 +22,10 @@ void		*main_udp_thread(void *data)
   if (bind(all->udp->main_sock, (struct sockaddr *)&all->udp->my_addr, all->udp->my_addrl) == -1)
     {
       fprintf(stderr, "Cannot bind on main socket\n");
-      return ((void *)0);
+      return (NULL);
     }
   udp_thread(all);
-  return ((void *)0);
+  return (NULL);
 }
 
 void			udp_thread(t_all *all)
@@ -84,7 +84,9 @@ void			udp_thread(t_all *all)
 	  }
       }
     }
+#ifdef	DEBUG
   write(1, "CLOSED\n", 7);
+#endif
 }
 
 void		server_check_msg_udp(t_all *all)
@@ -96,7 +98,9 @@ void		server_check_msg_udp(t_all *all)
     {
       if ((i = tcp_get_pseudo_index(all, &all->udp->buff[5])) == -1)
 	{
+#ifdef	DEBUG
 	  printf("we cannot find him to pseudo DB\nwith :%s:\n", &all->udp->buff[5]);
+#endif
 	  sendto(all->udp->main_sock, "/r", 2, 0,
 		(struct sockaddr *)&all->udp->tmp_sock, all->udp->cli_addrl);
 	  return ;
@@ -107,7 +111,9 @@ void		server_check_msg_udp(t_all *all)
 	     (struct sockaddr *)&all->udp->tmp_sock, all->udp->cli_addrl);
       all->udp->cli_sock[i] = all->udp->tmp_sock;
       all->timeout[i] = 1;
+#ifdef	DEBUG
       printf("all functionnal with id = %d\n", i);
+#endif
     }
   else
     {
