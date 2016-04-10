@@ -116,8 +116,8 @@ void	Displayer::Update(Camera &cam, Map &map, Player &player,
   int			t = cur - old + 1;
   float			dTime = t / 1000.0f;
   old = cur;
-  SDL_Event	e;
-  static bool		eventKey[NB_KEY_EVENT];
+  SDL_Event		e;
+  static bool		eventKey[NB_KEY_EVENT] = {0};
 
   tot += 1000 / t;
   nb++;
@@ -142,6 +142,7 @@ void	Displayer::Update(Camera &cam, Map &map, Player &player,
 	      eventKey[MOUSE_RIGHT] = true;
 	      break ;
 	    }
+	  break;
 	case SDL_MOUSEBUTTONUP:
 	  switch (e.button.button)
 	    {
@@ -340,30 +341,37 @@ void	Displayer::Update(Camera &cam, Map &map, Player &player,
 	  break ;
 	}
     }
+
+  // Oculus
   if (cam.isOculus())
     cam.UpdateFor();
+
+  // Movement
   if (eventKey[data->config.keys.forward])
     player.Move(vec2(cam.GetFor().x, cam.GetFor().y));
   else if (eventKey[data->config.keys.backward])
     player.Move(-vec2(cam.GetFor().x, cam.GetFor().y));
-
   if (eventKey[data->config.keys.left])
     player.Move(-vec2(normalize(cross(cam.GetFor(), vec3(0, 0, 1))).x, cross(cam.GetFor(), vec3(0, 0, 1)).y));
   else if (eventKey[data->config.keys.right])
     player.Move(vec2(normalize(cross(cam.GetFor(), vec3(0, 0, 1))).x, cross(cam.GetFor(), vec3(0, 0, 1)).y));
 
+  // Jump and Shoot
   if (eventKey[data->config.keys.jump])
     player.Jump();
   if (eventKey[data->config.keys.fire])
     user.shoot(true);
   else
     user.shoot(false);
+
+  // Switch weapon
   if (eventKey[data->config.keys.weapon1])
     user.changeWeapon(KNIFE_WEAPON);
   else if (eventKey[data->config.keys.weapon2])
     user.changeWeapon(PISTOL_WEAPON);
   else if (eventKey[data->config.keys.weapon3])
     user.changeWeapon(RIFLE_WEAPON);
+
   #ifdef CHEAT
   if (cheat.selected.fly && eventKey[data->config.keys.forward])
     player.MoveCheat(cam.GetFor());
@@ -374,6 +382,7 @@ void	Displayer::Update(Camera &cam, Map &map, Player &player,
   #else
   player.Update(map, dTime);
   #endif
+
   player.SetCam(cam, player.GetThird(), data->players + player.GetId());
 }
 

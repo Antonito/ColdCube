@@ -51,7 +51,8 @@ TOOLS_FILES=		text.cpp			\
 			check_package.cpp		\
 			tcp_client.cpp			\
 			events.cpp			\
-			str2tab.cpp
+			str2tab.cpp			\
+			audio.cpp
 
 GENERATION_PREFIX=	src/generation/
 

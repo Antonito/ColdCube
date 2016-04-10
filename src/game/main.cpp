@@ -5,11 +5,15 @@
 #include <GL/glut.h>
 #include "SDL2/SDL_image.h"
 #include <OVR.h>
+#include "tools.hpp"
 
 #ifdef	CHEAT
 # include "cheat.hpp"
 t_cheat		cheat;
 #endif
+
+Uint8		*audioPos = NULL;
+Uint32		audioLen = 0;
 
 void	setAzerty(t_keys *keys)
 {
@@ -41,31 +45,51 @@ void	commonKeys(t_keys *keys)
   keys->fire = MOUSE_LEFT;
 }
 
+void	myAudioCallback(void *data, Uint8 *stream, int len);
+
+void	loadSound(t_sound *sound, const char *path)
+{
+  static int	loop = 1;
+
+  if (!SDL_LoadWAV(path, &sound->spec, &sound->buffer, &sound->lenght))
+    {
+      std::cerr << "Error loading sound" << loop << "\n";
+      exit(1);
+    }
+  sound->spec.callback = myAudioCallback;
+  ++loop;
+}
+
 void	initWeapons(t_player *player)
 {
+  static bool		loaded = false;
+  static t_sound	rifle;
+  static t_sound	knife;
+
+  if (!loaded)
+    {
+      loaded = true;
+      loadSound(&rifle, SHOOT_SOUND_PATH);
+      loadSound(&knife, KNIFE_SOUND_PATH);
+    }
+
   // Init Knife
   player->weapons[KNIFE_WEAPON].id = 0;
   player->weapons[KNIFE_WEAPON].loaded = KNIFE_LOAD;
   player->weapons[KNIFE_WEAPON].ammo = KNIFE_AMMO;
-  player->weapons[KNIFE_WEAPON].sound_fire = 0;
-  player->weapons[KNIFE_WEAPON].sound_reload = 0;
-  player->weapons[KNIFE_WEAPON].sound_empty = 0;
+  player->weapons[KNIFE_WEAPON].shootSound = &knife;
 
   //Init Pistol
   player->weapons[PISTOL_WEAPON].id = 0;
   player->weapons[PISTOL_WEAPON].loaded = PISTOL_AMMO;
   player->weapons[PISTOL_WEAPON].ammo = PISTOL_AMMO;
-  player->weapons[PISTOL_WEAPON].sound_fire = 0;
-  player->weapons[PISTOL_WEAPON].sound_reload = 0;
-  player->weapons[PISTOL_WEAPON].sound_empty = 0;
+  player->weapons[PISTOL_WEAPON].shootSound = NULL;
 
   //Init Rifle
   player->weapons[RIFLE_WEAPON].id = 0;
   player->weapons[RIFLE_WEAPON].loaded = RIFLE_LOAD;
   player->weapons[RIFLE_WEAPON].ammo = RIFLE_AMMO;
-  player->weapons[RIFLE_WEAPON].sound_fire = 0;
-  player->weapons[RIFLE_WEAPON].sound_reload = 0;
-  player->weapons[RIFLE_WEAPON].sound_empty = 0;
+  player->weapons[RIFLE_WEAPON].shootSound = &rifle;
 }
 
 void	initData(t_data *data)

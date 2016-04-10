@@ -22,13 +22,17 @@
 # include "engine/keys.hpp"
 
 # define		KNIFE_AMMO		-1
-# define		KNIFE_LOAD		1
-
+# define		KNIFE_LOAD		-1
 # define		PISTOL_AMMO		-1
-# define		PISTOL_LOAD		15
-
+# define		PISTOL_LOAD		-1
 # define		RIFLE_AMMO		-1
-# define		RIFLE_LOAD		30
+# define		RIFLE_LOAD		-1
+
+# define		SHOOT_SOUND_PATH	"assets/musics/gun.wav"
+# define		KNIFE_SOUND_PATH	"assets/musics/knife.wav"
+
+extern Uint8	*audioPos;
+extern Uint32	audioLen;
 
 typedef enum		e_state
   {
@@ -96,14 +100,19 @@ typedef enum		e_weapon
     RIFLE_WEAPON	= 2
   }			e_eweapon;
 
+typedef struct		s_sound
+{
+  Uint32		lenght;
+  Uint8			*buffer;
+  SDL_AudioSpec		spec;
+}			t_sound;
+
 typedef struct		s_weapon
 {
   int			id; /* Id de l'arme */
   int			loaded;
   int			ammo; /* Total de munitions */
-  int			sound_fire;
-  int			sound_reload;
-  int			sound_empty;
+  t_sound		*shootSound;
 }			t_weapon;
 
 /*
