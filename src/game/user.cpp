@@ -39,16 +39,14 @@ void	User::sprint(int state)
 
 void	User::shoot(bool shoot)
 {
-  if (shoot)
-    printf("Ammo = %d\n", m_player->weapons[m_player->selected_weapon].loaded);
   if (shoot && m_player->weapons[m_player->selected_weapon].loaded < 0)
     {
 #ifdef	DEBUG
       std::clog << "Shoot, unlimited ammo\n";
 #endif
       setEvent(&m_player->events, SHOOT, shoot);
-      if (m_player->weapons[m_player->selected_weapon].shootSound)
-	playSound(m_player->weapons[m_player->selected_weapon].shootSound);
+      // if (m_player->weapons[m_player->selected_weapon].shootSound)
+      // 	m_player->weapons[m_player->selected_weapon].shootSound->sound.play();
     }
   else if (shoot)
     {
@@ -59,8 +57,8 @@ void	User::shoot(bool shoot)
 #endif
 	  setEvent(&m_player->events, SHOOT, shoot);
 	  --m_player->weapons[m_player->selected_weapon].loaded;
-	  if (m_player->weapons[m_player->selected_weapon].shootSound)
-	    playSound(m_player->weapons[m_player->selected_weapon].shootSound);
+	  // if (m_player->weapons[m_player->selected_weapon].shootSound)
+	  //   m_player->weapons[m_player->selected_weapon].shootSound->sound.play();
 	}
       else
 	{

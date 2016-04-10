@@ -6,6 +6,8 @@
 #  include <GL/glew.h>
 # endif
 
+//# include <SFML/Audio.hpp>
+
 # include <stdbool.h>
 # include <stdint.h>
 # include <pthread.h>
@@ -30,9 +32,6 @@
 
 # define		SHOOT_SOUND_PATH	"assets/musics/gun.wav"
 # define		KNIFE_SOUND_PATH	"assets/musics/knife.wav"
-
-extern Uint8	*audioPos;
-extern Uint32	audioLen;
 
 typedef enum		e_state
   {
@@ -102,9 +101,8 @@ typedef enum		e_weapon
 
 typedef struct		s_sound
 {
-  Uint32		lenght;
-  Uint8			*buffer;
-  SDL_AudioSpec		spec;
+  //  sf::Sound		sound;
+  //sf::SoundBuffer	buffer;
 }			t_sound;
 
 typedef struct		s_weapon

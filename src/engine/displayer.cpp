@@ -5,11 +5,10 @@
 #include <unistd.h>
 #include <GL/glew.h>
 #include <GL/gl.h>
-#include <GL/glx.h>
+//#include <GL/glx.h>
 #include <sys/time.h>
 #include "engine/displayer.hpp"
 #include <iostream>
-#include "common_structs.hpp"
 #include "game.hpp"
 #include "tools.hpp"
 #include "Menu.h"

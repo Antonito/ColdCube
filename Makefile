@@ -51,8 +51,7 @@ TOOLS_FILES=		text.cpp			\
 			check_package.cpp		\
 			tcp_client.cpp			\
 			events.cpp			\
-			str2tab.cpp			\
-			audio.cpp
+			str2tab.cpp
 
 GENERATION_PREFIX=	src/generation/
 
@@ -84,7 +83,8 @@ NAME=			coldcube
 NAMESERV=		server_coldcube
 NAMEGEN=		generator_coldcube
 
-HEAD=			-Iinclude
+HEAD=			-Iinclude			\
+			-I/home/${USER}/.froot/include
 
 # Flags
 
@@ -119,12 +119,11 @@ LIB=			-lstdc++			\
 			-lSDL2_ttf			\
 			-lSDL2_image			\
 			-lGL				\
-			-lm				\
 			-lGLEW				\
 			-lglut				\
-			-lX11				\
 			-lOVR				\
-			-ldl
+			-ldl				\
+			-lm
 
 # Obj link
 

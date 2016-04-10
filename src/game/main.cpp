@@ -12,9 +12,6 @@
 t_cheat		cheat;
 #endif
 
-Uint8		*audioPos = NULL;
-Uint32		audioLen = 0;
-
 void	setAzerty(t_keys *keys)
 {
   keys->forward = KEY_Z;
@@ -49,15 +46,14 @@ void	myAudioCallback(void *data, Uint8 *stream, int len);
 
 void	loadSound(t_sound *sound, const char *path)
 {
-  static int	loop = 1;
+  // LOAD SOUND
 
-  if (!SDL_LoadWAV(path, &sound->spec, &sound->buffer, &sound->lenght))
-    {
-      std::cerr << "Error loading sound" << loop << "\n";
-      exit(1);
-    }
-  sound->spec.callback = myAudioCallback;
-  ++loop;
+  // if (!sound->buffer.loadFromFile(path))
+  //   {
+  //     std::cerr << "Canno't load sound\n";
+  //     exit(1);
+  //   }
+  // sound->sound.setBuffer(sound->buffer);
 }
 
 void	initWeapons(t_player *player)
