@@ -21,6 +21,15 @@
 # include "Tchat.hpp"
 # include "engine/keys.hpp"
 
+# define		KNIFE_AMMO		-1
+# define		KNIFE_LOAD		1
+
+# define		PISTOL_AMMO		50
+# define		PISTOL_LOAD		15
+
+# define		RIFLE_AMMO		100
+# define		RIFLE_LOAD		30
+
 typedef enum		e_state
   {
     PRESSED,
@@ -92,7 +101,6 @@ typedef struct		s_weapon
   int			id; /* Id de l'arme */
   int			loaded;
   int			ammo; /* Total de munitions */
-  int			power;
   int			sound_fire;
   int			sound_reload;
   int			sound_empty;

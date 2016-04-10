@@ -41,6 +41,33 @@ void	commonKeys(t_keys *keys)
   keys->fire = MOUSE_LEFT;
 }
 
+void	initWeapons(t_player *player)
+{
+  // Init Knife
+  player->weapons[KNIFE_WEAPON].id = 0;
+  player->weapons[KNIFE_WEAPON].loaded = KNIFE_LOAD;
+  player->weapons[KNIFE_WEAPON].ammo = KNIFE_AMMO;
+  player->weapons[KNIFE_WEAPON].sound_fire = 0;
+  player->weapons[KNIFE_WEAPON].sound_reload = 0;
+  player->weapons[KNIFE_WEAPON].sound_empty = 0;
+
+  //Init Pistol
+  player->weapons[PISTOL_WEAPON].id = 0;
+  player->weapons[PISTOL_WEAPON].loaded = PISTOL_AMMO;
+  player->weapons[PISTOL_WEAPON].ammo = PISTOL_AMMO;
+  player->weapons[PISTOL_WEAPON].sound_fire = 0;
+  player->weapons[PISTOL_WEAPON].sound_reload = 0;
+  player->weapons[PISTOL_WEAPON].sound_empty = 0;
+
+  //Init Rifle
+  player->weapons[RIFLE_WEAPON].id = 0;
+  player->weapons[RIFLE_WEAPON].loaded = RIFLE_LOAD;
+  player->weapons[RIFLE_WEAPON].ammo = RIFLE_AMMO;
+  player->weapons[RIFLE_WEAPON].sound_fire = 0;
+  player->weapons[RIFLE_WEAPON].sound_reload = 0;
+  player->weapons[RIFLE_WEAPON].sound_empty = 0;
+}
+
 void	initData(t_data *data)
 {
   int	i;
@@ -55,6 +82,7 @@ void	initData(t_data *data)
       memset(data->players[i].pseudo, 0, 21);
       memset(&data->players[i].position, 0, sizeof(vector3));
       memset(&data->players[i].direction, 0, sizeof(vector3));
+      initWeapons(&data->players[i]);
     }
   data->game.running = true;
   data->game.Team1 = Score();
