@@ -12,6 +12,10 @@ public:
   User(t_player *player);
   ~User();
 
+  void		changeWeapon(e_weapon weapon)
+  {
+    m_player->selected_weapon = weapon;
+  };
   int		getSpeed(void){return (m_speed);};
   void		sprint(int state);
   //  void		getDamage();

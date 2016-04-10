@@ -82,10 +82,10 @@ typedef glm::vec3	vector3;
 */
 typedef enum		e_weapon
   {
-    RIFLE_WEAPON,
-    PISTOL_WEAPON,
-    KNIFE_WEAPON
-  }			t_eweapon;
+    KNIFE_WEAPON	= 0,
+    PISTOL_WEAPON	= 1,
+    RIFLE_WEAPON	= 2
+  }			e_eweapon;
 
 typedef struct		s_weapon
 {
@@ -133,6 +133,9 @@ typedef struct		s_keys
   e_eventKey		jump;
   e_eventKey		aim;
   e_eventKey		fire;
+  e_eventKey		weapon1;
+  e_eventKey		weapon2;
+  e_eventKey		weapon3;
 }			t_keys;
 
 typedef struct		s_config

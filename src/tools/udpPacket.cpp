@@ -83,7 +83,7 @@ int		createUdpPacket(t_data *data, t_player *player)
 int		readUdpPacket(t_data *data)
 {
   GLfloat	flo;
-  char *	tmp;
+  char		*tmp;
   int		all;
   unsigned int	i;
   uint32_t	tlo;
@@ -173,7 +173,7 @@ int		readUdpPacket(t_data *data)
     }
   data->players[(int)data->net.udp.buff[0]].events = tlo;
 
-  // printf("x = %d, y = %d\n", data->players[(int)data->net.udp.buff[0]].selected_weapon,
-  //   data->players[(int)data->net.udp.buff[0]].events);
+  printf("S = %d, E = %d\n", data->players[(int)data->net.udp.buff[0]].selected_weapon,
+	 data->players[(int)data->net.udp.buff[0]].events);
   return (0);
 }

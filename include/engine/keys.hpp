@@ -12,6 +12,12 @@ enum e_eventKey
     KEY_SPACE,
     MOUSE_LEFT,
     MOUSE_RIGHT,
+    KEY_1,
+    KEY_2,
+    KEY_3,
+    KEY_COMMERCIAL_AND,
+    KEY_E_ACCENT,
+    KEY_QUOTE,
 #ifdef	CHEAT
     KEY_I,
     KEY_J,

@@ -18,6 +18,9 @@ void	setAzerty(t_keys *keys)
   keys->left = KEY_Q;
   keys->right = KEY_D;
   keys->jump = KEY_SPACE;
+  keys->weapon1 = KEY_COMMERCIAL_AND;
+  keys->weapon2 = KEY_E_ACCENT;
+  keys->weapon3 = KEY_QUOTE;
 }
 
 void	setQwerty(t_keys *keys)
@@ -27,6 +30,9 @@ void	setQwerty(t_keys *keys)
   keys->left = KEY_A;
   keys->right = KEY_D;
   keys->jump = KEY_SPACE;
+  keys->weapon1 = KEY_1;
+  keys->weapon2 = KEY_2;
+  keys->weapon3 = KEY_3;
 }
 
 void	commonKeys(t_keys *keys)
