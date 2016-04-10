@@ -406,7 +406,9 @@ int	startGame(t_data *data, std::vector<menuItem> &items, Displayer &disp)
 	  setEvent(&data->players[data->net.playerIndexUdp].events, CONNECTED, true);
 	  engineMain(disp, data);
 	  write(data->net.tcp.sock, "/r", 2);
+#ifdef	DEBUG
 	  fprintf(stdout, "tcp fd closed\n");
+#endif
 #ifdef _WIN32
 	  closesocket(data->net.udp.sock);
 	  closesocket(data->net.tcp.sock);

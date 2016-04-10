@@ -1,5 +1,5 @@
 # Useful variables
-DEBUG=			yes
+DEBUG=			no
 CHEAT=			yes
 
 # Sources
