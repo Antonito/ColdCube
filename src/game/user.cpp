@@ -106,6 +106,8 @@ int     User::IsShooted(t_player *p, Score &advTeam, Map &map)
       hit = vec4(0, 0, 0, -1);
       weapon = p[i].selected_weapon;
       headshot = false;
+      if (getEvent(p[i].events, SHOOT))
+	printf("Player %d shooted !\n", i);
       if (getEvent(p[i].events, SHOOT) && id % 2 != i % 2)
 	{
   	hit = this->IsHit(p + i, map);
