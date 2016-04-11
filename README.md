@@ -14,6 +14,7 @@ Required:
 	- Glew
 	- Glut
 	- glm
+	- SFML
 	- OculusRift SDK
 
 Specs:
