@@ -33,7 +33,7 @@ void main() {
 
   float b = minimum + brightness0 * (1 - minimum) / 100;
   colorOut = max(intensity * diff + spec, ambient) *
-    texture2D(diffuse, texCoord0) * b;
+    texture2D(diffuse, texCoord0);
   if (colorOut.a == 0.0)
     discard ;
 }
