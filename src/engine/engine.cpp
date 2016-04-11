@@ -25,8 +25,9 @@ int	engineMain(Displayer &display, t_data *data)
   Shader	shader("shaders/test1");
   Shader	barrel("shaders/barrel_roll");
   Map		map("map");
-  Player	player(vec3(10, 10, 5), 90, &map, data->net.playerIndexUdp);
-  User		user(data->players + player.GetId());
+  data->players[data->net.playerIndexTcp].id = data->net.playerIndexTcp;
+  Player	player(vec3(10, 10, 5), 90, &map, data->net.playerIndexTcp);
+  User		user(&data->players[data->net.playerIndexTcp]);
   Camera	camera(vec3(10, 5, 10), 70.0f, (float)WIN_X / WIN_Y, 0.01f, 500.0f,
 		       data->config.oculusHmd, data->config.oculus);
   Transform	transform;

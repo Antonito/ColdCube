@@ -342,16 +342,16 @@ void	Displayer::Update(Camera &cam, Map &map, Player &player,
   else if (eventKey[data->config.keys.weapon3])
     user.changeWeapon(KNIFE_WEAPON);
 
-  #ifdef CHEAT
+#ifdef CHEAT
   if (cheat.selected.fly && eventKey[data->config.keys.forward])
     player.MoveCheat(cam.GetFor());
   else if (cheat.selected.fly && eventKey[data->config.keys.backward])
     player.MoveCheat(-cam.GetFor());
   else
     player.Update(map, dTime);
-  #else
+#else
   player.Update(map, dTime);
-  #endif
+#endif
 
   player.SetCam(cam, player.GetThird(), data->players + player.GetId());
 }
@@ -429,6 +429,7 @@ int	startGame(t_data *data, std::vector<menuItem> &items, Displayer &disp)
 	  std::clog << "UDP OK\n";
 #endif
 	  selectGameMusic(data, false);
+	  bunny_sound_volume(&data->gameMusic->sound, (double)data->config.musicVolume);
 	  bunny_sound_stop(&data->menuMusic->sound);
 	  bunny_sound_play(&data->gameMusic->sound);
 	  setEvent(&data->players[data->net.playerIndexUdp].events, IS_CONNECTED, true);

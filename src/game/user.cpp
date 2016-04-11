@@ -44,7 +44,7 @@ void		User::shoot(bool shoot)
   if (isShooting)
     {
       if (m_player->weapons[m_player->selected_weapon].shootSound &&
-	  bunny_music_get_cursor(m_player->weapons[m_player->selected_weapon].shootSound) <= 0.01)
+	  bunny_music_get_cursor(m_player->weapons[m_player->selected_weapon].shootSound) <= SOUND_WAIT)
 	{
 	  isShooting = false;
 	  bunny_sound_stop(&m_player->weapons[m_player->selected_weapon].shootSound->sound);
@@ -52,39 +52,37 @@ void		User::shoot(bool shoot)
     }
   if (shoot && m_player->weapons[m_player->selected_weapon].loaded < 0)
     {
-#ifdef	DEBUG
-      std::clog << "Shoot, unlimited ammo\n";
-#endif
-      setEvent(&m_player->events, SHOOT, shoot);
       if (!isShooting && m_player->weapons[m_player->selected_weapon].shootSound)
 	{
 	  bunny_sound_play(&m_player->weapons[m_player->selected_weapon].shootSound->sound);
 	  isShooting = true;
 	}
+      setEvent(&m_player->events, SHOOT, true);
+      return ;
     }
   else if (shoot)
     {
       if (m_player->weapons[m_player->selected_weapon].loaded > 0)
 	{
-#ifdef	DEBUG
-	  std::clog << "Shooting\n";
-#endif
-	  setEvent(&m_player->events, SHOOT, shoot);
 	  --m_player->weapons[m_player->selected_weapon].loaded;
 	  if (!isShooting && m_player->weapons[m_player->selected_weapon].shootSound)
 	    {
 	      bunny_sound_play(&m_player->weapons[m_player->selected_weapon].shootSound->sound);
 	      isShooting = true;
 	    }
+	  setEvent(&m_player->events, SHOOT, true);
+	  return ;
 	}
       else
 	{
 	  //Play no ammo sound
-	  ;
+	  setEvent(&m_player->events, SHOOT, false);
+	  return ;
 	}
     }
   else
-    setEvent(&m_player->events, SHOOT, shoot);
+    setEvent(&m_player->events, SHOOT, false);
+  setEvent(&m_player->events, SHOOT, false);
 }
 
 
@@ -117,6 +115,7 @@ int     User::IsShooted(t_player *p, Score &advTeam, Map &map)
   int		id = m_player->id;
   int		weapon;
   bool		headshot;
+  static bool	shooting[10] = {0};
 
   while (i < 10)
     {
@@ -124,10 +123,19 @@ int     User::IsShooted(t_player *p, Score &advTeam, Map &map)
       weapon = p[i].selected_weapon;
       headshot = false;
       if (getEvent(p[i].events, SHOOT))
-	printf("Player %d shooted !\n", i);
+	{
+	  if (shooting[i] &&
+	      bunny_music_get_cursor(p[i].weapons[p[i].selected_weapon].shootSound) <= SOUND_WAIT)
+	    shooting[i] = false;
+	  if (i != id && !shooting[i] && p[i].weapons[p[i].selected_weapon].shootSound)
+	    {
+	      bunny_sound_play(&p[i].weapons[p[i].selected_weapon].shootSound->sound);
+	      shooting[i] = true;
+	    }
+	}
       if (getEvent(p[i].events, SHOOT) && id % 2 != i % 2)
 	{
-  	hit = this->IsHit(p + i, map);
+	  hit = this->IsHit(p + i, map);
 	}
       if (hit.w > 0.0)
   	{

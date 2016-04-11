@@ -69,6 +69,7 @@
 # define MUSIC_TWO_GAME			"assets/musics/game/1.ogg"
 # define MUSIC_THREE_GAME		"assets/musics/game/2.ogg"
 # define NB_GAME_MUSIC			3
+# define SOUND_WAIT			0.018
 
 //
 // Game elements
