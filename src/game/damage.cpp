@@ -1,6 +1,6 @@
 #include "common_structs.hpp"
 
-unsigned char	getDamage(int weapon, int part)
+unsigned char	getDamage(int weapon, int part, double dist)
 {
   switch(weapon)
     {
@@ -9,13 +9,13 @@ unsigned char	getDamage(int weapon, int part)
 	switch(part)
 	  {
 	  case (HEAD_HIT):
-	    return (60);
+	    return (60 / dist * 4);
 	  case (BODY_HIT):
-	    return (25);
+	    return (25 / dist * 4);
 	  case (ARM_HIT):
-	    return (5);
+	    return (5 / dist * 4);
 	  case (LEG_HIT):
-	    return (15);
+	    return (15 / dist * 4);
 	  default:
 	    return (0);
 	  }
@@ -25,19 +25,21 @@ unsigned char	getDamage(int weapon, int part)
 	switch(part)
 	  {
 	  case (HEAD_HIT):
-	    return (80);
+	    return (80 / dist) * 4;
 	  case (BODY_HIT):
-	    return (30);
+	    return (30 / dist * 4);
 	  case (ARM_HIT):
-	    return (20);
+	    return (20 / dist * 4);
 	  case (LEG_HIT):
-	    return (5);
+	    return (5 / dist * 4);
 	  default:
 	    return (0);
 	  }
       }
     case (KNIFE_WEAPON):
       {
+	if (dist >= 0.8)
+	  return (0);
 	switch(part)
 	  {
 	  case (HEAD_HIT):

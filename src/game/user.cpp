@@ -139,13 +139,13 @@ int     User::IsShooted(t_player *p, Score &advTeam, Map &map)
   	  dist = vec2(hit.x - m_player->position.x - 0.4,
   		      hit.y - m_player->position.y - 0.4);
   	  if (hit.z > m_player->position.z + 1.4 && (headshot = true))
-  	    damage = getDamage(weapon, HEAD_HIT);
+  	    damage = getDamage(weapon, HEAD_HIT, hit.w);
   	  else if (hit.z < m_player->position.z + 0.8)
-  	    damage = getDamage(weapon, LEG_HIT);
+  	    damage = getDamage(weapon, LEG_HIT, hit.w);
   	  else if (length(dist) < 0.2)
-  	    damage = getDamage(weapon, BODY_HIT);
+  	    damage = getDamage(weapon, BODY_HIT, hit.w);
   	  else
-  	    damage = getDamage(weapon, ARM_HIT);
+  	    damage = getDamage(weapon, ARM_HIT, hit.w);
   	  m_player->life -= damage;
 	  printf("LIFE %d\n", m_player->life);
   	  if (m_player->life <= 0)

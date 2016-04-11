@@ -135,7 +135,7 @@
 # include "common_structs.hpp"
 
 void		selectGameMusic(t_data *, bool);
-unsigned int	getDamage(int, int);
+unsigned int	getDamage(int, int, double);
 int		engineMain(Displayer &, t_data *);
 void		setAzerty(t_keys *);
 void		setQwerty(t_keys *);
