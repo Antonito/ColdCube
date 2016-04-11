@@ -136,8 +136,12 @@ int	game()
     ovrHmd_ConfigureTracking(hmd, ovrTrackingCap_Orientation | ovrTrackingCap_MagYawCorrection | ovrTrackingCap_Position, 0);
   initData(data);
   data->screen = screen;
+
+  bunny_sound_volume(&data->menuMusic->sound, 50.0);
+  bunny_sound_volume(&data->menuEffect->sound, 50.0);
   bunny_sound_loop(&data->menuMusic->sound, true);
   bunny_sound_play(&data->menuMusic->sound);
+
   loginMenu(items);
 
   //Macro definie dans game.hpp
