@@ -24,3 +24,5 @@ We presented this game at the "Semaine de l'Innovation" in Bordeaux, on April 7,
 Made by Antoine Baché, Luka Boulagnon, Ludovic Petrenko and Lucas Troncy.
 
 Works on Linux.
+
+![Game Logo](/assets/imgs/logo.png?raw=true "ColdCube")
