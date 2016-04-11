@@ -57,6 +57,7 @@
 // Menu elements
 //
 # define EFFECT_MENU			"assets/musics/menu.ogg"
+# define MUSIC_MENU			"assets/musics/menu_music.ogg"
 
 //
 // Game elements

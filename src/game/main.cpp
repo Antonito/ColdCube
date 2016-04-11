@@ -84,7 +84,9 @@ void	initData(t_data *data)
 
   memset(data, 0, sizeof(t_data));
   i = -1;
-  if (!(data->menuEffect = bunny_load_music(EFFECT_MENU)))
+  data->gameMusic = NULL;
+  if (!(data->menuEffect = bunny_load_music(EFFECT_MENU)) ||
+      !(data->menuMusic = bunny_load_music(MUSIC_MENU)))
     {
       std::cerr << "Cannot load effect\n";
       exit(1);
@@ -134,13 +136,17 @@ int	game()
     ovrHmd_ConfigureTracking(hmd, ovrTrackingCap_Orientation | ovrTrackingCap_MagYawCorrection | ovrTrackingCap_Position, 0);
   initData(data);
   data->screen = screen;
+  bunny_sound_loop(&data->menuMusic->sound, true);
+  bunny_sound_play(&data->menuMusic->sound);
   loginMenu(items);
+
   //Macro definie dans game.hpp
   surface = IMG_Load(CURSOR_IMG);
   pos.x = (screen->w / 2) - (surface->w / 2);
   pos.y = (screen->h / 2) - (surface->h / 2);
   pos.w = surface->w / 2;
   pos.h = surface->h / 2;
+
   SDL_StartTextInput();
   data->config.oculusHmd = hmd;
   data->config.oculus = (hmd != NULL);
@@ -157,6 +163,7 @@ int	game()
   if (data->players[0].weapons[2].shootSound)
     bunny_delete_sound(&data->players[0].weapons[2].shootSound->sound);
   bunny_delete_sound(&data->menuEffect->sound);
+  bunny_delete_sound(&data->menuMusic->sound);
   return (0);
 }
 

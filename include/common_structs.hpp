@@ -163,6 +163,8 @@ typedef	struct		s_data
   SDL_Surface		*screen;
   Tchat			tchat;
   t_bunny_music		*menuEffect;
+  t_bunny_music		*menuMusic;
+  t_bunny_music		*gameMusic;
 }			t_data;
 
 #endif // !COMMON_STRUCTS_H_

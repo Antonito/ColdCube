@@ -437,6 +437,7 @@ int	startGame(t_data *data, std::vector<menuItem> &items, Displayer &disp)
 #ifdef	DEBUG
       std::clog << "TCP OK\n";
 #endif
+      bunny_sound_stop(&data->menuMusic->sound);
       if (!room(disp, data))
       {
 	write(data->net.tcp.sock, "/r", 2);
@@ -470,6 +471,7 @@ int	startGame(t_data *data, std::vector<menuItem> &items, Displayer &disp)
 #endif
 	  setEvent(&data->players[data->net.playerIndexUdp].events, IS_CONNECTED, false);
 	}
+      bunny_sound_play(&data->menuMusic->sound);
     }
   data->net.tcp.run = 0;
   data->net.udp.run_send = 0;
