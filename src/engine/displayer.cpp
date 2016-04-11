@@ -371,16 +371,16 @@ void	Displayer::Update(Camera &cam, Map &map, Player &player,
   else if (eventKey[data->config.keys.weapon3])
     user.changeWeapon(RIFLE_WEAPON);
 
-  #ifdef CHEAT
+#ifdef CHEAT
   if (cheat.selected.fly && eventKey[data->config.keys.forward])
     player.MoveCheat(cam.GetFor());
   else if (cheat.selected.fly && eventKey[data->config.keys.backward])
     player.MoveCheat(-cam.GetFor());
   else
     player.Update(map, dTime);
-  #else
+#else
   player.Update(map, dTime);
-  #endif
+#endif
 
   player.SetCam(cam, player.GetThird(), data->players + player.GetId());
 }
