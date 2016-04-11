@@ -10,6 +10,7 @@ Required:
 	- SDL2
 	- SDL2_Image
 	- SDL2_ttf
+	- Glew
 	- glm
 	- OculusRift SDK
 

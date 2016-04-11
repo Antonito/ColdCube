@@ -84,7 +84,7 @@ NAMESERV=		server_coldcube
 NAMEGEN=		generator_coldcube
 
 HEAD=			-Iinclude			\
-			-I/lib/lapin/include
+			-Ilib/lapin/include
 
 # Flags
 
