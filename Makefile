@@ -38,6 +38,7 @@ ENGINE_FILES=		animation_player.cpp		\
 			player.cpp			\
 			shader.cpp			\
 			texture.cpp			\
+			renderer.cpp			\
 			engine.cpp
 
 ENGINE_C_FILES=		cload_chunk.c

@@ -11,16 +11,19 @@
 #include "engine/camera.hpp"
 #include "engine/map.hpp"
 #include "engine/animation_player.hpp"
+#include "engine/renderer.hpp"
 #include "User.hpp"
 #include <time.h>
 
 using namespace glm;
 
 Mesh	SetPlanes(int, vec3);
+void	DrawUI(t_data *data, int oculus);
 
 int	engineMain(Displayer &display, t_data *data)
 {
   Shader	shader("shaders/test1");
+  Shader	barrel("shaders/barrel_roll");
   Map		map("map");
   Player	player(vec3(10, 10, 5), 90, &map, data->net.playerIndexUdp);
   User		user(data->players + player.GetId());
@@ -33,6 +36,8 @@ int	engineMain(Displayer &display, t_data *data)
   vec3		lastPredict[10] = {vec3(0, 0, 0)};
   vec3		light(15, 15, 5);
   int		render;
+  Renderer	rightEye(GAME_X, GAME_Y);
+  Renderer	leftEye(GAME_X, GAME_Y);
 
   i = 0;
   while (i < 10)
@@ -41,19 +46,24 @@ int	engineMain(Displayer &display, t_data *data)
       data->players[i].direction = vec3(0, 1, 0);
       i++;
     }
-  shader.Bind();
 
   while (!display.IsClosed())
     {
       render = 0;
-      display.Clear(0.0f, 0.3f, 0.8f, 1.0f);
       transform.GetPos() = vec3(0, 0, 0);
+      display.Clear(0.0f, 0.3f, 0.8f, 1.0f);
       while (render < data->config.oculus + 1)
 	{
-	  if (data->config.oculus)
-	    glViewport((render == 0) ? 0 : WIN_X / 2, 0, WIN_X / 2, WIN_Y);
+	  if (data->config.oculus && render == 0)
+	    leftEye.Bind();
 	  if (render == 1)
-	    camera.GetPos() += normalize(cross(camera.GetFor(), vec3(0, 0, 1))) * (GLfloat)0.32;
+	    {
+	      rightEye.Bind();
+	      camera.GetPos() += normalize(cross(camera.GetFor(), vec3(0, 0, 1))) * (GLfloat)0.16;
+	    }
+	  shader.Bind();
+	  if (data->config.oculus)
+	    glViewport(0, 0, GAME_X, GAME_Y);
 	  shader.Update(transform, camera, &light);
 	  map.Draw();
 	  i = 0;
@@ -69,11 +79,79 @@ int	engineMain(Displayer &display, t_data *data)
 		lastPos[i] = vec2(data->players[i].position);
 	      i++;
 	    }
+	  DrawUI(data, render);
 	  render++;
 	}
+      if (data->config.oculus)
+      	{
+	  glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	  glClearColor(0.0f, 0.3f, 0.8f, 1.0f);
+	  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	  barrel.Bind();
+      	  glViewport(0, 0, WIN_X / 2, WIN_Y);
+      	  leftEye.Draw();
+      	  glViewport(WIN_X / 2, 0, WIN_X / 2, WIN_Y);
+      	  rightEye.Draw();
+      	}
       user.IsShooted(data->players, data->game.Team2, map);
       display.Update(camera, map, player, data, user);
       player.FillCPlayer(data->players + player.GetId(), camera.GetFor());
     }
   return (0);
+}
+
+void	DrawUI(t_data *data, int oculus)
+{
+  SDL_Rect		tchat_pos = {0, data->tchat.isFocus() ? (WIN_Y / 2) : (3 * WIN_Y / 4), 854, data->tchat.isFocus() ? (WIN_Y / 2) : (WIN_Y / 4)};
+  SDL_Rect		origin = {42, 10, WIN_X, WIN_Y};
+  SDL_Rect		center = {(WIN_X - 270) / 2 + oculus * 10, (WIN_Y - 270) / 2, 270, 270};
+  SDL_Surface		*life;
+  char			lifebar[32];
+  SDL_Color		black = {0, 0, 0, 255};
+  static TTF_Font	*font = TTF_OpenFont(TCHAT_FONT_NAME, (int)(40 / WIN_RATIO));
+  static SDL_Surface	*crosshair = IMG_Load("./assets/imgs/crosshair.png");
+  static bool		rendering = true;
+  static SDL_Surface	*ui = SDL_CreateRGBSurface(0, WIN_X, WIN_Y, 32, 0x000000FF, 0x0000FF00, 0x00FF0000, 0xFF000000);
+
+  glFlush();
+
+  SDL_FillRect(ui, NULL, SDL_MapRGBA(ui->format, 0, 0, 0, 0));
+  SDL_BlitSurface(crosshair, NULL, ui, &center);
+  sprintf(lifebar, "./assets/imgs/lifebar/%03d.png", data->players[data->net.playerIndexUdp].life);
+  life = IMG_Load(lifebar);
+  SDL_BlitSurface(life, NULL, ui, &origin);
+  data->tchat.display(tchat_pos, ui, (SDL_Color){210, 210, 210, 255});
+  SDL_FreeSurface(life);
+  life = TTF_RenderUTF8_Blended(font, data->players[data->net.playerIndexUdp].pseudo, black);
+  origin.x = 470;
+  origin.y = 105;
+  SDL_BlitSurface(life, NULL, ui, &origin);
+  SDL_FreeSurface(life);
+  Texture uiTex(ui);
+
+  glDisable(GL_DEPTH_TEST);
+  glDisable(GL_CULL_FACE);
+  glDisable(GL_LIGHTING);
+  glUseProgram(0);
+  glEnable(GL_TEXTURE_2D);
+  glEnable(GL_BLEND);
+  glBlendEquation(GL_FUNC_ADD);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  glBegin(GL_QUADS);
+  uiTex.Bind(0);
+  glTexCoord2i(0, 0);
+  glVertex3f(-1 - 0.05 * oculus, 1, 0);
+  glTexCoord2i(0, 1);
+  glVertex3f(-1 - 0.05 * oculus, -1, 0);
+  glTexCoord2i(1, 1);
+  glVertex3f(1 - 0.05 * oculus, -1, 0);
+  glTexCoord2i(1, 0);
+  glVertex3f(1 - 0.05 * oculus, 1, 0);
+  glEnd();
+
+  glEnable(GL_DEPTH_TEST);
+  glEnable(GL_CULL_FACE);
+  glEnable(GL_LIGHTING);
+  glCullFace(GL_BACK);
+  glDisable(GL_BLEND);
 }

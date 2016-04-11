@@ -76,6 +76,7 @@ int	game()
   SDL_Surface		*surface = NULL;
   Menu			*menu = new Menu(screen, &items);
   ovrHmd		hmd;
+  Shader		barrel("shaders/barrel_roll");
 
   ovr_Initialize(0);
   hmd = ovrHmd_Create(0);
@@ -93,6 +94,7 @@ int	game()
   SDL_StartTextInput();
   data->config.oculusHmd = hmd;
   data->config.oculus = (hmd != NULL);
+  barrel.Bind();
   while (data->game.running)
     {
       display.UpdateMenu(menu, items, &pos, screen, surface, data);

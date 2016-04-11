@@ -57,12 +57,11 @@ Tchat::~Tchat()
   SDL_FreeSurface(this->footer);
 }
 
-void Tchat::display(SDL_Rect pos, SDL_Surface *to)
+void Tchat::display(SDL_Rect pos, SDL_Surface *to, SDL_Color grey)
 {
   SDL_Rect text_pos = {pos.x + 42, pos.h - this->footer->h - 40, pos.w, pos.h};
   SDL_Surface *text, *pseudo;
-  SDL_Color grey = {82, 82, 82, 0},
-	    black = {0, 0, 0, 0};
+  SDL_Color black = {0, 0, 0, 255};
   std::string pseudonym, msg;
   this->background = IMG_Load(TCHAT_BACKGROUND);
   size_t position;
