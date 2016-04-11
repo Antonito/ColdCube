@@ -10,7 +10,6 @@
 #include <iostream>
 #include <sys/time.h>
 
-
 Tchat::Tchat()
 {
   Tchat(0);
@@ -74,12 +73,12 @@ void Tchat::display(SDL_Rect pos, SDL_Surface *to, SDL_Color grey)
     pseudo = NULL;
     if (position != std::string::npos)
       {
-	pseudonym = this->messages[i].substr(0, position + 1);
-	msg = this->messages[i].substr(position + 1);
-	pseudo = TTF_RenderUTF8_Blended(this->name_font, pseudonym.c_str(), black);
-	SDL_BlitSurface(pseudo, NULL, this->background, &text_pos);
-	if (pseudo)
-	  text_pos.x += pseudo->w + 10;
+    	pseudonym = this->messages[i].substr(0, position + 1);
+    	msg = this->messages[i].substr(position + 1);
+    	pseudo = TTF_RenderUTF8_Blended(this->name_font, pseudonym.c_str(), black);
+    	SDL_BlitSurface(pseudo, NULL, this->background, &text_pos);
+    	if (pseudo)
+    	  text_pos.x += pseudo->w + 10;
       }
     text = TTF_RenderUTF8_Blended(this->text_font, msg.c_str(), grey);
     SDL_BlitSurface(text, NULL, this->background, &text_pos);

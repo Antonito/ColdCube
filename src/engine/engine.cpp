@@ -52,7 +52,7 @@ int	engineMain(Displayer &display, t_data *data)
       render = 0;
       transform.GetPos() = vec3(0, 0, 0);
       display.Clear(0.0f, 0.3f, 0.8f, 1.0f);
-      while (render < data->config.oculus + 1)
+      while (render < (data->config.oculus && data->config.oculusHmd) + 1)
 	{
 	  if (data->config.oculus && data->config.oculusHmd && render == 0)
 	    leftEye.Bind();
@@ -129,6 +129,7 @@ void	DrawUI(t_data *data, bool oculus)
   SDL_BlitSurface(life, NULL, ui, &origin);
   SDL_FreeSurface(life);
   Texture uiTex(ui);
+  // SDL_FreeSurface(ui);
 
   glDisable(GL_DEPTH_TEST);
   glDisable(GL_CULL_FACE);

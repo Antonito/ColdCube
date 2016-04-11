@@ -41,6 +41,7 @@ Texture::Texture(SDL_Surface *surface)
       std::cerr << "Invalid SDL_Surface: aborting" << std::endl;
       exit(1);
     }
+  m_temp = false;
   glGenTextures(1, &m_texture);
   glBindTexture(GL_TEXTURE_2D, m_texture);
 
