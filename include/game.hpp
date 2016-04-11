@@ -60,6 +60,14 @@
 # define MUSIC_MENU			"assets/musics/menu_music.ogg"
 
 //
+// Game Musics
+//
+# define MUSIC_ONE_GAME			"assets/musics/game/0.ogg"
+# define MUSIC_TWO_GAME			"assets/musics/game/1.ogg"
+# define MUSIC_THREE_GAME		"assets/musics/game/2.ogg"
+# define NB_GAME_MUSIC			3
+
+//
 // Game elements
 //
 
@@ -122,6 +130,7 @@
 # include "engine/displayer.hpp"
 # include "common_structs.hpp"
 
+void		selectGameMusic(t_data *, bool);
 unsigned int	getDamage(int, int);
 int		engineMain(Displayer &, t_data *);
 void		setAzerty(t_keys *);

@@ -439,7 +439,6 @@ int	startGame(t_data *data, std::vector<menuItem> &items, Displayer &disp)
 #ifdef	DEBUG
       std::clog << "TCP OK\n";
 #endif
-      bunny_sound_stop(&data->menuMusic->sound);
       if (!room(disp, data))
       {
 	write(data->net.tcp.sock, "/r", 2);
@@ -448,7 +447,6 @@ int	startGame(t_data *data, std::vector<menuItem> &items, Displayer &disp)
 #else
 	close(data->net.tcp.sock);
 #endif
-	bunny_sound_play(&data->menuMusic->sound);
 	data->net.tcp.run = 0;
 	data->net.udp.run_send = 0;
 	data->net.udp.run = 0;
@@ -459,6 +457,9 @@ int	startGame(t_data *data, std::vector<menuItem> &items, Displayer &disp)
 #ifdef	DEBUG
 	  std::clog << "UDP OK\n";
 #endif
+	  selectGameMusic(data, false);
+	  bunny_sound_stop(&data->menuMusic->sound);
+	  bunny_sound_play(&data->gameMusic->sound);
 	  setEvent(&data->players[data->net.playerIndexUdp].events, IS_CONNECTED, true);
 	  engineMain(disp, data);
 	  write(data->net.tcp.sock, "/r", 2);
@@ -473,8 +474,9 @@ int	startGame(t_data *data, std::vector<menuItem> &items, Displayer &disp)
 	  close(data->net.tcp.sock);
 #endif
 	  setEvent(&data->players[data->net.playerIndexUdp].events, IS_CONNECTED, false);
+	  bunny_sound_stop(&data->gameMusic->sound);
+	  bunny_sound_play(&data->menuMusic->sound);
 	}
-      bunny_sound_play(&data->menuMusic->sound);
     }
   data->net.tcp.run = 0;
   data->net.udp.run_send = 0;
