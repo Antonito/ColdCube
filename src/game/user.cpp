@@ -37,9 +37,9 @@ void	User::sprint(int state)
 //   ;
 // }
 
-void		User::shoot(bool shoot)
+void			User::shoot(bool shoot)
 {
-  static bool	isShooting = false;
+  static bool		isShooting = false;
 
   if (isShooting)
     {

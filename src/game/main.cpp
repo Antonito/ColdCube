@@ -12,6 +12,8 @@
 t_cheat		cheat;
 #endif
 
+bool		sentPacket = false;
+
 void	setAzerty(t_keys *keys)
 {
   keys->forward = KEY_Z;
