@@ -402,6 +402,8 @@ int	startGame(t_data *data, std::vector<menuItem> &items, Displayer &disp)
 
   data->config.musicVolume = items[8].value;
   data->config.effectsVolume = items[9].value;
+  bunny_sound_volume(&data->menuMusic->sound, (double)data->config.musicVolume);
+  bunny_sound_volume(&data->menuEffect->sound, (double)data->config.effectsVolume);
   if (data->players[0].weapons[0].shootSound)
     bunny_sound_volume(&data->players[0].weapons[0].shootSound->sound, (double)data->config.effectsVolume);
   if (data->players[0].weapons[1].shootSound)
@@ -442,10 +444,11 @@ int	startGame(t_data *data, std::vector<menuItem> &items, Displayer &disp)
       {
 	write(data->net.tcp.sock, "/r", 2);
 #ifdef _WIN32
-	  closesocket(data->net.tcp.sock);
+	closesocket(data->net.tcp.sock);
 #else
-	  close(data->net.tcp.sock);
+	close(data->net.tcp.sock);
 #endif
+	bunny_sound_play(&data->menuMusic->sound);
 	data->net.tcp.run = 0;
 	data->net.udp.run_send = 0;
 	data->net.udp.run = 0;
@@ -487,7 +490,8 @@ int			minUdpID(t_data *data)
   return (-1);
 }
 
-void			display_name(t_player *players, int pos, SDL_Surface *to, TTF_Font *font)
+void			display_name(t_player *players, int pos,
+				     SDL_Surface *to, TTF_Font *font)
 {
   SDL_Rect		positions[] = {{1356, 61, 200, 200},
 				       {1531, 157, 200, 200},
@@ -888,7 +892,7 @@ void			Displayer::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
 	  break;
 	case SDL_TEXTINPUT:
 	  if (items[menu->currentItem].type == MENU_TEXTINPUT &&
-	      (   (menu->currentItem != 1 && items[menu->currentItem].text.length() < 16)
+	      ((menu->currentItem != 1 && items[menu->currentItem].text.length() < 16)
 	       || (menu->currentItem == 1 && items[menu->currentItem].text.length() < 10)))
 	    {
 	      if (items[menu->currentItem].text == " ")
