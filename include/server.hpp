@@ -79,6 +79,7 @@ typedef struct		s_all
   int			isPackage[10];
   int			nb_actual;
   int			tmpIndex;
+  int                   cli_shoot;
   pthread_t		aiThread;
   t_player		*ai;
 }			t_all;

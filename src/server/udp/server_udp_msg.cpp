@@ -23,17 +23,35 @@ void		udps_send_to_all(t_all *all)
 	}
     }
   memset(all->isPackage, 0, sizeof(int) * 10);
+  all->cli_shoot = 0;
 }
 
 void		set_cli_buff(t_all *all, int index)
 {
   int		i;
+  uint32_t      event;
+  char          *tmp;
+  int           n;
 
+  i = 0;
+  event = 0;
+  n = 4;
+  tmp = (char *)&event;
+  while (i < sizeof(uint_32))
+  {
+      tmp[i] = all->udp->buff[38 + i];
+      ++i;
+  }
+  if (getEvent(&event, SHOOT))
+      all->cli_shoot = 1;
   i = -1;
-  while (++i < 42)
+  if (all->cli_shoot)
+      n = 0;
+  while (++i < 42 - n)
     all->udp->cli_buff[index][i] = all->udp->buff[i];
   all->timeout[index] = 1;
   all->isPackage[index] = 1;
+  all->cli_shoot = 1;
 }
 
 void		udps_check_timeout(t_all *all)

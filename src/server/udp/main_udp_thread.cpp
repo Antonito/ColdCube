@@ -40,6 +40,7 @@ void			udp_thread(t_all *all)
   struct timeval	t2;
 
   all->udp->action = 1;
+  all->cli_shoot = 0;
   all->udp->cli_addrl = sizeof(all->udp->tmp_sock);
   z1 = time(NULL);
   gettimeofday(&t1, NULL);
