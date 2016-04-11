@@ -373,6 +373,7 @@ int	startGame(t_data *data, std::vector<menuItem> &items, Displayer &disp)
 
   data->config.musicVolume = items[8].value;
   data->config.effectsVolume = items[9].value;
+  data->config.brightness = items[10].value;
   bunny_sound_volume(&data->menuMusic->sound, (double)data->config.musicVolume);
   bunny_sound_volume(&data->menuEffect->sound, (double)data->config.effectsVolume);
   if (data->players[0].weapons[0].shootSound)

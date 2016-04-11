@@ -153,6 +153,7 @@ typedef struct		s_config
   unsigned char		musicVolume;
   unsigned char		effectsVolume;
   t_keys		keys;
+  int			brightness;
 }			t_config;
 
 typedef	struct		s_data
