@@ -128,8 +128,8 @@ int     User::IsShooted(t_player *p, Score &advTeam, Map &map)
       headshot = false;
       if (getEvent(p[i].events, SHOOT))
 	{
-	  printf("Player[%d] shooted\n", i);
-	  if (i != m_player->id && p[i].weapons[p[i].selected_weapon].shootSound)
+	  printf("I am %d\n", id);
+	  if (i != id && p[i].weapons[p[i].selected_weapon].shootSound)
 	    {
 	      bunny_sound_play(&p[i].weapons[p[i].selected_weapon].shootSound->sound);
 	    }
