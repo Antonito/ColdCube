@@ -35,18 +35,16 @@ void		set_cli_buff(t_all *all, int index)
 
   i = 0;
   event = 0;
-  n = 4;
+  n = 0;
   tmp = (char *)&event;
-  while (i < sizeof(uint_32))
+  while (i < (int)sizeof(uint32_t))
   {
       tmp[i] = all->udp->buff[38 + i];
       ++i;
   }
-  if (getEvent(&event, SHOOT))
+  if (getEvent(event, SHOOT))
       all->cli_shoot = 1;
   i = -1;
-  if (all->cli_shoot)
-      n = 0;
   while (++i < 42 - n)
     all->udp->cli_buff[index][i] = all->udp->buff[i];
   all->timeout[index] = 1;

@@ -84,7 +84,7 @@ NAMESERV=		server_coldcube
 NAMEGEN=		generator_coldcube
 
 HEAD=			-Iinclude			\
-			-I/lib/lapin/include
+			-Ilib/lapin/include
 
 # Flags
 
@@ -114,11 +114,6 @@ endif
 RM=			rm -f
 
 LIB=			-Llib/lapin/lib			\
-			-llapin 			\
-			-lsfml-audio 			\
-			-lsfml-graphics 		\
-			-lsfml-window 			\
-			-lsfml-system 			\
 			-lstdc++			\
 			-lpthread			\
 			-lSDL2				\

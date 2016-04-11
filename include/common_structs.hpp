@@ -7,7 +7,7 @@
 # endif
 
 //# include <SFML/Audio.hpp>
-# include <lapin.h>
+# include "lapin.h"
 
 # include <stdbool.h>
 # include <stdint.h>
