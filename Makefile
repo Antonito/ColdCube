@@ -84,7 +84,7 @@ NAMESERV=		server_coldcube
 NAMEGEN=		generator_coldcube
 
 HEAD=			-Iinclude			\
-			-I/home/${USER}/.froot/include
+			-I/lib/lapin/include
 
 # Flags
 
@@ -113,8 +113,7 @@ endif
 
 RM=			rm -f
 
-LIB=			-L/usr/local/lib		\
-			-L/home/${USER}/.froot/lib	\
+LIB=			-Llib/lapin/lib			\
 			-llapin 			\
 			-lsfml-audio 			\
 			-lsfml-graphics 		\
