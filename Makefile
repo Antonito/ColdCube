@@ -1,5 +1,5 @@
 # Useful variables
-DEBUG=			no
+DEBUG=			yes
 CHEAT=			no
 
 # Sources
@@ -100,10 +100,6 @@ ifeq ($(CHEAT), yes)
 CXXFLAGS+= -D CHEAT
 CFLAGS+= -D CHEAT
 endif
-
-LIB_PATH=	-Wl -rpath lib/lapin/lib
-
-CXXLAGS+=	$(LIB_PATH)
 
 # Compiler
 
