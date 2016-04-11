@@ -681,6 +681,7 @@ void			Displayer::UpdateRoom(t_data *room, SDL_Rect *pos,
       glEnable(GL_CULL_FACE);
       glEnable(GL_LIGHTING);
       glCullFace(GL_BACK);
+      SDL_FreeSurface(final);
 
       SDL_GL_SwapWindow(m_window);
 
@@ -995,7 +996,7 @@ void			Displayer::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
       glEnable(GL_CULL_FACE);
       glEnable(GL_LIGHTING);
       glCullFace(GL_BACK);
-
+      SDL_FreeSurface(final);
       SDL_GL_SwapWindow(m_window);
     }
   else
