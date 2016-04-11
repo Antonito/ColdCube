@@ -458,6 +458,7 @@ int	startGame(t_data *data, std::vector<menuItem> &items, Displayer &disp)
 	  std::clog << "UDP OK\n";
 #endif
 	  selectGameMusic(data, false);
+	  bunny_sound_volume(&data->gameMusic->sound, (double)data->config.musicVolume);
 	  bunny_sound_stop(&data->menuMusic->sound);
 	  bunny_sound_play(&data->gameMusic->sound);
 	  setEvent(&data->players[data->net.playerIndexUdp].events, IS_CONNECTED, true);
