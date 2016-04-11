@@ -52,7 +52,6 @@ void		User::shoot(bool shoot)
     }
   if (shoot && m_player->weapons[m_player->selected_weapon].loaded < 0)
     {
-      setEvent(&m_player->events, SHOOT, shoot);
       if (!isShooting && m_player->weapons[m_player->selected_weapon].shootSound)
 	{
 	  bunny_sound_play(&m_player->weapons[m_player->selected_weapon].shootSound->sound);
@@ -65,7 +64,6 @@ void		User::shoot(bool shoot)
     {
       if (m_player->weapons[m_player->selected_weapon].loaded > 0)
 	{
-	  setEvent(&m_player->events, SHOOT, shoot);
 	  --m_player->weapons[m_player->selected_weapon].loaded;
 	  if (!isShooting && m_player->weapons[m_player->selected_weapon].shootSound)
 	    {
