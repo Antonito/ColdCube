@@ -6,6 +6,9 @@
 #  include <GL/glew.h>
 # endif
 
+//# include <SFML/Audio.hpp>
+# include "lapin.h"
+
 # include <stdbool.h>
 # include <stdint.h>
 # include <pthread.h>
@@ -82,20 +85,23 @@ typedef glm::vec3	vector3;
 */
 typedef enum		e_weapon
   {
-    RIFLE_WEAPON,
-    PISTOL_WEAPON,
-    KNIFE_WEAPON
-  }			t_eweapon;
+    KNIFE_WEAPON	= 0,
+    PISTOL_WEAPON	= 1,
+    RIFLE_WEAPON	= 2
+  }			e_eweapon;
+
+typedef struct		s_sound
+{
+  //  sf::Sound		sound;
+  //sf::SoundBuffer	buffer;
+}			t_sound;
 
 typedef struct		s_weapon
 {
   int			id; /* Id de l'arme */
   int			loaded;
   int			ammo; /* Total de munitions */
-  int			power;
-  int			sound_fire;
-  int			sound_reload;
-  int			sound_empty;
+  t_bunny_music		*shootSound;
 }			t_weapon;
 
 /*
@@ -133,6 +139,9 @@ typedef struct		s_keys
   e_eventKey		jump;
   e_eventKey		aim;
   e_eventKey		fire;
+  e_eventKey		weapon1;
+  e_eventKey		weapon2;
+  e_eventKey		weapon3;
 }			t_keys;
 
 typedef struct		s_config
@@ -153,7 +162,9 @@ typedef	struct		s_data
   t_config		config;
   SDL_Surface		*screen;
   Tchat			tchat;
-  char			sounds[];
+  t_bunny_music		*menuEffect;
+  t_bunny_music		*menuMusic;
+  t_bunny_music		*gameMusic;
 }			t_data;
 
 #endif // !COMMON_STRUCTS_H_

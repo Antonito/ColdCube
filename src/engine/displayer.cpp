@@ -5,11 +5,10 @@
 #include <unistd.h>
 #include <GL/glew.h>
 #include <GL/gl.h>
-#include <GL/glx.h>
+//#include <GL/glx.h>
 #include <sys/time.h>
 #include "engine/displayer.hpp"
 #include <iostream>
-#include "common_structs.hpp"
 #include "game.hpp"
 #include "tools.hpp"
 #include "Menu.h"
@@ -90,8 +89,8 @@ void	Displayer::Update(Camera &cam, Map &map, Player &player,
   int			t = cur - old + 1;
   float			dTime = t / 1000.0f;
   old = cur;
-  SDL_Event	e;
-  static bool		eventKey[NB_KEY_EVENT];
+  SDL_Event		e;
+  static bool		eventKey[NB_KEY_EVENT] = {0};
 
   tot += 1000 / t;
   nb++;
@@ -116,6 +115,7 @@ void	Displayer::Update(Camera &cam, Map &map, Player &player,
 	      eventKey[MOUSE_RIGHT] = true;
 	      break ;
 	    }
+	  break;
 	case SDL_MOUSEBUTTONUP:
 	  switch (e.button.button)
 	    {
@@ -134,114 +134,128 @@ void	Displayer::Update(Camera &cam, Map &map, Player &player,
 	  if (data->tchat.isFocus())
 	    switch (e.key.keysym.sym)
 	      {
-		case (SDLK_RETURN):
-		  data->tchat.send(data);
-		  break;
-		case (SDLK_ESCAPE):
-		  data->tchat.focus(false);
-		  break;
-		case (SDLK_BACKSPACE):
-		  data->tchat.backspace();
-		  break;
-		case (SDLK_LEFT):
-		  data->tchat.moveLeft();
-		  break;
-		case (SDLK_RIGHT):
-		  data->tchat.moveRight();
-		  break;
+	      case (SDLK_RETURN):
+		data->tchat.send(data);
+		break;
+	      case (SDLK_ESCAPE):
+		data->tchat.focus(false);
+		break;
+	      case (SDLK_BACKSPACE):
+		data->tchat.backspace();
+		break;
+	      case (SDLK_LEFT):
+		data->tchat.moveLeft();
+		break;
+	      case (SDLK_RIGHT):
+		data->tchat.moveRight();
+		break;
 	      }
 	  else
 	    switch (e.key.keysym.sym)
 	      {
-		case (SDLK_RETURN):
-		  data->tchat.focus(true);
-		  break ;
-		case (SDLK_z):
-		  eventKey[KEY_Z] = true;
-		  break ;
-		case (SDLK_s):
-		  eventKey[KEY_S] = true;
-		  break ;
-		case (SDLK_q):
-		  eventKey[KEY_Q] = true;
-		  break ;
-		case (SDLK_d):
-		  eventKey[KEY_D] = true;
-		  break ;
-		case (SDLK_a):
-		  eventKey[KEY_A] = true;
-		  break ;
-		case (SDLK_w):
-		  eventKey[KEY_W] = true;
-		  break ;
-		case (SDLK_SPACE):
-		  eventKey[KEY_SPACE] = true;
-		  break ;
-		  // case (SDLK_q):
-		  //   player.GetPos() += normalize(vec3((cross(cam.GetFor(), vec3(0, 1, 0))).x, (cross(cam.GetFor(), vec3(0, 1, 0))).y, 0));
-		  //   break ;
-		  // case (SDLK_d):
-		  //   player.GetPos() -= normalize(vec3((cross(cam.GetFor(), vec3(0, 1, 0))).x, (cross(cam.GetFor(), vec3(0, 1, 0))).y, 0));
-		  //   break ;
-		case (SDLK_ESCAPE):
-		  m_isClosed = true;
-		  break ;
-		case (SDLK_p):
-		  player.Jump();
-		  break ;
+	      case (SDLK_RETURN):
+		data->tchat.focus(true);
+		break ;
+	      case (SDLK_z):
+		eventKey[KEY_Z] = true;
+		break ;
+	      case (SDLK_s):
+		eventKey[KEY_S] = true;
+		break ;
+	      case (SDLK_q):
+		eventKey[KEY_Q] = true;
+		break ;
+	      case (SDLK_d):
+		eventKey[KEY_D] = true;
+		break ;
+	      case (SDLK_a):
+		eventKey[KEY_A] = true;
+		break ;
+	      case (SDLK_w):
+		eventKey[KEY_W] = true;
+		break ;
+	      case (SDLK_1):
+		eventKey[KEY_1] = true;
+		break ;
+	      case (SDLK_2):
+		eventKey[KEY_2] = true;
+		break ;
+	      case (SDLK_3):
+		eventKey[KEY_3] = true;
+		break ;
+	      case(SDLK_AMPERSAND):
+		eventKey[KEY_COMMERCIAL_AND] = true;
+		break;
+	      case (SDLK_QUOTEDBL):
+		eventKey[KEY_QUOTE] = true;
+		break ;
+	      case (SDLK_SPACE):
+		eventKey[KEY_SPACE] = true;
+		break ;
+		// case (SDLK_q):
+		//   player.GetPos() += normalize(vec3((cross(cam.GetFor(), vec3(0, 1, 0))).x, (cross(cam.GetFor(), vec3(0, 1, 0))).y, 0));
+		//   break ;
+		// case (SDLK_d):
+		//   player.GetPos() -= normalize(vec3((cross(cam.GetFor(), vec3(0, 1, 0))).x, (cross(cam.GetFor(), vec3(0, 1, 0))).y, 0));
+		//   break ;
+	      case (SDLK_ESCAPE):
+		m_isClosed = true;
+		break ;
+	      case (SDLK_p):
+		player.Jump();
+		break ;
 #ifdef	DEBUG
-
-		case (SDLK_F1):
-		  map.PutCube(1, ivec3(cam.GetPos() + cam.GetFor() * 2.0f));
-		  break ;
-		case (SDLK_F2):
-		  map.PutCube(2, ivec3(cam.GetPos() + cam.GetFor() * 2.0f));
-		  break ;
-		case (SDLK_F3):
-		  map.PutCube(3, ivec3(cam.GetPos() + cam.GetFor() * 2.0f));
-		  break ;
-		case (SDLK_F4):
-		  map.PutCube(4, ivec3(cam.GetPos() + cam.GetFor() * 2.0f));
-		  break ;
-		case (SDLK_F5):
-		  map.PutCube(5, ivec3(cam.GetPos() + cam.GetFor() * 2.0f));
-		  break ;
-		case (SDLK_F6):
-		  map.PutCube(6, ivec3(cam.GetPos() + cam.GetFor() * 2.0f));
-		  break ;
-		case (SDLK_F10):
-		  map.PutCube(0, ivec3(cam.GetPos() + cam.GetFor() * 2.0f));
-		  break ;
-		case (SDLK_v):
-		  map.Save();
-		  break ;
-		case (SDLK_t):
-		  player.GetThird() = !player.GetThird();
-		  break ;
+	      case (SDLK_F1):
+		map.PutCube(1, ivec3(cam.GetPos() + cam.GetFor() * 2.0f));
+		break ;
+	      case (SDLK_F2):
+		map.PutCube(2, ivec3(cam.GetPos() + cam.GetFor() * 2.0f));
+		break ;
+	      case (SDLK_F3):
+		map.PutCube(3, ivec3(cam.GetPos() + cam.GetFor() * 2.0f));
+		break ;
+	      case (SDLK_F4):
+		map.PutCube(4, ivec3(cam.GetPos() + cam.GetFor() * 2.0f));
+		break ;
+	      case (SDLK_F5):
+		map.PutCube(5, ivec3(cam.GetPos() + cam.GetFor() * 2.0f));
+		break ;
+	      case (SDLK_F6):
+		map.PutCube(6, ivec3(cam.GetPos() + cam.GetFor() * 2.0f));
+		break ;
+	      case (SDLK_F10):
+		map.PutCube(0, ivec3(cam.GetPos() + cam.GetFor() * 2.0f));
+		break ;
+	      case (SDLK_v):
+		map.Save();
+		break ;
+	      case (SDLK_t):
+		player.GetThird() = !player.GetThird();
+		break ;
 #endif
 #ifdef	CHEAT
-		case (SDLK_EQUALS):
-		  if (data->players[data->net.playerIndexUdp].life < 100)
-		    ++data->players[data->net.playerIndexUdp].life;
-		  break ;
-		case (SDLK_MINUS):
-		  if (data->players[data->net.playerIndexUdp].life)
-		    --data->players[data->net.playerIndexUdp].life;
-		  break ;
-		case(SDLK_i):
-		  cheat.selected.ammo = (cheat.selected.ammo) ?  false : true;
-		  break ;
-		case(SDLK_j):
-		  cheat.selected.life = (cheat.selected.life) ?  false : true;
-		  break ;
-		case(SDLK_k):
-		  cheat.selected.fly = (cheat.selected.fly) ?  false : true;
-		  cheat.selected.collisions = cheat.selected.fly;
-		  break ;
-		case(SDLK_l):
-		  cheat.selected.collisions =
-		    (cheat.selected.collisions) ?  false : true;
-		  break ;
+	      case (SDLK_EQUALS):
+		if (data->players[data->net.playerIndexUdp].life < 100)
+		  ++data->players[data->net.playerIndexUdp].life;
+		break ;
+	      case (SDLK_MINUS):
+		if (data->players[data->net.playerIndexUdp].life)
+		  --data->players[data->net.playerIndexUdp].life;
+		break ;
+	      case(SDLK_i):
+		cheat.selected.ammo = (cheat.selected.ammo) ?  false : true;
+		break ;
+	      case(SDLK_j):
+		cheat.selected.life = (cheat.selected.life) ?  false : true;
+		break ;
+	      case(SDLK_k):
+		cheat.selected.fly = (cheat.selected.fly) ?  false : true;
+		cheat.selected.collisions = cheat.selected.fly;
+		break ;
+	      case(SDLK_l):
+		cheat.selected.collisions =
+		  (cheat.selected.collisions) ?  false : true;
+		break ;
 #endif
 	      }
 	  break ;
@@ -269,6 +283,21 @@ void	Displayer::Update(Camera &cam, Map &map, Player &player,
 	    case (SDLK_SPACE):
 	      eventKey[KEY_SPACE] = false;
 	      break ;
+	    case (SDLK_1):
+	      eventKey[KEY_1] = false;
+	      break ;
+	    case (SDLK_2):
+	      eventKey[KEY_2] = false;
+	      break ;
+	    case (SDLK_3):
+	      eventKey[KEY_3] = false;
+	      break ;
+	    case(SDLK_AMPERSAND):
+	      eventKey[KEY_COMMERCIAL_AND] = false;
+	      break;
+	    case (SDLK_QUOTEDBL):
+	      eventKey[KEY_QUOTE] = false;
+	      break ;
 	    }
 	  break;
 	case (SDL_MOUSEMOTION):
@@ -282,24 +311,37 @@ void	Displayer::Update(Camera &cam, Map &map, Player &player,
 	  break ;
 	}
     }
+
+  // Oculus
   if (cam.isOculus())
     cam.UpdateFor();
+
+  // Movement
   if (eventKey[data->config.keys.forward])
     player.Move(vec2(cam.GetFor().x, cam.GetFor().y));
   else if (eventKey[data->config.keys.backward])
     player.Move(-vec2(cam.GetFor().x, cam.GetFor().y));
-
   if (eventKey[data->config.keys.left])
     player.Move(-vec2(normalize(cross(cam.GetFor(), vec3(0, 0, 1))).x, cross(cam.GetFor(), vec3(0, 0, 1)).y));
   else if (eventKey[data->config.keys.right])
     player.Move(vec2(normalize(cross(cam.GetFor(), vec3(0, 0, 1))).x, cross(cam.GetFor(), vec3(0, 0, 1)).y));
 
+  // Jump and Shoot
   if (eventKey[data->config.keys.jump])
     player.Jump();
   if (eventKey[data->config.keys.fire])
     user.shoot(true);
   else
     user.shoot(false);
+
+  // Switch weapon
+  if (eventKey[data->config.keys.weapon1])
+    user.changeWeapon(RIFLE_WEAPON);
+  else if (eventKey[data->config.keys.weapon2])
+    user.changeWeapon(PISTOL_WEAPON);
+  else if (eventKey[data->config.keys.weapon3])
+    user.changeWeapon(KNIFE_WEAPON);
+
   #ifdef CHEAT
   if (cheat.selected.fly && eventKey[data->config.keys.forward])
     player.MoveCheat(cam.GetFor());
@@ -310,6 +352,7 @@ void	Displayer::Update(Camera &cam, Map &map, Player &player,
   #else
   player.Update(map, dTime);
   #endif
+
   player.SetCam(cam, player.GetThird(), data->players + player.GetId());
 }
 
@@ -322,12 +365,23 @@ int	startGame(t_data *data, std::vector<menuItem> &items, Displayer &disp)
   cheat.selected.fly = false;
   cheat.selected.collisions = false;
 #endif
+
   if (data->config.keyboard == QWERTY_MODE)
     setQwerty(&data->config.keys);
   else if (data->config.keyboard == AZERTY_MODE)
     setAzerty(&data->config.keys);
+
   data->config.musicVolume = items[8].value;
   data->config.effectsVolume = items[9].value;
+  bunny_sound_volume(&data->menuMusic->sound, (double)data->config.musicVolume);
+  bunny_sound_volume(&data->menuEffect->sound, (double)data->config.effectsVolume);
+  if (data->players[0].weapons[0].shootSound)
+    bunny_sound_volume(&data->players[0].weapons[0].shootSound->sound, (double)data->config.effectsVolume);
+  if (data->players[0].weapons[1].shootSound)
+    bunny_sound_volume(&data->players[0].weapons[1].shootSound->sound, (double)data->config.effectsVolume);
+  if (data->players[0].weapons[2].shootSound)
+    bunny_sound_volume(&data->players[0].weapons[2].shootSound->sound, (double)data->config.effectsVolume);
+
   data->net.port = atoi(items[3].text.c_str());
   data->net.ip = (char *)items[2].text.c_str();
   data->net.pseudo = (char *)items[1].text.c_str();
@@ -360,9 +414,9 @@ int	startGame(t_data *data, std::vector<menuItem> &items, Displayer &disp)
       {
 	write(data->net.tcp.sock, "/r", 2);
 #ifdef _WIN32
-	  closesocket(data->net.tcp.sock);
+	closesocket(data->net.tcp.sock);
 #else
-	  close(data->net.tcp.sock);
+	close(data->net.tcp.sock);
 #endif
 	data->net.tcp.run = 0;
 	data->net.udp.run_send = 0;
@@ -374,10 +428,15 @@ int	startGame(t_data *data, std::vector<menuItem> &items, Displayer &disp)
 #ifdef	DEBUG
 	  std::clog << "UDP OK\n";
 #endif
-	  setEvent(&data->players[data->net.playerIndexUdp].events, CONNECTED, true);
+	  selectGameMusic(data, false);
+	  bunny_sound_stop(&data->menuMusic->sound);
+	  bunny_sound_play(&data->gameMusic->sound);
+	  setEvent(&data->players[data->net.playerIndexUdp].events, IS_CONNECTED, true);
 	  engineMain(disp, data);
 	  write(data->net.tcp.sock, "/r", 2);
+#ifdef	DEBUG
 	  fprintf(stdout, "tcp fd closed\n");
+#endif
 #ifdef _WIN32
 	  closesocket(data->net.udp.sock);
 	  closesocket(data->net.tcp.sock);
@@ -385,7 +444,9 @@ int	startGame(t_data *data, std::vector<menuItem> &items, Displayer &disp)
 	  close(data->net.udp.sock);
 	  close(data->net.tcp.sock);
 #endif
-	  setEvent(&data->players[data->net.playerIndexUdp].events, CONNECTED, false);
+	  setEvent(&data->players[data->net.playerIndexUdp].events, IS_CONNECTED, false);
+	  bunny_sound_stop(&data->gameMusic->sound);
+	  bunny_sound_play(&data->menuMusic->sound);
 	}
     }
   data->net.tcp.run = 0;
@@ -402,7 +463,8 @@ int			minUdpID(t_data *data)
   return (-1);
 }
 
-void			display_name(t_player *players, int pos, SDL_Surface *to, TTF_Font *font)
+void			display_name(t_player *players, int pos,
+				     SDL_Surface *to, TTF_Font *font)
 {
   SDL_Rect		positions[] = {{1356, 61, 200, 200},
 				       {1531, 157, 200, 200},
@@ -570,10 +632,10 @@ void			Displayer::UpdateRoom(t_data *room, SDL_Rect *pos,
 	}
 
       SDL_Surface	*final = SDL_CreateRGBSurface(0, WIN_X, WIN_Y, 32, 0x000000FF, 0x0000FF00, 0x00FF0000, 0xFF000000);
-      this->Clear(0.0, 0.0, 0.2, 1);
+      this->Clear(0.0, 0.0, 0.0, 1);
       SDL_BlitScaled(eyes, NULL, final, NULL);
-      SetSDL_Rect(&dest, pos->x + 3, pos->y, surface->w, surface->h);
-      SDL_BlitScaled(surface, NULL, final, &dest);
+      SetSDL_Rect(&dest, pos->x + 10, pos->y, surface->w, surface->h);
+      SDL_BlitSurface(surface, NULL, final, &dest);
       Texture left(final);
       glViewport(0, 0, WIN_X / 2, WIN_Y);
 
@@ -585,18 +647,18 @@ void			Displayer::UpdateRoom(t_data *room, SDL_Rect *pos,
 
       glBegin(GL_QUADS);
       glTexCoord2i(0, 0);
-      glVertex3f(-1, 1, 0);
+      glVertex3f(-0.8, 0.5, 0);
       glTexCoord2i(0, 1);
-      glVertex3f(-1, -1, 0);
+      glVertex3f(-0.8, -0.5, 0);
       glTexCoord2i(1, 1);
-      glVertex3f(1, -1, 0);
+      glVertex3f(0.8, -0.5, 0);
       glTexCoord2i(1, 0);
-      glVertex3f(1, 1, 0);
+      glVertex3f(0.8, 0.5, 0);
       glEnd();
 
       SDL_BlitScaled(eyes, NULL, final, NULL);
-      SetSDL_Rect(&dest, pos->x - 3, pos->y, surface->w, surface->h);
-      SDL_BlitScaled(surface, NULL, final, pos);
+      SetSDL_Rect(&dest, pos->x - 10, pos->y, surface->w, surface->h);
+      SDL_BlitSurface(surface, NULL, final, &dest);
 
       Texture right(final);
       glViewport(WIN_X / 2, 0, WIN_X / 2, WIN_Y);
@@ -605,13 +667,13 @@ void			Displayer::UpdateRoom(t_data *room, SDL_Rect *pos,
 
       glBegin(GL_QUADS);
       glTexCoord2i(0, 0);
-      glVertex3f(-1, 1, 0);
+      glVertex3f(-0.8, 0.5, 0);
       glTexCoord2i(0, 1);
-      glVertex3f(-1, -1, 0);
+      glVertex3f(-0.8, -0.5, 0);
       glTexCoord2i(1, 1);
-      glVertex3f(1, -1, 0);
+      glVertex3f(0.8, -0.5, 0);
       glTexCoord2i(1, 0);
-      glVertex3f(1, 1, 0);
+      glVertex3f(0.8, 0.5, 0);
       glEnd();
 
       glEnable(GL_DEPTH_TEST);
@@ -736,18 +798,21 @@ void			Displayer::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
 	  if (event.key.keysym.sym == SDLK_LEFT)
 	    {
 	      menu->moveLeft();
+	      bunny_sound_play(&data->menuEffect->sound);
 	      if (items[menu->currentItem].type == MENU_TEXTINPUT)
 		menu->hold();
 	    }
 	  if (event.key.keysym.sym == SDLK_RIGHT)
 	    {
 	      menu->moveRight();
+	      bunny_sound_play(&data->menuEffect->sound);
 	      if (items[menu->currentItem].type == MENU_TEXTINPUT)
 		menu->hold();
 	    }
 	  if (event.key.keysym.sym == SDLK_UP)
 	    {
 	      menu->moveUp();
+	      bunny_sound_play(&data->menuEffect->sound);
 	      if (items[menu->currentItem].type == MENU_TEXTINPUT)
 		menu->hold();
 	    }
@@ -813,6 +878,7 @@ void			Displayer::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
 	  if (event.key.keysym.sym == SDLK_DOWN)
 	    {
 	      menu->moveDown();
+	      bunny_sound_play(&data->menuEffect->sound);
 	      if (items[menu->currentItem].type == MENU_TEXTINPUT)
 		menu->hold();
 	    }
@@ -822,6 +888,7 @@ void			Displayer::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
 		  || menu->currentItem == 0))
 	    {
 	      menu->moveNext();
+	      bunny_sound_play(&data->menuEffect->sound);
 	      if (items[menu->currentItem].type == MENU_TEXTINPUT)
 		menu->hold();
 	    }
@@ -856,7 +923,7 @@ void			Displayer::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
 	  break;
 	case SDL_TEXTINPUT:
 	  if (items[menu->currentItem].type == MENU_TEXTINPUT &&
-	      (   (menu->currentItem != 1 && items[menu->currentItem].text.length() < 16)
+	      ((menu->currentItem != 1 && items[menu->currentItem].text.length() < 16)
 	       || (menu->currentItem == 1 && items[menu->currentItem].text.length() < 10)))
 	    {
 	      if (items[menu->currentItem].text == " ")
@@ -881,7 +948,7 @@ void			Displayer::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
   if (data->config.oculus)
     {
       SDL_Surface	*final = SDL_CreateRGBSurface(0, WIN_X, WIN_Y, 32, 0x000000FF, 0x0000FF00, 0x00FF0000, 0xFF000000);
-      this->Clear(0.0, 0.0, 0.2, 1);
+      this->Clear(0.0, 0.0, 0.0, 1);
       SDL_BlitScaled(screen, NULL, final, NULL);
       SDL_BlitScaled(surface, NULL, final, pos);
       Texture left(final);
@@ -895,13 +962,13 @@ void			Displayer::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
 
       glBegin(GL_QUADS);
       glTexCoord2i(0, 0);
-      glVertex3f(-1, 1, 0);
+      glVertex3f(-0.8, 0.5, 0);
       glTexCoord2i(0, 1);
-      glVertex3f(-1, -1, 0);
+      glVertex3f(-0.8, -0.5, 0);
       glTexCoord2i(1, 1);
-      glVertex3f(1, -1, 0);
+      glVertex3f(0.8, -0.5, 0);
       glTexCoord2i(1, 0);
-      glVertex3f(1, 1, 0);
+      glVertex3f(0.8, 0.5, 0);
       glEnd();
 
       SDL_BlitScaled(screen, NULL, final, NULL);
@@ -914,13 +981,13 @@ void			Displayer::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
 
       glBegin(GL_QUADS);
       glTexCoord2i(0, 0);
-      glVertex3f(-1, 1, 0);
+      glVertex3f(-0.8, 0.5, 0);
       glTexCoord2i(0, 1);
-      glVertex3f(-1, -1, 0);
+      glVertex3f(-0.8, -0.5, 0);
       glTexCoord2i(1, 1);
-      glVertex3f(1, -1, 0);
+      glVertex3f(0.8, -0.5, 0);
       glTexCoord2i(1, 0);
-      glVertex3f(1, 1, 0);
+      glVertex3f(0.8, 0.5, 0);
       glEnd();
 
       glEnable(GL_DEPTH_TEST);
@@ -938,4 +1005,5 @@ void			Displayer::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
     }
   if (items[menu->currentItem].type == MENU_TEXTINPUT)
     items[menu->currentItem].text.erase(items[menu->currentItem].text.length() - 1);
+  usleep(12000);
 }

@@ -81,8 +81,12 @@ void		*tcp_thread(void *data)
       _data->net.tcp.buff[len] = 0;
       if (strncmp("/s", _data->net.tcp.buff, 2) == 0)
 	tcp_set_pseudo(_data);
+#ifdef	DEBUG
       else if (strncmp("/g", _data->net.tcp.buff, 2) == 0)
 	fprintf(stdout, "We launch the game Here\n");
+#else
+      else if (strncmp("/g", _data->net.tcp.buff, 2) == 0);
+#endif
       else
 	{
 	  std::string str(_data->net.tcp.buff);
@@ -136,7 +140,9 @@ int		clientLaunchTcpc(t_data *data)
       return (-1);
     }
   read(data->net.tcp.sock, tmp, 3);
+#ifdef	DEBUG
   fprintf(stdout, "the tcp index :%d:\n", (int)tmp[0]);
+#endif
   if (tmp[0] == 's')
     {
       close(data->net.tcp.sock);

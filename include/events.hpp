@@ -6,15 +6,15 @@
 
 typedef enum			e_event
   {
-    CONNECTED			= 1,
+    IS_CONNECTED	       	= 1,
     SHOOT			= 2
   }				e_event;
 
 typedef	struct			s_event
 {
-  unsigned int			others : 30;
   unsigned char			connected : 1;
   unsigned char			shoot : 1;
+  unsigned int			others : 30;
 }				t_event;
 
 typedef union			u_uevent

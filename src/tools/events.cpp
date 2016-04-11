@@ -6,7 +6,7 @@ void		setEvent(uint32_t *value, int event, bool stat)
   t_uevent	set;
 
   set.value = *value;
-  if (event == CONNECTED)
+  if (event == IS_CONNECTED)
     set.event.connected = stat;
   else if (event == SHOOT)
     set.event.shoot = stat;
@@ -22,7 +22,7 @@ bool		getEvent(uint32_t value, int event)
   t_uevent	set;
 
   set.value = value;
-  if (event == CONNECTED)
+  if (event == IS_CONNECTED)
     return (set.event.connected);
   else if (event == SHOOT)
     return (set.event.shoot);

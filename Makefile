@@ -1,6 +1,6 @@
 # Useful variables
 DEBUG=			yes
-CHEAT=			yes
+CHEAT=			no
 
 # Sources
 GAME_PREFIX=		src/game/
@@ -84,7 +84,8 @@ NAME=			coldcube
 NAMESERV=		server_coldcube
 NAMEGEN=		generator_coldcube
 
-HEAD=			-Iinclude
+HEAD=			-Iinclude			\
+			-Ilib/lapin/include
 
 # Flags
 
@@ -113,18 +114,23 @@ endif
 
 RM=			rm -f
 
-LIB=			-lstdc++			\
+LIB=			-Llib/lapin/lib			\
+			-llapin 			\
+			-lsfml-audio 			\
+			-lsfml-graphics 		\
+			-lsfml-window 			\
+			-lsfml-system 			\
+			-lstdc++			\
 			-lpthread			\
 			-lSDL2				\
 			-lSDL2_ttf			\
 			-lSDL2_image			\
 			-lGL				\
-			-lm				\
 			-lGLEW				\
 			-lglut				\
-			-lX11				\
 			-lOVR				\
-			-ldl
+			-ldl				\
+			-lm
 
 # Obj link
 

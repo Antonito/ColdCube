@@ -9,13 +9,13 @@ void main()
   vec2	p = texCoord;
   p = 2 * p - 1.0;
   float radius = length(p);
-  radius = pow(radius, 2);
+  radius = pow(radius, 1) / 3.0;
   p = p * (1 + radius);
-  p.y *= 1.5;
-  p /= 2;
+  // p.y *= 1.5;
+  p /= 1.2;
 
   vec2 r = 0.5 * (p + 1.0);
-  p *= 1.02;
+  p *= 1.012;
   vec2 g = 0.5 * (p + 1.0);
   p *= 1.02;
   vec2 b = 0.5 * (p + 1.0);

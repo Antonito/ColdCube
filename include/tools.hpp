@@ -12,5 +12,7 @@ int	createUdpPacket(t_data *, t_player *);
 int	readUdpPacket(t_data *);
 bool	checkPacket(char *);
 char	**my_str_to_wordtab(char *, char);
+void	playSound(t_sound *);
+void	myAudioCallBack(void *, Uint8 *, int);
 
 #endif	/* !TOOLS_H_ */

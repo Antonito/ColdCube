@@ -4,6 +4,7 @@
 #endif
 
 #include "game.hpp"
+#include "tools.hpp"
 
 User::User(t_player *player)
 {
@@ -36,9 +37,54 @@ void	User::sprint(int state)
 //   ;
 // }
 
-void	User::shoot(bool shoot)
+void		User::shoot(bool shoot)
 {
-  setEvent(&m_player->events, SHOOT, shoot);
+  static bool	isShooting = false;
+
+  if (isShooting)
+    {
+      if (m_player->weapons[m_player->selected_weapon].shootSound &&
+	  bunny_music_get_cursor(m_player->weapons[m_player->selected_weapon].shootSound) <= 0.01)
+	{
+	  isShooting = false;
+	  bunny_sound_stop(&m_player->weapons[m_player->selected_weapon].shootSound->sound);
+	}
+    }
+  if (shoot && m_player->weapons[m_player->selected_weapon].loaded < 0)
+    {
+#ifdef	DEBUG
+      std::clog << "Shoot, unlimited ammo\n";
+#endif
+      setEvent(&m_player->events, SHOOT, shoot);
+      if (!isShooting && m_player->weapons[m_player->selected_weapon].shootSound)
+	{
+	  bunny_sound_play(&m_player->weapons[m_player->selected_weapon].shootSound->sound);
+	  isShooting = true;
+	}
+    }
+  else if (shoot)
+    {
+      if (m_player->weapons[m_player->selected_weapon].loaded > 0)
+	{
+#ifdef	DEBUG
+	  std::clog << "Shooting\n";
+#endif
+	  setEvent(&m_player->events, SHOOT, shoot);
+	  --m_player->weapons[m_player->selected_weapon].loaded;
+	  if (!isShooting && m_player->weapons[m_player->selected_weapon].shootSound)
+	    {
+	      bunny_sound_play(&m_player->weapons[m_player->selected_weapon].shootSound->sound);
+	      isShooting = true;
+	    }
+	}
+      else
+	{
+	  //Play no ammo sound
+	  ;
+	}
+    }
+  else
+    setEvent(&m_player->events, SHOOT, shoot);
 }
 
 
@@ -77,6 +123,8 @@ int     User::IsShooted(t_player *p, Score &advTeam, Map &map)
       hit = vec4(0, 0, 0, -1);
       weapon = p[i].selected_weapon;
       headshot = false;
+      if (getEvent(p[i].events, SHOOT))
+	printf("Player %d shooted !\n", i);
       if (getEvent(p[i].events, SHOOT) && id % 2 != i % 2)
 	{
   	hit = this->IsHit(p + i, map);
