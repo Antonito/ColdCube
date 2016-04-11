@@ -52,9 +52,6 @@ void		User::shoot(bool shoot)
     }
   if (shoot && m_player->weapons[m_player->selected_weapon].loaded < 0)
     {
-#ifdef	DEBUG
-      std::clog << "Shoot, unlimited ammo\n";
-#endif
       setEvent(&m_player->events, SHOOT, shoot);
       if (!isShooting && m_player->weapons[m_player->selected_weapon].shootSound)
 	{
@@ -62,14 +59,12 @@ void		User::shoot(bool shoot)
 	  isShooting = true;
 	}
       setEvent(&m_player->events, SHOOT, true);
+      return ;
     }
   else if (shoot)
     {
       if (m_player->weapons[m_player->selected_weapon].loaded > 0)
 	{
-#ifdef	DEBUG
-	  std::clog << "Shooting\n";
-#endif
 	  setEvent(&m_player->events, SHOOT, shoot);
 	  --m_player->weapons[m_player->selected_weapon].loaded;
 	  if (!isShooting && m_player->weapons[m_player->selected_weapon].shootSound)
@@ -78,16 +73,18 @@ void		User::shoot(bool shoot)
 	      isShooting = true;
 	    }
 	  setEvent(&m_player->events, SHOOT, true);
+	  return ;
 	}
       else
 	{
 	  //Play no ammo sound
 	  setEvent(&m_player->events, SHOOT, false);
-	  ;
+	  return ;
 	}
     }
   else
-    setEvent(&m_player->events, SHOOT, shoot);
+    setEvent(&m_player->events, SHOOT, false);
+  setEvent(&m_player->events, SHOOT, false);
 }
 
 
