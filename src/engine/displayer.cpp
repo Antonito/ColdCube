@@ -330,9 +330,9 @@ void	Displayer::Update(Camera &cam, Map &map, Player &player,
   if (eventKey[data->config.keys.jump])
     player.Jump();
   if (eventKey[data->config.keys.fire])
-    user.shoot(true);
+    user.shoot(true, data->lock);
   else
-    user.shoot(false);
+    user.shoot(false, data->lock);
 
   // Switch weapon
   if (eventKey[data->config.keys.weapon1])

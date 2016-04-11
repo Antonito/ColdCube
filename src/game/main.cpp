@@ -141,6 +141,7 @@ void	initData(t_data *data)
       memset(&data->players[i].direction, 0, sizeof(vector3));
       initWeapons(&data->players[i]);
     }
+  data->lock = false;
   data->game.running = true;
   data->game.Team1 = Score();
   data->game.Team2 = Score();
