@@ -114,6 +114,11 @@ endif
 RM=			rm -f
 
 LIB=			-Llib/lapin/lib			\
+			-llapin 			\
+			-lsfml-audio 			\
+			-lsfml-graphics 		\
+			-lsfml-window 			\
+			-lsfml-system 			\
 			-lstdc++			\
 			-lpthread			\
 			-lSDL2				\
