@@ -112,6 +112,7 @@ void			selectGameMusic(t_data *data, bool close)
     data->gameMusic = two;
   else
     data->gameMusic = three;
+  bunny_sound_loop(&data->gameMusic->sound, true);
 }
 
 void	initData(t_data *data)
