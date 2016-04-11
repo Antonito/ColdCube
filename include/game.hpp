@@ -10,6 +10,9 @@
 #  define WIN_Y				720
 # endif
 
+# define GAME_X				1280
+# define GAME_Y				720
+
 # define WIN_TITLE			"ColdCube"
 # define FONT_PATH			"assets/fonts/menu.ttf"
 

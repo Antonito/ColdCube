@@ -29,7 +29,7 @@ public:
   bool isFocus();
   void constructor();
   void backspace();
-  void display(SDL_Rect, SDL_Surface *);
+  void display(SDL_Rect, SDL_Surface *, SDL_Color grey = (SDL_Color){82, 82, 82, 0});
   void focus(bool);
   void moveLeft();
   void moveRight();
