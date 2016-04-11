@@ -135,7 +135,7 @@ void	initData(t_data *data)
     {
       data->players[i].events = 0;
       data->players[i].pseudo = new char [21];
-      data->players[i].selected_weapon = 0;
+      data->players[i].selected_weapon = RIFLE_WEAPON;
       memset(data->players[i].pseudo, 0, 21);
       memset(&data->players[i].position, 0, sizeof(vector3));
       memset(&data->players[i].direction, 0, sizeof(vector3));

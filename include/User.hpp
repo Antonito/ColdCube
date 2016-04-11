@@ -20,7 +20,7 @@ public:
   void		sprint(int state);
   //  void		getDamage();
   void		shoot(bool shoot, bool lock);
-  int		IsShooted(t_player *p, Score &advTeam, Map &map);
+  int		IsShooted(t_player *p, Score &advTeam, Score &Team, Map &map);
   vec4		IsHit(t_player *p, Map &map);
 
 private:

@@ -103,7 +103,8 @@ vec4    User::IsHit(t_player *p, Map &map)
   return (vec4(pos.x, pos.y, pos.z, -1.0));
 }
 
-int     User::IsShooted(t_player *p, Score &advTeam, Map &map)
+int     User::IsShooted(t_player *p, Score &advTeam, Score &Team,
+			Map &map)
 {
   int		i = 0;
   vec4		hit;
@@ -149,7 +150,14 @@ int     User::IsShooted(t_player *p, Score &advTeam, Map &map)
   	  m_player->life -= damage;
 	  printf("LIFE %d\n", m_player->life);
   	  if (m_player->life <= 0)
-  	    advTeam.updateScore(weapon, headshot, length(vec3(hit) - p[i].position));
+	    {
+	      Team.updateStreakMult(weapon);
+	      advTeam.updateScore(weapon, headshot, length(vec3(hit) - p[i].position));
+#ifdef	DEBUG
+	      std::clog << "Team 1 :" << Team.getScore() << "\n";
+	      std::clog << "Team 2 :" << advTeam.getScore() << "\n";
+#endif
+	    }
   	}
       // if (getEvent(p[i].events, SHOOT))
       // 	setEvent(&p[i].events, SHOOT, false);
