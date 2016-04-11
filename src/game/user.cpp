@@ -37,10 +37,12 @@ void	User::sprint(int state)
 //   ;
 // }
 
-void		User::shoot(bool shoot)
+void			User::shoot(bool shoot, bool lock)
 {
-  static bool	isShooting = false;
+  static bool		isShooting = false;
 
+  if (lock)
+    return ;
   if (isShooting)
     {
       if (m_player->weapons[m_player->selected_weapon].shootSound &&
@@ -76,13 +78,9 @@ void		User::shoot(bool shoot)
       else
 	{
 	  //Play no ammo sound
-	  setEvent(&m_player->events, SHOOT, false);
 	  return ;
 	}
     }
-  else
-    setEvent(&m_player->events, SHOOT, false);
-  setEvent(&m_player->events, SHOOT, false);
 }
 
 
@@ -155,8 +153,8 @@ int     User::IsShooted(t_player *p, Score &advTeam, Map &map)
   	  if (m_player->life <= 0)
   	    advTeam.updateScore(weapon, headshot, length(vec3(hit) - p[i].position));
   	}
-      if (getEvent(p[i].events, SHOOT))
-  	setEvent(&p[i].events, SHOOT, false);
+      // if (getEvent(p[i].events, SHOOT))
+      // 	setEvent(&p[i].events, SHOOT, false);
       i++;
     }
   return (0);

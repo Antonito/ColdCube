@@ -330,9 +330,9 @@ void	Displayer::Update(Camera &cam, Map &map, Player &player,
   if (eventKey[data->config.keys.jump])
     player.Jump();
   if (eventKey[data->config.keys.fire])
-    user.shoot(true);
+    user.shoot(true, data->lock);
   else
-    user.shoot(false);
+    user.shoot(false, data->lock);
 
   // Switch weapon
   if (eventKey[data->config.keys.weapon1])
@@ -373,6 +373,7 @@ int	startGame(t_data *data, std::vector<menuItem> &items, Displayer &disp)
 
   data->config.musicVolume = items[8].value;
   data->config.effectsVolume = items[9].value;
+  data->config.brightness = items[10].value;
   bunny_sound_volume(&data->menuMusic->sound, (double)data->config.musicVolume);
   bunny_sound_volume(&data->menuEffect->sound, (double)data->config.effectsVolume);
   if (data->players[0].weapons[0].shootSound)

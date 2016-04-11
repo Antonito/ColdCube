@@ -12,6 +12,8 @@
 t_cheat		cheat;
 #endif
 
+bool		sentPacket = false;
+
 void	setAzerty(t_keys *keys)
 {
   keys->forward = KEY_Z;
@@ -139,6 +141,7 @@ void	initData(t_data *data)
       memset(&data->players[i].direction, 0, sizeof(vector3));
       initWeapons(&data->players[i]);
     }
+  data->lock = false;
   data->game.running = true;
   data->game.Team1 = Score();
   data->game.Team2 = Score();

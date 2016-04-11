@@ -1,3 +1,4 @@
+
 #ifndef COMMON_STRUCTS_H_
 # define COMMON_STRUCTS_H_
 
@@ -152,6 +153,7 @@ typedef struct		s_config
   unsigned char		musicVolume;
   unsigned char		effectsVolume;
   t_keys		keys;
+  int			brightness;
 }			t_config;
 
 typedef	struct		s_data
@@ -162,6 +164,7 @@ typedef	struct		s_data
   t_config		config;
   SDL_Surface		*screen;
   Tchat			tchat;
+  bool			lock;
   t_bunny_music		*menuEffect;
   t_bunny_music		*menuMusic;
   t_bunny_music		*gameMusic;
