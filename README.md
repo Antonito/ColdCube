@@ -1,3 +1,5 @@
+![Game Banner](/assets/imgs/banner.png?raw=true "ColdCube")
+
 ColdCube is a voxel FPS based on SDL2 / OpenGL.
 
 You can play with up to 10 players (5 vs 5 combat).
