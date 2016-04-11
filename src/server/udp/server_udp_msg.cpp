@@ -66,7 +66,7 @@ void		udp_send_disconnect(t_all *all, char id)
   int		n;
   char		*tmp;
 
-  setEvent(&events, CONNECTED, false);
+  setEvent(&events, IS_CONNECTED, false);
   memset(packet, 0, 42);
   packet[0] = id;
   n = 37;

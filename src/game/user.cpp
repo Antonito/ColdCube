@@ -37,16 +37,30 @@ void	User::sprint(int state)
 //   ;
 // }
 
-void	User::shoot(bool shoot)
+void		User::shoot(bool shoot)
 {
+  static bool	isShooting = false;
+
+  if (isShooting)
+    {
+      if (m_player->weapons[m_player->selected_weapon].shootSound &&
+	  bunny_music_get_cursor(m_player->weapons[m_player->selected_weapon].shootSound) <= 0.01)
+	{
+	  isShooting = false;
+	  bunny_sound_stop(&m_player->weapons[m_player->selected_weapon].shootSound->sound);
+	}
+    }
   if (shoot && m_player->weapons[m_player->selected_weapon].loaded < 0)
     {
 #ifdef	DEBUG
       std::clog << "Shoot, unlimited ammo\n";
 #endif
       setEvent(&m_player->events, SHOOT, shoot);
-      // if (m_player->weapons[m_player->selected_weapon].shootSound)
-      // 	m_player->weapons[m_player->selected_weapon].shootSound->sound.play();
+      if (!isShooting && m_player->weapons[m_player->selected_weapon].shootSound)
+	{
+	  bunny_sound_play(&m_player->weapons[m_player->selected_weapon].shootSound->sound);
+	  isShooting = true;
+	}
     }
   else if (shoot)
     {
@@ -57,8 +71,11 @@ void	User::shoot(bool shoot)
 #endif
 	  setEvent(&m_player->events, SHOOT, shoot);
 	  --m_player->weapons[m_player->selected_weapon].loaded;
-	  // if (m_player->weapons[m_player->selected_weapon].shootSound)
-	  //   m_player->weapons[m_player->selected_weapon].shootSound->sound.play();
+	  if (!isShooting && m_player->weapons[m_player->selected_weapon].shootSound)
+	    {
+	      bunny_sound_play(&m_player->weapons[m_player->selected_weapon].shootSound->sound);
+	      isShooting = true;
+	    }
 	}
       else
 	{

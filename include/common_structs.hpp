@@ -7,6 +7,7 @@
 # endif
 
 //# include <SFML/Audio.hpp>
+# include <lapin.h>
 
 # include <stdbool.h>
 # include <stdint.h>
@@ -30,8 +31,8 @@
 # define		RIFLE_AMMO		-1
 # define		RIFLE_LOAD		-1
 
-# define		SHOOT_SOUND_PATH	"assets/musics/gun.wav"
-# define		KNIFE_SOUND_PATH	"assets/musics/knife.wav"
+# define		SHOOT_SOUND_PATH	"assets/musics/gun.ogg"
+# define		KNIFE_SOUND_PATH	"assets/musics/knife.ogg"
 
 typedef enum		e_state
   {
@@ -110,7 +111,7 @@ typedef struct		s_weapon
   int			id; /* Id de l'arme */
   int			loaded;
   int			ammo; /* Total de munitions */
-  t_sound		*shootSound;
+  t_bunny_music		*shootSound;
 }			t_weapon;
 
 /*

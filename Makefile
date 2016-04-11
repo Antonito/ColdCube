@@ -113,7 +113,14 @@ endif
 
 RM=			rm -f
 
-LIB=			-lstdc++			\
+LIB=			-L/usr/local/lib		\
+			-L/home/${USER}/.froot/lib	\
+			-llapin 			\
+			-lsfml-audio 			\
+			-lsfml-graphics 		\
+			-lsfml-window 			\
+			-lsfml-system 			\
+			-lstdc++			\
 			-lpthread			\
 			-lSDL2				\
 			-lSDL2_ttf			\

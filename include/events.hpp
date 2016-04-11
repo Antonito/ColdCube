@@ -6,7 +6,7 @@
 
 typedef enum			e_event
   {
-    CONNECTED			= 1,
+    IS_CONNECTED	       	= 1,
     SHOOT			= 2
   }				e_event;
 

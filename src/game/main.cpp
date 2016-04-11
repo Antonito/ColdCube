@@ -42,38 +42,26 @@ void	commonKeys(t_keys *keys)
   keys->fire = MOUSE_LEFT;
 }
 
-void	myAudioCallback(void *data, Uint8 *stream, int len);
-
-void	loadSound(t_sound *sound, const char *path)
-{
-  // LOAD SOUND
-
-  // if (!sound->buffer.loadFromFile(path))
-  //   {
-  //     std::cerr << "Canno't load sound\n";
-  //     exit(1);
-  //   }
-  // sound->sound.setBuffer(sound->buffer);
-}
-
 void	initWeapons(t_player *player)
 {
-  static bool		loaded = false;
-  static t_sound	rifle;
-  static t_sound	knife;
+  static t_bunny_music	*rifle = NULL;
+  static t_bunny_music	*knife = NULL;
 
-  if (!loaded)
+  if (!rifle && !knife)
     {
-      loaded = true;
-      loadSound(&rifle, SHOOT_SOUND_PATH);
-      loadSound(&knife, KNIFE_SOUND_PATH);
+      if (!(rifle = bunny_load_music(SHOOT_SOUND_PATH)) ||
+	  !(knife = bunny_load_music(KNIFE_SOUND_PATH)))
+	{
+	  std::cerr << "Cannot load effect\n";
+	  exit(1);
+	}
     }
 
   // Init Knife
   player->weapons[KNIFE_WEAPON].id = 0;
   player->weapons[KNIFE_WEAPON].loaded = KNIFE_LOAD;
   player->weapons[KNIFE_WEAPON].ammo = KNIFE_AMMO;
-  player->weapons[KNIFE_WEAPON].shootSound = &knife;
+  player->weapons[KNIFE_WEAPON].shootSound = knife;
 
   //Init Pistol
   player->weapons[PISTOL_WEAPON].id = 0;
@@ -85,7 +73,7 @@ void	initWeapons(t_player *player)
   player->weapons[RIFLE_WEAPON].id = 0;
   player->weapons[RIFLE_WEAPON].loaded = RIFLE_LOAD;
   player->weapons[RIFLE_WEAPON].ammo = RIFLE_AMMO;
-  player->weapons[RIFLE_WEAPON].shootSound = &rifle;
+  player->weapons[RIFLE_WEAPON].shootSound = rifle;
 }
 
 void	initData(t_data *data)
@@ -155,6 +143,12 @@ int	game()
     }
   if (hmd)
     ovrHmd_Destroy(hmd);
+  if (data->players[0].weapons[0].shootSound)
+    bunny_delete_sound(&data->players[0].weapons[0].shootSound->sound);
+  if (data->players[0].weapons[1].shootSound)
+    bunny_delete_sound(&data->players[0].weapons[1].shootSound->sound);
+  if (data->players[0].weapons[2].shootSound)
+    bunny_delete_sound(&data->players[0].weapons[2].shootSound->sound);
   return (0);
 }
 

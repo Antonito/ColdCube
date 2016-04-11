@@ -394,12 +394,21 @@ int	startGame(t_data *data, std::vector<menuItem> &items, Displayer &disp)
   cheat.selected.fly = false;
   cheat.selected.collisions = false;
 #endif
+
   if (data->config.keyboard == QWERTY_MODE)
     setQwerty(&data->config.keys);
   else if (data->config.keyboard == AZERTY_MODE)
     setAzerty(&data->config.keys);
+
   data->config.musicVolume = items[8].value;
   data->config.effectsVolume = items[9].value;
+  if (data->players[0].weapons[0].shootSound)
+    bunny_sound_volume(&data->players[0].weapons[0].shootSound->sound, (double)data->config.effectsVolume);
+  if (data->players[0].weapons[1].shootSound)
+    bunny_sound_volume(&data->players[0].weapons[1].shootSound->sound, (double)data->config.effectsVolume);
+  if (data->players[0].weapons[2].shootSound)
+    bunny_sound_volume(&data->players[0].weapons[2].shootSound->sound, (double)data->config.effectsVolume);
+
   data->net.port = atoi(items[3].text.c_str());
   data->net.ip = (char *)items[2].text.c_str();
   data->net.pseudo = (char *)items[1].text.c_str();
@@ -446,7 +455,7 @@ int	startGame(t_data *data, std::vector<menuItem> &items, Displayer &disp)
 #ifdef	DEBUG
 	  std::clog << "UDP OK\n";
 #endif
-	  setEvent(&data->players[data->net.playerIndexUdp].events, CONNECTED, true);
+	  setEvent(&data->players[data->net.playerIndexUdp].events, IS_CONNECTED, true);
 	  engineMain(disp, data);
 	  write(data->net.tcp.sock, "/r", 2);
 #ifdef	DEBUG
@@ -459,7 +468,7 @@ int	startGame(t_data *data, std::vector<menuItem> &items, Displayer &disp)
 	  close(data->net.udp.sock);
 	  close(data->net.tcp.sock);
 #endif
-	  setEvent(&data->players[data->net.playerIndexUdp].events, CONNECTED, false);
+	  setEvent(&data->players[data->net.playerIndexUdp].events, IS_CONNECTED, false);
 	}
     }
   data->net.tcp.run = 0;

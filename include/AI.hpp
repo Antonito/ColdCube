@@ -15,7 +15,7 @@ public:
   int		getId()const{return (m_id);};
   void		setId(int id){m_id = id;};
   void		setPlayer(t_player *player);
-  bool		isBot(uint32_t events) {return (!getEvent(events, CONNECTED));};
+  bool		isBot(uint32_t events) {return (!getEvent(events, IS_CONNECTED));};
   void		shootPlayer(void);
   void		findPlayer(t_player *player, int *isConnected);
   void		moveToPlayer(void);
