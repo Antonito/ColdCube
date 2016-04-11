@@ -772,18 +772,21 @@ void			Displayer::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
 	  if (event.key.keysym.sym == SDLK_LEFT)
 	    {
 	      menu->moveLeft();
+	      bunny_sound_play(&data->menuEffect->sound);
 	      if (items[menu->currentItem].type == MENU_TEXTINPUT)
 		menu->hold();
 	    }
 	  if (event.key.keysym.sym == SDLK_RIGHT)
 	    {
 	      menu->moveRight();
+	      bunny_sound_play(&data->menuEffect->sound);
 	      if (items[menu->currentItem].type == MENU_TEXTINPUT)
 		menu->hold();
 	    }
 	  if (event.key.keysym.sym == SDLK_UP)
 	    {
 	      menu->moveUp();
+	      bunny_sound_play(&data->menuEffect->sound);
 	      if (items[menu->currentItem].type == MENU_TEXTINPUT)
 		menu->hold();
 	    }
@@ -849,6 +852,7 @@ void			Displayer::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
 	  if (event.key.keysym.sym == SDLK_DOWN)
 	    {
 	      menu->moveDown();
+	      bunny_sound_play(&data->menuEffect->sound);
 	      if (items[menu->currentItem].type == MENU_TEXTINPUT)
 		menu->hold();
 	    }
@@ -858,6 +862,7 @@ void			Displayer::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
 		  || menu->currentItem == 0))
 	    {
 	      menu->moveNext();
+	      bunny_sound_play(&data->menuEffect->sound);
 	      if (items[menu->currentItem].type == MENU_TEXTINPUT)
 		menu->hold();
 	    }
