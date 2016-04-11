@@ -78,6 +78,42 @@ void	initWeapons(t_player *player)
   player->weapons[RIFLE_WEAPON].shootSound = rifle;
 }
 
+void			selectGameMusic(t_data *data, bool close)
+{
+  static t_bunny_music	*one = NULL;
+  static t_bunny_music	*two = NULL;
+  static t_bunny_music	*three = NULL;
+
+  if (close)
+    {
+      bunny_delete_sound(&one->sound);
+      bunny_delete_sound(&two->sound);
+      bunny_delete_sound(&three->sound);
+      return ;
+    }
+  if (!one && !two && !three)
+    {
+      if (!(one = bunny_load_music(MUSIC_ONE_GAME)) ||
+	  !(two = bunny_load_music(MUSIC_TWO_GAME)) ||
+	  !(three = bunny_load_music(MUSIC_THREE_GAME)))
+	{
+	  std::cerr << "Cannot load effect\n";
+	  exit(1);
+	}
+      return ;
+    }
+
+  int	res;
+
+  res = rand() % NB_GAME_MUSIC;
+  if (!res)
+    data->gameMusic = one;
+  else if (res == 1)
+    data->gameMusic = two;
+  else
+    data->gameMusic = three;
+}
+
 void	initData(t_data *data)
 {
   int	i;
@@ -91,6 +127,7 @@ void	initData(t_data *data)
       std::cerr << "Cannot load effect\n";
       exit(1);
     }
+  selectGameMusic(data, false);
   while (++i < 10)
     {
       data->players[i].events = 0;
@@ -134,6 +171,7 @@ int	game()
   hmd = ovrHmd_Create(0);
   if (hmd)
     ovrHmd_ConfigureTracking(hmd, ovrTrackingCap_Orientation | ovrTrackingCap_MagYawCorrection | ovrTrackingCap_Position, 0);
+
   initData(data);
   data->screen = screen;
 
@@ -168,6 +206,7 @@ int	game()
     bunny_delete_sound(&data->players[0].weapons[2].shootSound->sound);
   bunny_delete_sound(&data->menuEffect->sound);
   bunny_delete_sound(&data->menuMusic->sound);
+  selectGameMusic(data, true);
   return (0);
 }
 
