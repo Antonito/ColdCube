@@ -61,6 +61,7 @@ void		User::shoot(bool shoot)
 	  bunny_sound_play(&m_player->weapons[m_player->selected_weapon].shootSound->sound);
 	  isShooting = true;
 	}
+      setEvent(&m_player->events, SHOOT, true);
     }
   else if (shoot)
     {
@@ -76,10 +77,12 @@ void		User::shoot(bool shoot)
 	      bunny_sound_play(&m_player->weapons[m_player->selected_weapon].shootSound->sound);
 	      isShooting = true;
 	    }
+	  setEvent(&m_player->events, SHOOT, true);
 	}
       else
 	{
 	  //Play no ammo sound
+	  setEvent(&m_player->events, SHOOT, false);
 	  ;
 	}
     }
