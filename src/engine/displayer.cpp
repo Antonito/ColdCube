@@ -82,33 +82,7 @@ bool	Displayer::IsClosed()
 void	Displayer::Update(Camera &cam, Map &map, Player &player,
 			  t_data *data, User &user)
 {
-  SDL_Rect		tchat_pos = {0, data->tchat.isFocus() ? (WIN_Y / 2) : (3 * WIN_Y / 4), 854, data->tchat.isFocus() ? (WIN_Y / 2) : (WIN_Y / 4)};
-  SDL_Rect		origin = {42, 10, WIN_X, WIN_Y};
-  SDL_Rect		center = {(WIN_X - 270) / 2, (WIN_Y - 270) / 2, 270, 270};
-  SDL_Surface		*life;
-  char			lifebar[32];
-  SDL_Color		black = {0, 0, 0, 0};
-  static TTF_Font	*font = TTF_OpenFont(TCHAT_FONT_NAME, (int)(40 / WIN_RATIO));
-  static SDL_Surface	*crosshair = IMG_Load("./assets/imgs/crosshair.png");
-  static bool		rendering = true;
-
-  SDL_FillRect(m_windowSurface, NULL, SDL_MapRGB(m_windowSurface->format, 255, 255, 255));
-  SDL_BlitSurface(crosshair, NULL, m_windowSurface, &center);
-  sprintf(lifebar, "./assets/imgs/lifebar/%03d.png", data->players[data->net.playerIndexUdp].life);
-  life = IMG_Load(lifebar);
-  SDL_BlitSurface(life, NULL, m_windowSurface, &origin);
-  data->tchat.display(tchat_pos, m_windowSurface);
-  SDL_FreeSurface(life);
-  life = TTF_RenderUTF8_Blended(font, data->players[data->net.playerIndexUdp].pseudo, black);
-  origin.x = 470;
-  origin.y = 105;
-  SDL_BlitSurface(life, NULL, m_windowSurface, &origin);
-  SDL_FreeSurface(life);
-  if (rendering)
-    SDL_GL_SwapWindow(m_window);
-  else
-    SDL_UpdateWindowSurface(m_window);
-
+  SDL_GL_SwapWindow(m_window);
   usleep(5800);
   static		int cur(0), old(0), tot(0), nb(0);
   cur = SDL_GetTicks();
@@ -179,9 +153,6 @@ void	Displayer::Update(Camera &cam, Map &map, Player &player,
 	  else
 	    switch (e.key.keysym.sym)
 	      {
-	      case (SDLK_SEMICOLON):
-		rendering = !rendering;
-		break;
 	      case (SDLK_RETURN):
 		data->tchat.focus(true);
 		break ;
@@ -359,28 +330,28 @@ void	Displayer::Update(Camera &cam, Map &map, Player &player,
   if (eventKey[data->config.keys.jump])
     player.Jump();
   if (eventKey[data->config.keys.fire])
-    user.shoot(true);
+    user.shoot(true, data->lock);
   else
-    user.shoot(false);
+    user.shoot(false, data->lock);
 
   // Switch weapon
   if (eventKey[data->config.keys.weapon1])
-    user.changeWeapon(KNIFE_WEAPON);
+    user.changeWeapon(RIFLE_WEAPON);
   else if (eventKey[data->config.keys.weapon2])
     user.changeWeapon(PISTOL_WEAPON);
   else if (eventKey[data->config.keys.weapon3])
-    user.changeWeapon(RIFLE_WEAPON);
+    user.changeWeapon(KNIFE_WEAPON);
 
-  #ifdef CHEAT
+#ifdef CHEAT
   if (cheat.selected.fly && eventKey[data->config.keys.forward])
     player.MoveCheat(cam.GetFor());
   else if (cheat.selected.fly && eventKey[data->config.keys.backward])
     player.MoveCheat(-cam.GetFor());
   else
     player.Update(map, dTime);
-  #else
+#else
   player.Update(map, dTime);
-  #endif
+#endif
 
   player.SetCam(cam, player.GetThird(), data->players + player.GetId());
 }
@@ -394,12 +365,25 @@ int	startGame(t_data *data, std::vector<menuItem> &items, Displayer &disp)
   cheat.selected.fly = false;
   cheat.selected.collisions = false;
 #endif
+
   if (data->config.keyboard == QWERTY_MODE)
     setQwerty(&data->config.keys);
   else if (data->config.keyboard == AZERTY_MODE)
     setAzerty(&data->config.keys);
+
   data->config.musicVolume = items[8].value;
   data->config.effectsVolume = items[9].value;
+  data->config.brightness = items[10].value;
+  bunny_sound_volume(&data->menuMusic->sound, (double)data->config.musicVolume);
+  bunny_sound_volume(&data->menuEffect->sound, (double)data->config.effectsVolume);
+
+  if (data->players[0].weapons[0].shootSound)
+    bunny_sound_volume(&data->players[0].weapons[0].shootSound->sound, (double)data->config.effectsVolume);
+  if (data->players[0].weapons[1].shootSound)
+    bunny_sound_volume(&data->players[0].weapons[1].shootSound->sound, (double)data->config.effectsVolume);
+  if (data->players[0].weapons[2].shootSound)
+    bunny_sound_volume(&data->players[0].weapons[2].shootSound->sound, (double)data->config.effectsVolume);
+
   data->net.port = atoi(items[3].text.c_str());
   data->net.ip = (char *)items[2].text.c_str();
   data->net.pseudo = (char *)items[1].text.c_str();
@@ -432,9 +416,9 @@ int	startGame(t_data *data, std::vector<menuItem> &items, Displayer &disp)
       {
 	write(data->net.tcp.sock, "/r", 2);
 #ifdef _WIN32
-	  closesocket(data->net.tcp.sock);
+	closesocket(data->net.tcp.sock);
 #else
-	  close(data->net.tcp.sock);
+	close(data->net.tcp.sock);
 #endif
 	data->net.tcp.run = 0;
 	data->net.udp.run_send = 0;
@@ -446,7 +430,11 @@ int	startGame(t_data *data, std::vector<menuItem> &items, Displayer &disp)
 #ifdef	DEBUG
 	  std::clog << "UDP OK\n";
 #endif
-	  setEvent(&data->players[data->net.playerIndexUdp].events, CONNECTED, true);
+	  selectGameMusic(data, false);
+	  bunny_sound_volume(&data->gameMusic->sound, (double)data->config.musicVolume);
+	  bunny_sound_stop(&data->menuMusic->sound);
+	  bunny_sound_play(&data->gameMusic->sound);
+	  setEvent(&data->players[data->net.playerIndexUdp].events, IS_CONNECTED, true);
 	  engineMain(disp, data);
 	  write(data->net.tcp.sock, "/r", 2);
 #ifdef	DEBUG
@@ -459,7 +447,9 @@ int	startGame(t_data *data, std::vector<menuItem> &items, Displayer &disp)
 	  close(data->net.udp.sock);
 	  close(data->net.tcp.sock);
 #endif
-	  setEvent(&data->players[data->net.playerIndexUdp].events, CONNECTED, false);
+	  setEvent(&data->players[data->net.playerIndexUdp].events, IS_CONNECTED, false);
+	  bunny_sound_stop(&data->gameMusic->sound);
+	  bunny_sound_play(&data->menuMusic->sound);
 	}
     }
   data->net.tcp.run = 0;
@@ -476,7 +466,8 @@ int			minUdpID(t_data *data)
   return (-1);
 }
 
-void			display_name(t_player *players, int pos, SDL_Surface *to, TTF_Font *font)
+void			display_name(t_player *players, int pos,
+				     SDL_Surface *to, TTF_Font *font)
 {
   SDL_Rect		positions[] = {{1356, 61, 200, 200},
 				       {1531, 157, 200, 200},
@@ -643,17 +634,71 @@ void			Displayer::UpdateRoom(t_data *room, SDL_Rect *pos,
 	    SDL_BlitSurface(icon_ia, NULL, eyes, &(players[i]));
 	}
 
-      SetSDL_Rect(&dest, 0, WIN_Y / 4, WIN_X / 2, WIN_Y / 2);
-      SDL_BlitScaled(eyes, NULL, m_windowSurface, &dest);
+      SDL_Surface	*final = SDL_CreateRGBSurface(0, WIN_X, WIN_Y, 32, 0x000000FF, 0x0000FF00, 0x00FF0000, 0xFF000000);
+      this->Clear(0.0, 0.0, 0.0, 1);
+      SDL_BlitScaled(eyes, NULL, final, NULL);
+      SetSDL_Rect(&dest, pos->x + 10, pos->y, surface->w, surface->h);
+      SDL_BlitSurface(surface, NULL, final, &dest);
+      Texture left(final);
+      glViewport(0, 0, WIN_X / 2, WIN_Y);
 
-      SetSDL_Rect(&dest, pos->x / 2 + 3, WIN_Y / 4 + pos->y / 2, surface->w, surface->h);
-      SDL_BlitScaled(surface, NULL, m_windowSurface, &dest);
+      glDisable(GL_DEPTH_TEST);
+      glDisable(GL_CULL_FACE);
+      glDisable(GL_LIGHTING);
+      glEnable(GL_TEXTURE_2D);
+      left.Bind(0);
 
-      SetSDL_Rect(&dest, WIN_X / 2, WIN_Y / 4, WIN_X / 2, WIN_Y / 2);
-      SDL_BlitScaled(eyes, NULL, m_windowSurface, &dest);
+      glBegin(GL_QUADS);
+      glTexCoord2i(0, 0);
+      glVertex3f(-0.8, 0.5, 0);
+      glTexCoord2i(0, 1);
+      glVertex3f(-0.8, -0.5, 0);
+      glTexCoord2i(1, 1);
+      glVertex3f(0.8, -0.5, 0);
+      glTexCoord2i(1, 0);
+      glVertex3f(0.8, 0.5, 0);
+      glEnd();
 
-      SetSDL_Rect(&dest, WIN_X / 2 + pos->x / 2 - 3, WIN_Y / 4 + pos->y / 2, surface->w, surface->h);
-      SDL_BlitScaled(surface, NULL, m_windowSurface, &dest);
+      SDL_BlitScaled(eyes, NULL, final, NULL);
+      SetSDL_Rect(&dest, pos->x - 10, pos->y, surface->w, surface->h);
+      SDL_BlitSurface(surface, NULL, final, &dest);
+
+      Texture right(final);
+      glViewport(WIN_X / 2, 0, WIN_X / 2, WIN_Y);
+
+      left.Bind(0);
+
+      glBegin(GL_QUADS);
+      glTexCoord2i(0, 0);
+      glVertex3f(-0.8, 0.5, 0);
+      glTexCoord2i(0, 1);
+      glVertex3f(-0.8, -0.5, 0);
+      glTexCoord2i(1, 1);
+      glVertex3f(0.8, -0.5, 0);
+      glTexCoord2i(1, 0);
+      glVertex3f(0.8, 0.5, 0);
+      glEnd();
+
+      glEnable(GL_DEPTH_TEST);
+      glEnable(GL_CULL_FACE);
+      glEnable(GL_LIGHTING);
+      glCullFace(GL_BACK);
+      SDL_FreeSurface(final);
+
+      SDL_GL_SwapWindow(m_window);
+
+
+      // SetSDL_Rect(&dest, 0, WIN_Y / 4, WIN_X / 2, WIN_Y / 2);
+      // SDL_BlitScaled(eyes, NULL, m_windowSurface, &dest);
+
+      // SetSDL_Rect(&dest, pos->x / 2 + 3, WIN_Y / 4 + pos->y / 2, surface->w, surface->h);
+      // SDL_BlitScaled(surface, NULL, m_windowSurface, &dest);
+
+      // SetSDL_Rect(&dest, WIN_X / 2, WIN_Y / 4, WIN_X / 2, WIN_Y / 2);
+      // SDL_BlitScaled(eyes, NULL, m_windowSurface, &dest);
+
+      // SetSDL_Rect(&dest, WIN_X / 2 + pos->x / 2 - 3, WIN_Y / 4 + pos->y / 2, surface->w, surface->h);
+      // SDL_BlitScaled(surface, NULL, m_windowSurface, &dest);
       SDL_FreeSurface(eyes);
     }
   else
@@ -679,8 +724,8 @@ void			Displayer::UpdateRoom(t_data *room, SDL_Rect *pos,
 	}
 								// 2ms
       SDL_BlitSurface(surface, NULL, m_windowSurface, pos);	// 3ms
+      SDL_UpdateWindowSurface(m_window);
     }
-  SDL_UpdateWindowSurface(m_window);
 }
 
 void			Displayer::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
@@ -757,18 +802,21 @@ void			Displayer::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
 	  if (event.key.keysym.sym == SDLK_LEFT)
 	    {
 	      menu->moveLeft();
+	      bunny_sound_play(&data->menuEffect->sound);
 	      if (items[menu->currentItem].type == MENU_TEXTINPUT)
 		menu->hold();
 	    }
 	  if (event.key.keysym.sym == SDLK_RIGHT)
 	    {
 	      menu->moveRight();
+	      bunny_sound_play(&data->menuEffect->sound);
 	      if (items[menu->currentItem].type == MENU_TEXTINPUT)
 		menu->hold();
 	    }
 	  if (event.key.keysym.sym == SDLK_UP)
 	    {
 	      menu->moveUp();
+	      bunny_sound_play(&data->menuEffect->sound);
 	      if (items[menu->currentItem].type == MENU_TEXTINPUT)
 		menu->hold();
 	    }
@@ -834,6 +882,7 @@ void			Displayer::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
 	  if (event.key.keysym.sym == SDLK_DOWN)
 	    {
 	      menu->moveDown();
+	      bunny_sound_play(&data->menuEffect->sound);
 	      if (items[menu->currentItem].type == MENU_TEXTINPUT)
 		menu->hold();
 	    }
@@ -843,6 +892,7 @@ void			Displayer::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
 		  || menu->currentItem == 0))
 	    {
 	      menu->moveNext();
+	      bunny_sound_play(&data->menuEffect->sound);
 	      if (items[menu->currentItem].type == MENU_TEXTINPUT)
 		menu->hold();
 	    }
@@ -877,7 +927,7 @@ void			Displayer::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
 	  break;
 	case SDL_TEXTINPUT:
 	  if (items[menu->currentItem].type == MENU_TEXTINPUT &&
-	      (   (menu->currentItem != 1 && items[menu->currentItem].text.length() < 16)
+	      ((menu->currentItem != 1 && items[menu->currentItem].text.length() < 16)
 	       || (menu->currentItem == 1 && items[menu->currentItem].text.length() < 10)))
 	    {
 	      if (items[menu->currentItem].text == " ")
@@ -901,24 +951,62 @@ void			Displayer::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
   SDL_FillRect(m_windowSurface, NULL, SDL_MapRGB(screen->format, 143, 45, 42));
   if (data->config.oculus)
     {
-      SetSDL_Rect(&dest, 0, WIN_Y / 4, WIN_X / 2, WIN_Y / 2);
-      SDL_BlitScaled(screen, NULL, m_windowSurface, &dest);
+      SDL_Surface	*final = SDL_CreateRGBSurface(0, WIN_X, WIN_Y, 32, 0x000000FF, 0x0000FF00, 0x00FF0000, 0xFF000000);
+      this->Clear(0.0, 0.0, 0.0, 1);
+      SDL_BlitScaled(screen, NULL, final, NULL);
+      SDL_BlitScaled(surface, NULL, final, pos);
+      Texture left(final);
+      glViewport(0, 0, WIN_X / 2, WIN_Y);
 
-      SetSDL_Rect(&dest, WIN_X / 2, WIN_Y / 4, WIN_X / 2, WIN_Y / 2);
-      SDL_BlitScaled(screen, NULL, m_windowSurface, &dest);
+      glDisable(GL_DEPTH_TEST);
+      glDisable(GL_CULL_FACE);
+      glDisable(GL_LIGHTING);
+      glEnable(GL_TEXTURE_2D);
+      left.Bind(0);
 
-      SetSDL_Rect(&dest, pos->x / 2 + 3, WIN_Y / 4 + pos->y / 2, 50, 50);
-      SDL_BlitScaled(surface, NULL, m_windowSurface, &dest);
+      glBegin(GL_QUADS);
+      glTexCoord2i(0, 0);
+      glVertex3f(-0.8, 0.5, 0);
+      glTexCoord2i(0, 1);
+      glVertex3f(-0.8, -0.5, 0);
+      glTexCoord2i(1, 1);
+      glVertex3f(0.8, -0.5, 0);
+      glTexCoord2i(1, 0);
+      glVertex3f(0.8, 0.5, 0);
+      glEnd();
 
-      SetSDL_Rect(&dest, WIN_X / 2 + pos->x / 2 - 3, WIN_Y / 4 + pos->y / 2, 50, 50);
-      SDL_BlitScaled(surface, NULL, m_windowSurface, &dest);
+      SDL_BlitScaled(screen, NULL, final, NULL);
+      SDL_BlitScaled(surface, NULL, final, pos);
+
+      Texture right(final);
+      glViewport(WIN_X / 2, 0, WIN_X / 2, WIN_Y);
+
+      left.Bind(0);
+
+      glBegin(GL_QUADS);
+      glTexCoord2i(0, 0);
+      glVertex3f(-0.8, 0.5, 0);
+      glTexCoord2i(0, 1);
+      glVertex3f(-0.8, -0.5, 0);
+      glTexCoord2i(1, 1);
+      glVertex3f(0.8, -0.5, 0);
+      glTexCoord2i(1, 0);
+      glVertex3f(0.8, 0.5, 0);
+      glEnd();
+
+      glEnable(GL_DEPTH_TEST);
+      glEnable(GL_CULL_FACE);
+      glEnable(GL_LIGHTING);
+      glCullFace(GL_BACK);
+      SDL_FreeSurface(final);
+      SDL_GL_SwapWindow(m_window);
     }
   else
     {
       SDL_BlitSurface(surface, NULL, screen, pos);
       SDL_BlitSurface(screen, NULL, m_windowSurface, &dest);
+      SDL_UpdateWindowSurface(m_window);
     }
-  SDL_UpdateWindowSurface(m_window);
   if (items[menu->currentItem].type == MENU_TEXTINPUT)
     items[menu->currentItem].text.erase(items[menu->currentItem].text.length() - 1);
   usleep(12000);

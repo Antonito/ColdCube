@@ -37,39 +37,51 @@ void	User::sprint(int state)
 //   ;
 // }
 
-void	User::shoot(bool shoot)
+void			User::shoot(bool shoot, bool lock)
 {
+  static bool		isShooting = false;
+
+  if (lock)
+    return ;
+  if (isShooting)
+    {
+      if (m_player->weapons[m_player->selected_weapon].shootSound &&
+	  bunny_music_get_cursor(m_player->weapons[m_player->selected_weapon].shootSound) <= SOUND_WAIT)
+	{
+	  isShooting = false;
+	  bunny_sound_stop(&m_player->weapons[m_player->selected_weapon].shootSound->sound);
+	}
+    }
   if (shoot && m_player->weapons[m_player->selected_weapon].loaded < 0)
     {
-#ifdef	DEBUG
-      std::clog << "Shoot, unlimited ammo\n";
-#endif
-      setEvent(&m_player->events, SHOOT, shoot);
-      // if (m_player->weapons[m_player->selected_weapon].shootSound)
-      // 	m_player->weapons[m_player->selected_weapon].shootSound->sound.play();
+      if (!isShooting && m_player->weapons[m_player->selected_weapon].shootSound)
+	{
+	  bunny_sound_play(&m_player->weapons[m_player->selected_weapon].shootSound->sound);
+	  isShooting = true;
+	}
+      setEvent(&m_player->events, SHOOT, true);
+      return ;
     }
   else if (shoot)
     {
       if (m_player->weapons[m_player->selected_weapon].loaded > 0)
 	{
-#ifdef	DEBUG
-	  std::clog << "Shooting\n";
-#endif
-	  setEvent(&m_player->events, SHOOT, shoot);
 	  --m_player->weapons[m_player->selected_weapon].loaded;
-	  // if (m_player->weapons[m_player->selected_weapon].shootSound)
-	  //   m_player->weapons[m_player->selected_weapon].shootSound->sound.play();
+	  if (!isShooting && m_player->weapons[m_player->selected_weapon].shootSound)
+	    {
+	      bunny_sound_play(&m_player->weapons[m_player->selected_weapon].shootSound->sound);
+	      isShooting = true;
+	    }
+	  setEvent(&m_player->events, SHOOT, true);
+	  return ;
 	}
       else
 	{
 	  //Play no ammo sound
-	  ;
+	  return ;
 	}
     }
-  else
-    setEvent(&m_player->events, SHOOT, shoot);
 }
-
 
 vec4    User::IsHit(t_player *p, Map &map)
 {
@@ -100,6 +112,7 @@ int     User::IsShooted(t_player *p, Score &advTeam, Map &map)
   int		id = m_player->id;
   int		weapon;
   bool		headshot;
+  static bool	shooting[10] = {0};
 
   while (i < 10)
     {
@@ -107,31 +120,39 @@ int     User::IsShooted(t_player *p, Score &advTeam, Map &map)
       weapon = p[i].selected_weapon;
       headshot = false;
       if (getEvent(p[i].events, SHOOT))
-	printf("Player %d shooted !\n", i);
+	{
+	  if (shooting[i] &&
+	      bunny_music_get_cursor(p[i].weapons[p[i].selected_weapon].shootSound) <= SOUND_WAIT)
+	    shooting[i] = false;
+	  if (i != id && !shooting[i] && p[i].weapons[p[i].selected_weapon].shootSound)
+	    {
+	      bunny_sound_play(&p[i].weapons[p[i].selected_weapon].shootSound->sound);
+	      shooting[i] = true;
+	    }
+	}
       if (getEvent(p[i].events, SHOOT) && id % 2 != i % 2)
 	{
-  	hit = this->IsHit(p + i, map);
+	  hit = this->IsHit(p + i, map);
 	}
       if (hit.w > 0.0)
   	{
-	  printf("%.2f %.2f %.2f %.2f\n", hit.x, hit.y, hit.z, hit.w);
   	  dist = vec2(hit.x - m_player->position.x - 0.4,
   		      hit.y - m_player->position.y - 0.4);
   	  if (hit.z > m_player->position.z + 1.4 && (headshot = true))
-  	    damage = getDamage(weapon, HEAD_HIT);
+  	    damage = getDamage(weapon, HEAD_HIT, hit.w);
   	  else if (hit.z < m_player->position.z + 0.8)
-  	    damage = getDamage(weapon, LEG_HIT);
+  	    damage = getDamage(weapon, LEG_HIT, hit.w);
   	  else if (length(dist) < 0.2)
-  	    damage = getDamage(weapon, BODY_HIT);
+  	    damage = getDamage(weapon, BODY_HIT, hit.w);
   	  else
-  	    damage = getDamage(weapon, ARM_HIT);
+  	    damage = getDamage(weapon, ARM_HIT, hit.w);
   	  m_player->life -= damage;
 	  printf("LIFE %d\n", m_player->life);
   	  if (m_player->life <= 0)
   	    advTeam.updateScore(weapon, headshot, length(vec3(hit) - p[i].position));
   	}
-      if (getEvent(p[i].events, SHOOT))
-  	setEvent(&p[i].events, SHOOT, false);
+      // if (getEvent(p[i].events, SHOOT))
+      // 	setEvent(&p[i].events, SHOOT, false);
       i++;
     }
   return (0);

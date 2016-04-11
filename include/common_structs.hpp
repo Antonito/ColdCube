@@ -1,3 +1,4 @@
+
 #ifndef COMMON_STRUCTS_H_
 # define COMMON_STRUCTS_H_
 
@@ -7,6 +8,7 @@
 # endif
 
 //# include <SFML/Audio.hpp>
+# include "lapin.h"
 
 # include <stdbool.h>
 # include <stdint.h>
@@ -22,16 +24,6 @@
 # include "Score.hpp"
 # include "Tchat.hpp"
 # include "engine/keys.hpp"
-
-# define		KNIFE_AMMO		-1
-# define		KNIFE_LOAD		-1
-# define		PISTOL_AMMO		-1
-# define		PISTOL_LOAD		-1
-# define		RIFLE_AMMO		-1
-# define		RIFLE_LOAD		-1
-
-# define		SHOOT_SOUND_PATH	"assets/musics/gun.wav"
-# define		KNIFE_SOUND_PATH	"assets/musics/knife.wav"
 
 typedef enum		e_state
   {
@@ -110,7 +102,7 @@ typedef struct		s_weapon
   int			id; /* Id de l'arme */
   int			loaded;
   int			ammo; /* Total de munitions */
-  t_sound		*shootSound;
+  t_bunny_music		*shootSound;
 }			t_weapon;
 
 /*
@@ -161,6 +153,7 @@ typedef struct		s_config
   unsigned char		musicVolume;
   unsigned char		effectsVolume;
   t_keys		keys;
+  int			brightness;
 }			t_config;
 
 typedef	struct		s_data
@@ -171,7 +164,10 @@ typedef	struct		s_data
   t_config		config;
   SDL_Surface		*screen;
   Tchat			tchat;
-  char			sounds[];
+  bool			lock;
+  t_bunny_music		*menuEffect;
+  t_bunny_music		*menuMusic;
+  t_bunny_music		*gameMusic;
 }			t_data;
 
 #endif // !COMMON_STRUCTS_H_

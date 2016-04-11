@@ -12,6 +12,8 @@
 t_cheat		cheat;
 #endif
 
+bool		sentPacket = false;
+
 void	setAzerty(t_keys *keys)
 {
   keys->forward = KEY_Z;
@@ -42,50 +44,77 @@ void	commonKeys(t_keys *keys)
   keys->fire = MOUSE_LEFT;
 }
 
-void	myAudioCallback(void *data, Uint8 *stream, int len);
-
-void	loadSound(t_sound *sound, const char *path)
-{
-  // LOAD SOUND
-
-  // if (!sound->buffer.loadFromFile(path))
-  //   {
-  //     std::cerr << "Canno't load sound\n";
-  //     exit(1);
-  //   }
-  // sound->sound.setBuffer(sound->buffer);
-}
-
 void	initWeapons(t_player *player)
 {
-  static bool		loaded = false;
-  static t_sound	rifle;
-  static t_sound	knife;
+  static t_bunny_music	*rifle = NULL;
+  static t_bunny_music	*knife = NULL;
+  static t_bunny_music	*pistol = NULL;
 
-  if (!loaded)
+  if (!rifle && !knife)
     {
-      loaded = true;
-      loadSound(&rifle, SHOOT_SOUND_PATH);
-      loadSound(&knife, KNIFE_SOUND_PATH);
+      if (!(pistol = bunny_load_music(PISTOL_SOUND_PATH)) ||
+	  !(rifle = bunny_load_music(RIFLE_SOUND_PATH)) ||
+	  !(knife = bunny_load_music(KNIFE_SOUND_PATH)))
+	{
+	  std::cerr << "Cannot load effect\n";
+	  exit(1);
+	}
     }
 
   // Init Knife
   player->weapons[KNIFE_WEAPON].id = 0;
   player->weapons[KNIFE_WEAPON].loaded = KNIFE_LOAD;
   player->weapons[KNIFE_WEAPON].ammo = KNIFE_AMMO;
-  player->weapons[KNIFE_WEAPON].shootSound = &knife;
+  player->weapons[KNIFE_WEAPON].shootSound = knife;
 
   //Init Pistol
   player->weapons[PISTOL_WEAPON].id = 0;
   player->weapons[PISTOL_WEAPON].loaded = PISTOL_AMMO;
   player->weapons[PISTOL_WEAPON].ammo = PISTOL_AMMO;
-  player->weapons[PISTOL_WEAPON].shootSound = NULL;
+  player->weapons[PISTOL_WEAPON].shootSound = pistol;
 
   //Init Rifle
   player->weapons[RIFLE_WEAPON].id = 0;
   player->weapons[RIFLE_WEAPON].loaded = RIFLE_LOAD;
   player->weapons[RIFLE_WEAPON].ammo = RIFLE_AMMO;
-  player->weapons[RIFLE_WEAPON].shootSound = &rifle;
+  player->weapons[RIFLE_WEAPON].shootSound = rifle;
+}
+
+void			selectGameMusic(t_data *data, bool close)
+{
+  static t_bunny_music	*one = NULL;
+  static t_bunny_music	*two = NULL;
+  static t_bunny_music	*three = NULL;
+
+  if (close)
+    {
+      bunny_delete_sound(&one->sound);
+      bunny_delete_sound(&two->sound);
+      bunny_delete_sound(&three->sound);
+      return ;
+    }
+  if (!one && !two && !three)
+    {
+      if (!(one = bunny_load_music(MUSIC_ONE_GAME)) ||
+	  !(two = bunny_load_music(MUSIC_TWO_GAME)) ||
+	  !(three = bunny_load_music(MUSIC_THREE_GAME)))
+	{
+	  std::cerr << "Cannot load effect\n";
+	  exit(1);
+	}
+      return ;
+    }
+
+  int	res;
+
+  res = rand() % NB_GAME_MUSIC;
+  if (!res)
+    data->gameMusic = one;
+  else if (res == 1)
+    data->gameMusic = two;
+  else
+    data->gameMusic = three;
+  bunny_sound_loop(&data->gameMusic->sound, true);
 }
 
 void	initData(t_data *data)
@@ -94,6 +123,14 @@ void	initData(t_data *data)
 
   memset(data, 0, sizeof(t_data));
   i = -1;
+  data->gameMusic = NULL;
+  if (!(data->menuEffect = bunny_load_music(EFFECT_MENU)) ||
+      !(data->menuMusic = bunny_load_music(MUSIC_MENU)))
+    {
+      std::cerr << "Cannot load effect\n";
+      exit(1);
+    }
+  selectGameMusic(data, false);
   while (++i < 10)
     {
       data->players[i].events = 0;
@@ -104,6 +141,7 @@ void	initData(t_data *data)
       memset(&data->players[i].direction, 0, sizeof(vector3));
       initWeapons(&data->players[i]);
     }
+  data->lock = false;
   data->game.running = true;
   data->game.Team1 = Score();
   data->game.Team2 = Score();
@@ -132,29 +170,49 @@ int	game()
   SDL_Surface		*surface = NULL;
   Menu			*menu = new Menu(screen, &items);
   ovrHmd		hmd;
+  Shader		barrel("shaders/barrel_roll");
 
   ovr_Initialize(0);
   hmd = ovrHmd_Create(0);
   if (hmd)
     ovrHmd_ConfigureTracking(hmd, ovrTrackingCap_Orientation | ovrTrackingCap_MagYawCorrection | ovrTrackingCap_Position, 0);
+
   initData(data);
   data->screen = screen;
+
+  bunny_sound_volume(&data->menuMusic->sound, 50.0);
+  bunny_sound_volume(&data->menuEffect->sound, 50.0);
+  bunny_sound_loop(&data->menuMusic->sound, true);
+  bunny_sound_play(&data->menuMusic->sound);
+
   loginMenu(items);
+
   //Macro definie dans game.hpp
   surface = IMG_Load(CURSOR_IMG);
   pos.x = (screen->w / 2) - (surface->w / 2);
   pos.y = (screen->h / 2) - (surface->h / 2);
   pos.w = surface->w / 2;
   pos.h = surface->h / 2;
+
   SDL_StartTextInput();
   data->config.oculusHmd = hmd;
   data->config.oculus = (hmd != NULL);
+  barrel.Bind();
   while (data->game.running)
     {
       display.UpdateMenu(menu, items, &pos, screen, surface, data);
     }
   if (hmd)
     ovrHmd_Destroy(hmd);
+  if (data->players[0].weapons[0].shootSound)
+    bunny_delete_sound(&data->players[0].weapons[0].shootSound->sound);
+  if (data->players[0].weapons[1].shootSound)
+    bunny_delete_sound(&data->players[0].weapons[1].shootSound->sound);
+  if (data->players[0].weapons[2].shootSound)
+    bunny_delete_sound(&data->players[0].weapons[2].shootSound->sound);
+  bunny_delete_sound(&data->menuEffect->sound);
+  bunny_delete_sound(&data->menuMusic->sound);
+  selectGameMusic(data, true);
   return (0);
 }
 

@@ -10,6 +10,9 @@
 #  define WIN_Y				720
 # endif
 
+# define GAME_X				1280
+# define GAME_Y				720
+
 # define WIN_TITLE			"ColdCube"
 # define FONT_PATH			"assets/fonts/menu.ttf"
 
@@ -54,6 +57,21 @@
 # define MAX_PSEUDO			20
 
 //
+// Menu elements
+//
+# define EFFECT_MENU			"assets/musics/menu.ogg"
+# define MUSIC_MENU			"assets/musics/menu_music.ogg"
+
+//
+// Game Musics
+//
+# define MUSIC_ONE_GAME			"assets/musics/game/0.ogg"
+# define MUSIC_TWO_GAME			"assets/musics/game/1.ogg"
+# define MUSIC_THREE_GAME		"assets/musics/game/2.ogg"
+# define NB_GAME_MUSIC			3
+# define SOUND_WAIT			0.018
+
+//
 // Game elements
 //
 
@@ -80,6 +98,17 @@
 # define STREAK_PISTOL			1.25
 # define STREAK_KNIFE			1.50
 
+# define KNIFE_AMMO			-1
+# define KNIFE_LOAD			-1
+# define PISTOL_AMMO			-1
+# define PISTOL_LOAD			-1
+# define RIFLE_AMMO			-1
+# define RIFLE_LOAD			-1
+
+# define PISTOL_SOUND_PATH		"assets/musics/gun.ogg"
+# define RIFLE_SOUND_PATH		"assets/musics/rifle.ogg"
+# define KNIFE_SOUND_PATH		"assets/musics/knife.ogg"
+
 //
 //
 //
@@ -105,7 +134,8 @@
 # include "engine/displayer.hpp"
 # include "common_structs.hpp"
 
-unsigned int	getDamage(int, int);
+void		selectGameMusic(t_data *, bool);
+unsigned int	getDamage(int, int, double);
 int		engineMain(Displayer &, t_data *);
 void		setAzerty(t_keys *);
 void		setQwerty(t_keys *);

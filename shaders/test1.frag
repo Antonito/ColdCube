@@ -1,6 +1,7 @@
 #version 130
 
 varying vec2 texCoord0;
+varying float brightness0;
 
 uniform sampler2D diffuse;
 
@@ -11,6 +12,7 @@ in  vec3 eye2;
 in  vec3 lightDir2;
 
 void main() {
+  float minimum = 0.5;
   vec4 diff = vec4(0.3, 0.3, 0.3, 1.0);
   vec4 ambient = vec4(0.1, 0.1, 0.1, 1.0);
   vec4 specular = vec4(0.75, 0.75, 0.75, 1.0);
@@ -29,6 +31,7 @@ void main() {
     spec = specular * pow(intSpec, shininess);
   }
 
+  float b = minimum + brightness0 * (1 - minimum) / 100;
   colorOut = max(intensity * diff + spec, ambient) *
     texture2D(diffuse, texCoord0);
   if (colorOut.a == 0.0)

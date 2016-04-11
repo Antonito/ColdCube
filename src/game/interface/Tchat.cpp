@@ -10,7 +10,6 @@
 #include <iostream>
 #include <sys/time.h>
 
-
 Tchat::Tchat()
 {
   Tchat(0);
@@ -57,12 +56,11 @@ Tchat::~Tchat()
   SDL_FreeSurface(this->footer);
 }
 
-void Tchat::display(SDL_Rect pos, SDL_Surface *to)
+void Tchat::display(SDL_Rect pos, SDL_Surface *to, SDL_Color grey)
 {
   SDL_Rect text_pos = {pos.x + 42, pos.h - this->footer->h - 40, pos.w, pos.h};
-  SDL_Surface *text, *pseudo;
-  SDL_Color grey = {82, 82, 82, 0},
-	    black = {0, 0, 0, 0};
+  SDL_Surface *text = NULL, *pseudo = NULL;
+  SDL_Color black = {0, 0, 0, 255};
   std::string pseudonym, msg;
   this->background = IMG_Load(TCHAT_BACKGROUND);
   size_t position;
@@ -75,19 +73,24 @@ void Tchat::display(SDL_Rect pos, SDL_Surface *to)
     pseudo = NULL;
     if (position != std::string::npos)
       {
-	pseudonym = this->messages[i].substr(0, position + 1);
-	msg = this->messages[i].substr(position + 1);
-	pseudo = TTF_RenderUTF8_Blended(this->name_font, pseudonym.c_str(), black);
-	SDL_BlitSurface(pseudo, NULL, this->background, &text_pos);
-	text_pos.x += pseudo->w + 10;
+    	pseudonym = this->messages[i].substr(0, position + 1);
+    	msg = this->messages[i].substr(position + 1);
+    	pseudo = TTF_RenderUTF8_Blended(this->name_font, pseudonym.c_str(), black);
+    	SDL_BlitSurface(pseudo, NULL, this->background, &text_pos);
+    	if (pseudo)
+    	  text_pos.x += pseudo->w + 10;
       }
     text = TTF_RenderUTF8_Blended(this->text_font, msg.c_str(), grey);
     SDL_BlitSurface(text, NULL, this->background, &text_pos);
     text_pos.x = 42;
     text_pos.y -= 35;
     SDL_FreeSurface(text);
+    text = NULL;
     if (pseudo)
-      SDL_FreeSurface(pseudo);
+      {
+	SDL_FreeSurface(pseudo);
+	pseudo = NULL;
+      }
   }
   SDL_BlitSurface(this->background, NULL, to, &pos);
   if (!pos.y)

@@ -1,3 +1,5 @@
+![Game Banner](/assets/imgs/banner.png?raw=true "ColdCube")
+
 ColdCube is a voxel FPS based on SDL2 / OpenGL.
 
 You can play with up to 10 players (5 vs 5 combat).
@@ -8,7 +10,11 @@ Required:
 	- SDL2
 	- SDL2_Image
 	- SDL2_ttf
+	- OpenAl
+	- Glew
+	- Glut
 	- glm
+	- SFML
 	- OculusRift SDK
 
 Specs:
@@ -22,3 +28,5 @@ We presented this game at the "Semaine de l'Innovation" in Bordeaux, on April 7,
 Made by Antoine Baché, Luka Boulagnon, Ludovic Petrenko and Lucas Troncy.
 
 Works on Linux.
+
+![Game Logo](/assets/imgs/logo.png?raw=true "ColdCube")

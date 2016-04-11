@@ -33,7 +33,10 @@ void			*udp_send_thread(void *data)
       timestamp = t2.tv_sec * 1000 + t2.tv_usec / 1000;
       if ((timestamp - last_packet) >= 16)
 	{
+	  _data->lock = true;
 	  createUdpPacket(_data, &_data->players[_data->net.playerIndexUdp]);
+	  setEvent(&_data->players[_data->net.playerIndexUdp].events, SHOOT, false);
+	  _data->lock = false;
 	  gettimeofday(&t1, NULL);
 	  last_packet = t1.tv_sec * 1000 + t1.tv_usec / 1000;
 	}

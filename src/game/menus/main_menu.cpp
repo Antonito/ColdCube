@@ -42,7 +42,7 @@ void	loginMenu(std::vector<menuItem> &items)
   items[9].value = 50;
   items[10].text = "Brightness";
   items[10].type = MENU_SLIDER;
-  items[10].value = 50;
+  items[10].value = 10;
   items[11].text = "AZERTY mode";
   items[11].type = MENU_CHECKBOX;
   items[12].text = " Set Oculus";

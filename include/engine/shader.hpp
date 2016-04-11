@@ -13,6 +13,7 @@ class	Shader
   Shader(const std::string& fileName);
 
   void Bind();
+  void SetBright(float bright);
   void Update(const Transform& transform, Camera& camera);
   void Update(const Transform& transform, Camera& camera, vec3 *light);
   void Update(const glm::mat4& transform, Camera& camera);
@@ -28,6 +29,7 @@ enum
   SHADOW_MAT_U,
   LIGHT_U,
   MVP_U,
+  BRIGHT_U,
 
   NB_UNIFORMS
 };

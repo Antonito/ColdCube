@@ -38,6 +38,7 @@ ENGINE_FILES=		animation_player.cpp		\
 			player.cpp			\
 			shader.cpp			\
 			texture.cpp			\
+			renderer.cpp			\
 			engine.cpp
 
 ENGINE_C_FILES=		cload_chunk.c
@@ -84,7 +85,7 @@ NAMESERV=		server_coldcube
 NAMEGEN=		generator_coldcube
 
 HEAD=			-Iinclude			\
-			-I/home/${USER}/.froot/include
+			-Ilib/lapin/include
 
 # Flags
 
@@ -113,7 +114,13 @@ endif
 
 RM=			rm -f
 
-LIB=			-lstdc++			\
+LIB=			-Llib/lapin/lib			\
+			-llapin 			\
+			-lsfml-audio 			\
+			-lsfml-graphics 		\
+			-lsfml-window 			\
+			-lsfml-system 			\
+			-lstdc++			\
 			-lpthread			\
 			-lSDL2				\
 			-lSDL2_ttf			\
