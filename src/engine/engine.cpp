@@ -87,14 +87,6 @@ int	engineMain(Displayer &display, t_data *data)
 	  DrawUI(data, data->config.oculus && data->config.oculusHmd);
 	  render++;
 	}
-      if (data->players[player.GetId()].life <= 0)
-	{
-	  data->players[player.GetId()].life = 100;
-	  if (player.GetId() % 2)
-	    player.GetPos() = vec3(10, 10, 2);
-	  else
-	    player.GetPos() = vec3(5, 5, 2);
-	}
       if (data->config.oculus && data->config.oculusHmd)
       	{
 	  glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -107,6 +99,14 @@ int	engineMain(Displayer &display, t_data *data)
       	  rightEye.Draw();
       	}
       user.IsShooted(data->players, data->game.Team2, map);
+      if (data->players[player.GetId()].life <= 0)
+	{
+	  data->players[player.GetId()].life = 100;
+	  if (player.GetId() % 2)
+	    player.GetPos() = vec3(10, 10, 2);
+	  else
+	    player.GetPos() = vec3(5, 5, 2);
+	}
       display.Update(camera, map, player, data, user);
       player.FillCPlayer(data->players + player.GetId(), camera.GetFor());
     }
