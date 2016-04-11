@@ -54,6 +54,11 @@
 # define MAX_PSEUDO			20
 
 //
+// Menu elements
+//
+# define EFFECT_MENU			"assets/musics/menu.ogg"
+
+//
 // Game elements
 //
 
@@ -79,6 +84,17 @@
 # define STREAK_RIFLE			1.10
 # define STREAK_PISTOL			1.25
 # define STREAK_KNIFE			1.50
+
+# define KNIFE_AMMO			-1
+# define KNIFE_LOAD			-1
+# define PISTOL_AMMO			-1
+# define PISTOL_LOAD			-1
+# define RIFLE_AMMO			-1
+# define RIFLE_LOAD			-1
+
+# define PISTOL_SOUND_PATH		"assets/musics/gun.ogg"
+# define RIFLE_SOUND_PATH		"assets/musics/rifle.ogg"
+# define KNIFE_SOUND_PATH		"assets/musics/knife.ogg"
 
 //
 //

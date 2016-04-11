@@ -46,10 +46,12 @@ void	initWeapons(t_player *player)
 {
   static t_bunny_music	*rifle = NULL;
   static t_bunny_music	*knife = NULL;
+  static t_bunny_music	*pistol = NULL;
 
   if (!rifle && !knife)
     {
-      if (!(rifle = bunny_load_music(SHOOT_SOUND_PATH)) ||
+      if (!(pistol = bunny_load_music(PISTOL_SOUND_PATH)) ||
+	  !(rifle = bunny_load_music(RIFLE_SOUND_PATH)) ||
 	  !(knife = bunny_load_music(KNIFE_SOUND_PATH)))
 	{
 	  std::cerr << "Cannot load effect\n";
@@ -67,7 +69,7 @@ void	initWeapons(t_player *player)
   player->weapons[PISTOL_WEAPON].id = 0;
   player->weapons[PISTOL_WEAPON].loaded = PISTOL_AMMO;
   player->weapons[PISTOL_WEAPON].ammo = PISTOL_AMMO;
-  player->weapons[PISTOL_WEAPON].shootSound = NULL;
+  player->weapons[PISTOL_WEAPON].shootSound = pistol;
 
   //Init Rifle
   player->weapons[RIFLE_WEAPON].id = 0;
@@ -82,6 +84,11 @@ void	initData(t_data *data)
 
   memset(data, 0, sizeof(t_data));
   i = -1;
+  if (!(data->menuEffect = bunny_load_music(EFFECT_MENU)))
+    {
+      std::cerr << "Cannot load effect\n";
+      exit(1);
+    }
   while (++i < 10)
     {
       data->players[i].events = 0;
@@ -149,6 +156,7 @@ int	game()
     bunny_delete_sound(&data->players[0].weapons[1].shootSound->sound);
   if (data->players[0].weapons[2].shootSound)
     bunny_delete_sound(&data->players[0].weapons[2].shootSound->sound);
+  bunny_delete_sound(&data->menuEffect->sound);
   return (0);
 }
 

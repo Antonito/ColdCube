@@ -24,16 +24,6 @@
 # include "Tchat.hpp"
 # include "engine/keys.hpp"
 
-# define		KNIFE_AMMO		-1
-# define		KNIFE_LOAD		-1
-# define		PISTOL_AMMO		-1
-# define		PISTOL_LOAD		-1
-# define		RIFLE_AMMO		-1
-# define		RIFLE_LOAD		-1
-
-# define		SHOOT_SOUND_PATH	"assets/musics/gun.ogg"
-# define		KNIFE_SOUND_PATH	"assets/musics/knife.ogg"
-
 typedef enum		e_state
   {
     PRESSED,
@@ -172,7 +162,7 @@ typedef	struct		s_data
   t_config		config;
   SDL_Surface		*screen;
   Tchat			tchat;
-  char			sounds[];
+  t_bunny_music		*menuEffect;
 }			t_data;
 
 #endif // !COMMON_STRUCTS_H_
