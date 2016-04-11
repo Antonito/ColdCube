@@ -28,7 +28,7 @@ int	engineMain(Displayer &display, t_data *data)
   data->players[data->net.playerIndexTcp].id = data->net.playerIndexTcp;
   Player	player(vec3(10, 10, 5), 90, &map, data->net.playerIndexTcp);
   User		user(&data->players[data->net.playerIndexTcp]);
-  Camera	camera(vec3(10, 5, 10), 70.0f, (float)WIN_X / WIN_Y, 0.01f, 500.0f,
+  Camera	camera(vec3(10, 5, 10), 80.0f, (float)WIN_X / WIN_Y, 0.01f, 500.0f,
 		       data->config.oculusHmd, data->config.oculus);
   Transform	transform;
   int		i;
@@ -46,6 +46,7 @@ int	engineMain(Displayer &display, t_data *data)
       data->players[i].direction = vec3(0, 1, 0);
       i++;
     }
+  shader.SetBright(data->config.brightness);
   glViewport(0, 0, WIN_X, WIN_Y);
   while (!display.IsClosed())
     {
@@ -59,7 +60,7 @@ int	engineMain(Displayer &display, t_data *data)
 	  if (render == 1)
 	    {
 	      rightEye.Bind();
-	      camera.GetPos() += normalize(cross(normalize(vec3(camera.GetFor().x, camera.GetFor().y, 0)), vec3(0, 0, 1))) * (GLfloat)0.4;
+	      camera.GetPos() += normalize(cross(normalize(vec3(camera.GetFor().x, camera.GetFor().y, 0)), vec3(0, 0, 1))) * (GLfloat)0.16;
 	    }
 	  shader.Bind();
 	  if (data->config.oculus && data->config.oculusHmd)

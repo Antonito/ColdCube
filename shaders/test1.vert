@@ -8,11 +8,13 @@ varying vec2 texCoord0;
 varying vec3 normal0;
 varying float z0;
 varying float lum;
+varying float brighness0;
 
 uniform mat4 transform;
 uniform mat4 shadow_mat;
 uniform vec4 light;
 uniform mat4 mvp;
+uniform float brightness;
 
 
 out vec3 normal2;
@@ -26,6 +28,7 @@ void main () {
   normal2 = vec3(normalize(shadow_mat * vec4(normal, 0.0)));
   lightDir2 = vec3(light - pos);
   eye2 = vec3(pos);
+  brightness0 = brightness;
 
   gl_Position = transform * vec4(position, 1.0);
 }

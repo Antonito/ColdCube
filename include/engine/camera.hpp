@@ -14,8 +14,9 @@ class Camera
  public:
   Camera(const vec3& pos, float fov, float aspect, float zNear, float zFar, ovrHmd oculusHmd, bool oculus)
     {
+      fov *= M_PI / 180.0f;
       if (oculus)
-	m_perspective = perspective(fov, 1.0f, zNear, zFar);
+	m_perspective = perspective(fov * 1.5f, 1.0f, zNear, zFar);
       else
 	m_perspective = perspective(fov, aspect, zNear, zFar);
       m_position = pos;
