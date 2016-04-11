@@ -52,14 +52,15 @@ int	engineMain(Displayer &display, t_data *data)
     {
       render = 0;
       transform.GetPos() = vec3(0, 0, 0);
-      display.Clear(0.0f, 0.3f, 0.8f, 1.0f);
+      display.Clear(0.0f, 0.3f * (0.5 + data->config.brightness * 0.5 / 100),
+       		    0.8f * (0.5 + data->config.brightness * 0.5 / 100), 1.0f);
       while (render < (data->config.oculus && data->config.oculusHmd) + 1)
 	{
 	  if (data->config.oculus && data->config.oculusHmd && render == 0)
-	    leftEye.Bind();
+	    leftEye.Bind((0.5 + data->config.brightness * 0.5 / 100));
 	  if (render == 1)
 	    {
-	      rightEye.Bind();
+	      rightEye.Bind((0.5 + data->config.brightness * 0.5 / 100));
 	      camera.GetPos() += normalize(cross(normalize(vec3(camera.GetFor().x, camera.GetFor().y, 0)), vec3(0, 0, 1))) * (GLfloat)0.16;
 	    }
 	  shader.Bind();
@@ -70,18 +71,29 @@ int	engineMain(Displayer &display, t_data *data)
 	  i = 0;
 	  while (i < 10)
 	    {
-	      PredictPosition(data->players + i, lastPredict + i, data->net.isPackage + i);
-	      DrawPlayerModel(data->players[i].position, data->players[i].direction,
-			      length(vec2(data->players[i].position) - lastPos[i]) * 5,
-			      camera, shader, i, player.GetId(), player.GetThird());
-	      if (render == 0 && !data->config.oculus)
-		lastPos[i] = vec2(data->players[i].position);
-	      else if (render == 1 && data->config.oculus)
-		lastPos[i] = vec2(data->players[i].position);
+	      if (getEvent(data->players[i].events, IS_CONNECTED))
+		{
+		  PredictPosition(data->players + i, lastPredict + i, data->net.isPackage + i);
+		  DrawPlayerModel(data->players[i].position, data->players[i].direction,
+				  length(vec2(data->players[i].position) - lastPos[i]) * 5,
+				  camera, shader, i, player.GetId(), player.GetThird());
+		  if (render == 0 && !data->config.oculus)
+		    lastPos[i] = vec2(data->players[i].position);
+		  else if (render == 1 && data->config.oculus)
+		    lastPos[i] = vec2(data->players[i].position);
+		}
 	      i++;
 	    }
 	  DrawUI(data, data->config.oculus && data->config.oculusHmd);
 	  render++;
+	}
+      if (data->players[player.GetId()].life <= 0)
+	{
+	  data->players[player.GetId()].life = 100;
+	  if (player.GetId() % 2)
+	    player.GetPos() = vec3(10, 10, 2);
+	  else
+	    player.GetPos() = vec3(5, 5, 2);
 	}
       if (data->config.oculus && data->config.oculusHmd)
       	{

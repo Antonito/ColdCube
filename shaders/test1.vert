@@ -8,7 +8,7 @@ varying vec2 texCoord0;
 varying vec3 normal0;
 varying float z0;
 varying float lum;
-varying float brighness0;
+varying float brightness0;
 
 uniform mat4 transform;
 uniform mat4 shadow_mat;
