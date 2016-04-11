@@ -44,7 +44,7 @@ void		User::shoot(bool shoot)
   if (isShooting)
     {
       if (m_player->weapons[m_player->selected_weapon].shootSound &&
-	  bunny_music_get_cursor(m_player->weapons[m_player->selected_weapon].shootSound) <= 0.01)
+	  bunny_music_get_cursor(m_player->weapons[m_player->selected_weapon].shootSound) <= SOUND_WAIT)
 	{
 	  isShooting = false;
 	  bunny_sound_stop(&m_player->weapons[m_player->selected_weapon].shootSound->sound);
@@ -131,7 +131,7 @@ int     User::IsShooted(t_player *p, Score &advTeam, Map &map)
 	{
 	  printf("I am %d\n", id);
 	  if (shooting[i] &&
-	      bunny_music_get_cursor(p[i].weapons[p[i].selected_weapon].shootSound) <= 0.01)
+	      bunny_music_get_cursor(p[i].weapons[p[i].selected_weapon].shootSound) <= SOUND_WAIT)
 	    shooting[i] = false;
 	  if (i != id && !shooting[i] && p[i].weapons[p[i].selected_weapon].shootSound)
 	    {
