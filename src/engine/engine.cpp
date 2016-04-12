@@ -54,7 +54,7 @@ int	engineMain(Displayer &display, t_data *data)
   glViewport(0, 0, WIN_X, WIN_Y);
   while (!display.IsClosed())
     {
-      if (player.IsAiming() && zoom > FOV_ZOOM)
+      if (player.IsAiming() && zoom > FOV_ZOOM && data->players[player.GetId()].selected_weapon != KNIFE_WEAPON)
 	{
 	  zoom -= ((FOV_ZOOM - 1) + zoom) / 7;
 	  camera.SetFov(zoom);

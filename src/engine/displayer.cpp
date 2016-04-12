@@ -163,159 +163,171 @@ void	Displayer::Update(Camera &cam, Map &map, Player &player,
 		break;
 	      }
 	  else
-	    switch (e.key.keysym.sym)
-	      {
-	      case (SDLK_RETURN):
-		data->tchat.focus(true);
-		break ;
-	      case (SDLK_z):
-		eventKey[KEY_Z] = true;
-		break ;
-	      case (SDLK_s):
-		eventKey[KEY_S] = true;
-		break ;
-	      case (SDLK_q):
-		eventKey[KEY_Q] = true;
-		break ;
-	      case (SDLK_d):
-		eventKey[KEY_D] = true;
-		break ;
-	      case (SDLK_a):
-		eventKey[KEY_A] = true;
-		break ;
-	      case (SDLK_w):
-		eventKey[KEY_W] = true;
-		break ;
-	      case (SDLK_1):
-		eventKey[KEY_1] = true;
-		break ;
-	      case (SDLK_2):
-		eventKey[KEY_2] = true;
-		break ;
-	      case (SDLK_3):
-		eventKey[KEY_3] = true;
-		break ;
-	      case(SDLK_AMPERSAND):
-		eventKey[KEY_COMMERCIAL_AND] = true;
-		break;
-	      case (SDLK_QUOTEDBL):
-		eventKey[KEY_QUOTE] = true;
-		break ;
-	      case (SDLK_SPACE):
-		eventKey[KEY_SPACE] = true;
-		break ;
-		// case (SDLK_q):
-		//   player.GetPos() += normalize(vec3((cross(cam.GetFor(), vec3(0, 1, 0))).x, (cross(cam.GetFor(), vec3(0, 1, 0))).y, 0));
-		//   break ;
-		// case (SDLK_d):
-		//   player.GetPos() -= normalize(vec3((cross(cam.GetFor(), vec3(0, 1, 0))).x, (cross(cam.GetFor(), vec3(0, 1, 0))).y, 0));
-		//   break ;
-	      case (SDLK_ESCAPE):
-		m_isClosed = true;
-		break ;
-	      case (SDLK_p):
-		player.Jump();
-		break ;
+	    {
+	      if (e.key.keysym.scancode == SDL_SCANCODE_2)
+		{
+		  eventKey[KEY_E_ACCENT] = true;
+		}
+	      switch (e.key.keysym.sym)
+		{
+		case (SDLK_RETURN):
+		  data->tchat.focus(true);
+		  break ;
+		case (SDLK_z):
+		  eventKey[KEY_Z] = true;
+		  break ;
+		case (SDLK_s):
+		  eventKey[KEY_S] = true;
+		  break ;
+		case (SDLK_q):
+		  eventKey[KEY_Q] = true;
+		  break ;
+		case (SDLK_d):
+		  eventKey[KEY_D] = true;
+		  break ;
+		case (SDLK_a):
+		  eventKey[KEY_A] = true;
+		  break ;
+		case (SDLK_w):
+		  eventKey[KEY_W] = true;
+		  break ;
+		case (SDLK_1):
+		  eventKey[KEY_1] = true;
+		  break ;
+		case (SDLK_2):
+		  eventKey[KEY_2] = true;
+		  break ;
+		case (SDLK_3):
+		  eventKey[KEY_3] = true;
+		  break ;
+		case(SDLK_AMPERSAND):
+		  eventKey[KEY_COMMERCIAL_AND] = true;
+		  break;
+		case (SDLK_QUOTEDBL):
+		  eventKey[KEY_QUOTE] = true;
+		  break ;
+		case (SDLK_SPACE):
+		  eventKey[KEY_SPACE] = true;
+		  break ;
+		  // case (SDLK_q):
+		  //   player.GetPos() += normalize(vec3((cross(cam.GetFor(), vec3(0, 1, 0))).x, (cross(cam.GetFor(), vec3(0, 1, 0))).y, 0));
+		  //   break ;
+		  // case (SDLK_d):
+		  //   player.GetPos() -= normalize(vec3((cross(cam.GetFor(), vec3(0, 1, 0))).x, (cross(cam.GetFor(), vec3(0, 1, 0))).y, 0));
+		  //   break ;
+		case (SDLK_ESCAPE):
+		  m_isClosed = true;
+		  break ;
+		case (SDLK_p):
+		  player.Jump();
+		  break ;
 #ifdef	DEBUG
-	      case (SDLK_F1):
-		map.PutCube(1, ivec3(cam.GetPos() + cam.GetFor() * 2.0f));
-		break ;
-	      case (SDLK_F2):
-		map.PutCube(2, ivec3(cam.GetPos() + cam.GetFor() * 2.0f));
-		break ;
-	      case (SDLK_F3):
-		map.PutCube(3, ivec3(cam.GetPos() + cam.GetFor() * 2.0f));
-		break ;
-	      case (SDLK_F4):
-		map.PutCube(4, ivec3(cam.GetPos() + cam.GetFor() * 2.0f));
-		break ;
-	      case (SDLK_F5):
-		map.PutCube(5, ivec3(cam.GetPos() + cam.GetFor() * 2.0f));
-		break ;
-	      case (SDLK_F6):
-		map.PutCube(6, ivec3(cam.GetPos() + cam.GetFor() * 2.0f));
-		break ;
-	      case (SDLK_F10):
-		map.PutCube(0, ivec3(cam.GetPos() + cam.GetFor() * 2.0f));
-		break ;
-	      case (SDLK_v):
-		map.Save();
-		break ;
-	      case (SDLK_t):
-		player.GetThird() = !player.GetThird();
-		break ;
+		case (SDLK_F1):
+		  map.PutCube(1, ivec3(cam.GetPos() + cam.GetFor() * 2.0f));
+		  break ;
+		case (SDLK_F2):
+		  map.PutCube(2, ivec3(cam.GetPos() + cam.GetFor() * 2.0f));
+		  break ;
+		case (SDLK_F3):
+		  map.PutCube(3, ivec3(cam.GetPos() + cam.GetFor() * 2.0f));
+		  break ;
+		case (SDLK_F4):
+		  map.PutCube(4, ivec3(cam.GetPos() + cam.GetFor() * 2.0f));
+		  break ;
+		case (SDLK_F5):
+		  map.PutCube(5, ivec3(cam.GetPos() + cam.GetFor() * 2.0f));
+		  break ;
+		case (SDLK_F6):
+		  map.PutCube(6, ivec3(cam.GetPos() + cam.GetFor() * 2.0f));
+		  break ;
+		case (SDLK_F10):
+		  map.PutCube(0, ivec3(cam.GetPos() + cam.GetFor() * 2.0f));
+		  break ;
+		case (SDLK_v):
+		  map.Save();
+		  break ;
+		case (SDLK_t):
+		  player.GetThird() = !player.GetThird();
+		  break ;
 #endif
 #ifdef	CHEAT
-	      case (SDLK_EQUALS):
-		if (data->players[data->net.playerIndexUdp].life < 100)
-		  ++data->players[data->net.playerIndexUdp].life;
-		break ;
-	      case (SDLK_MINUS):
-		if (data->players[data->net.playerIndexUdp].life)
-		  --data->players[data->net.playerIndexUdp].life;
-		break ;
-	      case(SDLK_i):
-		cheat.selected.ammo = (cheat.selected.ammo) ?  false : true;
-		break ;
-	      case(SDLK_j):
-		cheat.selected.life = (cheat.selected.life) ?  false : true;
-		break ;
-	      case(SDLK_k):
-		cheat.selected.fly = (cheat.selected.fly) ?  false : true;
-		cheat.selected.collisions = cheat.selected.fly;
-		break ;
-	      case(SDLK_l):
-		cheat.selected.collisions =
-		  (cheat.selected.collisions) ?  false : true;
-		break ;
+		case (SDLK_EQUALS):
+		  if (data->players[data->net.playerIndexUdp].life < 100)
+		    ++data->players[data->net.playerIndexUdp].life;
+		  break ;
+		case (SDLK_MINUS):
+		  if (data->players[data->net.playerIndexUdp].life)
+		    --data->players[data->net.playerIndexUdp].life;
+		  break ;
+		case(SDLK_i):
+		  cheat.selected.ammo = (cheat.selected.ammo) ?  false : true;
+		  break ;
+		case(SDLK_j):
+		  cheat.selected.life = (cheat.selected.life) ?  false : true;
+		  break ;
+		case(SDLK_k):
+		  cheat.selected.fly = (cheat.selected.fly) ?  false : true;
+		  cheat.selected.collisions = cheat.selected.fly;
+		  break ;
+		case(SDLK_l):
+		  cheat.selected.collisions =
+		    (cheat.selected.collisions) ?  false : true;
+		  break ;
 #endif
-	      }
+		}
+	    }
 	  break ;
 	case (SDL_KEYUP):
-	  switch (e.key.keysym.sym)
-	    {
-	    case (SDLK_z):
-	      eventKey[KEY_Z] = false;
-	      break ;
-	    case (SDLK_s):
-	      eventKey[KEY_S] = false;
-	      break ;
-	    case (SDLK_q):
-	      eventKey[KEY_Q] = false;
-	      break ;
-	    case (SDLK_d):
-	      eventKey[KEY_D] = false;
-	      break ;
-	    case (SDLK_a):
-	      eventKey[KEY_A] = false;
-	      break ;
-	    case (SDLK_w):
-	      eventKey[KEY_W] = false;
-	      break ;
-	    case (SDLK_SPACE):
-	      eventKey[KEY_SPACE] = false;
-	      break ;
-	    case (SDLK_1):
-	      eventKey[KEY_1] = false;
-	      break ;
-	    case (SDLK_2):
-	      eventKey[KEY_2] = false;
-	      break ;
-	    case (SDLK_3):
-	      eventKey[KEY_3] = false;
-	      break ;
-	    case(SDLK_AMPERSAND):
-	      eventKey[KEY_COMMERCIAL_AND] = false;
-	      break;
-	    case (SDLK_QUOTEDBL):
-	      eventKey[KEY_QUOTE] = false;
-	      break ;
-	    }
+	  {
+	    if (e.key.keysym.scancode == SDL_SCANCODE_2)
+	      {
+		eventKey[KEY_E_ACCENT] = false;
+	      }
+	    switch (e.key.keysym.sym)
+	      {
+	      case (SDLK_z):
+		eventKey[KEY_Z] = false;
+		break ;
+	      case (SDLK_s):
+		eventKey[KEY_S] = false;
+		break ;
+	      case (SDLK_q):
+		eventKey[KEY_Q] = false;
+		break ;
+	      case (SDLK_d):
+		eventKey[KEY_D] = false;
+		break ;
+	      case (SDLK_a):
+		eventKey[KEY_A] = false;
+		break ;
+	      case (SDLK_w):
+		eventKey[KEY_W] = false;
+		break ;
+	      case (SDLK_SPACE):
+		eventKey[KEY_SPACE] = false;
+		break ;
+	      case (SDLK_1):
+		eventKey[KEY_1] = false;
+		break ;
+	      case (SDLK_2):
+		eventKey[KEY_2] = false;
+		break ;
+	      case (SDLK_3):
+		eventKey[KEY_3] = false;
+		break ;
+	      case(SDLK_AMPERSAND):
+		eventKey[KEY_COMMERCIAL_AND] = false;
+		break;
+	      case (SDLK_QUOTEDBL):
+		eventKey[KEY_QUOTE] = false;
+		break ;
+	      }
 	  break;
 	case (SDL_MOUSEMOTION):
-	  player.GetMouseRot().y -= e.motion.xrel / 6.0f / (player.IsAiming() ? FOV_NORMAL / FOV_ZOOM : 1) * data->config.sensitivity / 100.0f;
-	  player.GetMouseRot().x -= e.motion.yrel / 6.0f / (player.IsAiming() ? FOV_NORMAL / FOV_ZOOM : 1) * data->config.sensitivity / 100.0f;
+	  player.GetMouseRot().y -= e.motion.xrel / 6.0f / (player.IsAiming() ? FOV_NORMAL / FOV_ZOOM : 1) * (data->config.sensitivity / 100.0f);
+	  player.GetMouseRot().x -= e.motion.yrel / 6.0f / (player.IsAiming() ? FOV_NORMAL / FOV_ZOOM : 1) * (data->config.sensitivity / 100.0f);
 	  break ;
+	  }
 	}
     }
 
@@ -634,11 +646,11 @@ void			Displayer::UpdateRoom(t_data *room, SDL_Rect *pos,
 	    break;
 	  case SDL_MOUSEMOTION:
 	    if (event.motion.x)
-	      event.motion.x -= event.motion.xrel / WIN_RATIO * room->config.sensitivity / 100;
+	      event.motion.x -= event.motion.xrel / WIN_RATIO;
 	    if (event.motion.y)
-	      event.motion.y -= event.motion.yrel / WIN_RATIO * room->config.sensitivity / 100;
-	    pos->x += (event.motion.xrel / 2) / WIN_RATIO;
-	    pos->y += (event.motion.yrel / 2) / WIN_RATIO;
+	      event.motion.y -= event.motion.yrel / WIN_RATIO;
+	    pos->x += event.motion.xrel / WIN_RATIO * (room->config.sensitivity / 100.0f);
+	    pos->y += event.motion.yrel / WIN_RATIO * (room->config.sensitivity / 100.0f);
 	    if (pos->x > WIN_X)
 	      pos->x = WIN_X;
 	    else if (pos->x < 0)
@@ -771,6 +783,7 @@ void			Displayer::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
   SDL_Event		event;
   struct timeval	tv;
   SDL_Rect		dest = {0, 0, WIN_X, WIN_Y};
+  vec2			tmpPos(pos->x, pos->y);
 
   while (SDL_PollEvent(&event))
     {
@@ -832,8 +845,13 @@ void			Displayer::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
 	case SDL_KEYDOWN:
 	  if (event.key.keysym.sym == SDLK_ESCAPE)
 	    {
-	      data->game.running = false;
-	      break;
+	      if (items[0].type == 0)
+		{
+		  data->game.running = false;
+		  break;
+		}
+	      else
+		loginMenu(items);
 	    }
 	  if (event.key.keysym.sym == SDLK_LEFT)
 	    {
@@ -935,21 +953,24 @@ void			Displayer::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
 	  break;
 	case SDL_MOUSEMOTION:
 	  if (event.motion.x)
-	    event.motion.x -= event.motion.xrel / WIN_RATIO * data->config.sensitivity / 100.0;
+	    event.motion.x -= event.motion.xrel / WIN_RATIO;
 	  if (event.motion.y)
-	    event.motion.y -= event.motion.yrel / WIN_RATIO * data->config.sensitivity / 100.0;
+	    event.motion.y -= event.motion.yrel / WIN_RATIO;
 	  if (items[menu->currentItem].type != MENU_SLIDER ||
 	      !menu->holded) {
-	    pos->x += (event.motion.xrel / 2) / WIN_RATIO;
-	    pos->y += (event.motion.yrel / 2) / WIN_RATIO;
-	    if (pos->x > WIN_X)
-	      pos->x = WIN_X;
-	    else if (pos->x < 0)
-	      pos->x = 0;
-	    if (pos->y > WIN_Y)
-	      pos->y = WIN_Y;
-	    else if (pos->y < 0)
-	      pos->y = 0;
+	    tmpPos.x += event.motion.xrel * 2 / WIN_RATIO * data->config.sensitivity / 100.0f;
+	    tmpPos.y += event.motion.yrel * 2 / WIN_RATIO * data->config.sensitivity / 100.0f;
+	    // * (data->config.sensitivity / 100.0f)
+	    if (tmpPos.x > WIN_X)
+	      tmpPos.x = WIN_X;
+	    else if (tmpPos.x < 0)
+	      tmpPos.x = 0;
+	    if (tmpPos.y > WIN_Y)
+	      tmpPos.y = WIN_Y;
+	    else if (tmpPos.y < 0)
+	      tmpPos.y = 0;
+	    pos->x = tmpPos.x;
+	    pos->y = tmpPos.y;
 	  }
 	  if (menu->holded)
 	    menu->hover(pos->x, pos->y);
@@ -982,9 +1003,12 @@ void			Displayer::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
       else
 	items[menu->currentItem].text += "|";
     }
-  data->config.musicVolume = items[8].value;
-  data->config.effectsVolume = items[9].value;
-  data->config.sensitivity = items[10].value;
+  if (items[0].type == 1)
+    {
+      data->config.musicVolume = items[1].value;
+      data->config.effectsVolume = items[2].value;
+      data->config.sensitivity = items[3].value;
+    }
   bunny_sound_volume(&data->menuMusic->sound, (double)data->config.musicVolume);
   bunny_sound_volume(&data->menuEffect->sound, (double)data->config.effectsVolume);
 

@@ -20,7 +20,6 @@ int		room(Displayer &display, t_data *data)
 
   while (!display.IsClosed() && data->game.running && strcmp(data->net.tcp.buff, "/g"))
     {
-      printf("This is WTF\n");
       display.UpdateRoom(data, &pos, bg, surface);
     }
   if (!data->game.running)
