@@ -1,6 +1,7 @@
 #include <GL/gl.h>
 #include "common_structs.hpp"
 #include "tools.hpp"
+#include "events.hpp"
 
 int		createUdpPacket(t_data *data, t_player *player)
 {
@@ -172,5 +173,6 @@ int		readUdpPacket(t_data *data)
       ++i;
     }
   data->players[(int)data->net.udp.buff[0]].events = tlo;
+  data->game.Team1.setScore(getScore(data->players[(int)data->net.udp.buff[0]].events));
   return (0);
 }

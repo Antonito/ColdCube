@@ -12,10 +12,13 @@ public:
   void		checkWin(const int team);
   void		updateScore(const int weapon, const bool headshot,
 			    const double dist);
+  time_t       	getMinuts(void){return ((m_begin - time(NULL)) / 60);};
+  time_t       	getSeconds(void){return ((m_begin - time(NULL)) % 60);};
   void		updateTime(void);
   void		resetStreak(void);
   void		updateStreakMult(const int weapon);
 
+  void		setScore(int score){m_score = score;};
   int		getScore(void);
 
 private:

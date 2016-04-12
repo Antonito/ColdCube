@@ -20,6 +20,10 @@ using namespace glm;
 Mesh	SetPlanes(int, vec3);
 void	DrawUI(t_data *data, bool oculus);
 
+//
+// Timer -> getMinuts and getSeconds in data->game.Team1
+//
+
 int	engineMain(Displayer &display, t_data *data)
 {
   Shader	shader("shaders/test1");
@@ -112,6 +116,7 @@ int	engineMain(Displayer &display, t_data *data)
       user.IsShooted(data->players, data->game.Team2, map);
       if (data->players[player.GetId()].life <= 0)
 	{
+	  data->game.Team2.resetStreak();
 	  data->players[player.GetId()].life = 100;
 	  if (player.GetId() % 2)
 	    player.GetPos() = vec3(10, 10, 2);
@@ -120,6 +125,7 @@ int	engineMain(Displayer &display, t_data *data)
 	}
       display.Update(camera, map, player, data, user);
       player.FillCPlayer(data->players + player.GetId(), camera.GetFor());
+      data->game.Team2.updateTime();
     }
   return (0);
 }
