@@ -218,9 +218,6 @@ void	Displayer::Update(Camera &cam, Map &map, Player &player,
 		case (SDLK_ESCAPE):
 		  m_isClosed = true;
 		  break ;
-		case (SDLK_p):
-		  player.Jump();
-		  break ;
 #ifdef	DEBUG
 		case (SDLK_F1):
 		  map.PutCube(1, ivec3(cam.GetPos() + cam.GetFor() * 2.0f));
@@ -354,13 +351,13 @@ void	Displayer::Update(Camera &cam, Map &map, Player &player,
 
   // Movement
   if (eventKey[data->config.keys.forward])
-    player.Move(vec2(cam.GetFor().x, cam.GetFor().y));
+    player.Move(vec2(cam.GetFor().x, cam.GetFor().y) * dTime);
   else if (eventKey[data->config.keys.backward])
-    player.Move(-vec2(cam.GetFor().x, cam.GetFor().y));
+    player.Move(-vec2(cam.GetFor().x, cam.GetFor().y) * dTime);
   if (eventKey[data->config.keys.left])
-    player.Move(-vec2(normalize(cross(cam.GetFor(), vec3(0, 0, 1))).x, cross(cam.GetFor(), vec3(0, 0, 1)).y));
+    player.Move(-vec2(normalize(cross(cam.GetFor(), vec3(0, 0, 1))).x, cross(cam.GetFor(), vec3(0, 0, 1)).y) * dTime);
   else if (eventKey[data->config.keys.right])
-    player.Move(vec2(normalize(cross(cam.GetFor(), vec3(0, 0, 1))).x, cross(cam.GetFor(), vec3(0, 0, 1)).y));
+    player.Move(vec2(normalize(cross(cam.GetFor(), vec3(0, 0, 1))).x, cross(cam.GetFor(), vec3(0, 0, 1)).y) * dTime);
 
   // Jump and Shoot
   if (eventKey[data->config.keys.jump])
