@@ -9,7 +9,7 @@ public:
   Score();
   ~Score();
   void		printScore(const int team);
-  void		checkWin(const int team);
+  bool		checkWin(const int team);
   void		updateScore(const int weapon, const bool headshot,
 			    const double dist);
   time_t       	getMinuts(void){return ((m_begin - time(NULL)) / 60);};

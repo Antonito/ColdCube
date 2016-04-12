@@ -459,6 +459,8 @@ int	startGame(t_data *data, std::vector<menuItem> &items, Displayer &disp)
 #ifdef	DEBUG
 	  std::clog << "UDP OK\n";
 #endif
+	  data->game.Team1.setScore(0);
+	  data->game.Team2.setScore(0);
 	  selectGameMusic(data, false);
 	  bunny_sound_volume(&data->gameMusic->sound, (double)data->config.musicVolume);
 	  bunny_sound_stop(&data->menuMusic->sound);

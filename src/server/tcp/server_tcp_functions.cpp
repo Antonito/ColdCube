@@ -78,6 +78,7 @@ void		tcps_cli_add(t_all *all)
 void		tcps_check_received(t_all *all, int i)
 {
   char		tmp[3] = {0};
+  char          buffi[30] = {0};
   pthread_t	timer;
 
   if (all->tcp->buff[0] == '/')
@@ -120,6 +121,11 @@ void		tcps_check_received(t_all *all, int i)
 	      return ;
 	    }
 	}
+      if (all->tcp->buff[1] == 't')
+      {
+        sprintf(buffi, "Server: %s has slain %s !", all->pseudo[(int)all->tcp->buff[3] - 48], all->pseudo[(int)all->tcp->buff[5] - 48]);
+        tcps_send_to_all_c(all, buffi);
+      }
     }
   else
     tcps_send_to_all(all);
