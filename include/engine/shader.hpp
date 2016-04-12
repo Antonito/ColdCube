@@ -29,7 +29,6 @@ enum
   SHADOW_MAT_U,
   LIGHT_U,
   MVP_U,
-  BRIGHT_U,
 
   NB_UNIFORMS
 };

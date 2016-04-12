@@ -30,7 +30,6 @@ Shader::Shader(const std::string& fileName)
   m_uniforms[1] = glGetUniformLocation(m_program, "shadow_mat");
   m_uniforms[2] = glGetUniformLocation(m_program, "light");
   m_uniforms[3] = glGetUniformLocation(m_program, "mvp");
-  m_uniforms[4] = glGetUniformLocation(m_program, "brightness");
 }
 
 Shader::~Shader()
@@ -47,11 +46,6 @@ Shader::~Shader()
 void	Shader::Bind()
 {
   glUseProgram(m_program);
-}
-
-void	Shader::SetBright(float bright)
-{
-  glUniform1f(m_uniforms[BRIGHT_U], bright);
 }
 
 void	Shader::Update(const Transform& transform, Camera& camera)

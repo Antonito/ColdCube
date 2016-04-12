@@ -77,10 +77,10 @@ Renderer::~Renderer()
   glDeleteFramebuffers(1, &m_frameBuffer);
 }
 
-void	Renderer::Bind(float bright)
+void	Renderer::Bind()
 {
   glBindFramebuffer(GL_FRAMEBUFFER, m_frameBuffer);
-  glClearColor(0.0f, 0.3f * bright, 0.8f * bright, 1.0f);
+  glClearColor(0.0f, 0.3f, 0.8f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 

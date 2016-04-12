@@ -1,4 +1,3 @@
-//#include <GL/glew.h>
 #include <ctime>
 #include "game.hpp"
 #include "common_structs.hpp"
@@ -52,7 +51,6 @@ int	engineMain(Displayer &display, t_data *data)
       data->players[i].direction = vec3(0, 1, 0);
       i++;
     }
-  shader.SetBright(data->config.brightness);
   glViewport(0, 0, WIN_X, WIN_Y);
   while (!display.IsClosed())
     {
@@ -66,17 +64,16 @@ int	engineMain(Displayer &display, t_data *data)
 	  zoom += ((FOV_NORMAL + 1) - zoom) / 3;
 	  camera.SetFov(zoom);
 	}
-      render = 0;
+            render = 0;
       transform.GetPos() = vec3(0, 0, 0);
-      display.Clear(0.0f, 0.3f * (0.5 + data->config.brightness * 0.5 / 100),
-       		    0.8f * (0.5 + data->config.brightness * 0.5 / 100), 1.0f);
+      display.Clear(0.0f, 0.3f, 0.8f, 1.0f);
       while (render < data->config.oculus + 1)
 	{
 	  if (data->config.oculus && render == 0)
-	    leftEye.Bind((0.5 + data->config.brightness * 0.5 / 100));
+	    leftEye.Bind();
 	  if (render == 1)
 	    {
-	      rightEye.Bind((0.5 + data->config.brightness * 0.5 / 100));
+	      rightEye.Bind();
 	      decal = normalize(cross(normalize(vec3(camera.GetFor().x, camera.GetFor().y, 0)), vec3(0, 0, 1))) * (GLfloat)0.16;
 	      camera.GetPos() += decal;
 	    }
@@ -95,9 +92,6 @@ int	engineMain(Displayer &display, t_data *data)
 		  DrawPlayerModel(data->players[i].position, data->players[i].direction,
 				  length(vec2(data->players[i].position) - lastPos[i]) * 5,
 				  camera, shader, i, player.GetId(), player.GetThird(), (render) ? decal / 2.0f : -decal / 2.0f);
-		  // glUseProgram(0);
-		  // DrawShoot(data->players + i, i, camera.GetViewProjection());
-		  // shader.Bind();
 		  if (render == 0 && !data->config.oculus)
 		    lastPos[i] = vec2(data->players[i].position);
 		  else if (render == 1 && data->config.oculus)

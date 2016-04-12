@@ -313,8 +313,8 @@ void	Displayer::Update(Camera &cam, Map &map, Player &player,
 	    }
 	  break;
 	case (SDL_MOUSEMOTION):
-	  player.GetMouseRot().y -= e.motion.xrel / 20.0f / (player.IsAiming() ? FOV_NORMAL / FOV_ZOOM : 1);
-	  player.GetMouseRot().x -= e.motion.yrel / 20.0f / (player.IsAiming() ? FOV_NORMAL / FOV_ZOOM : 1);
+	  player.GetMouseRot().y -= e.motion.xrel / 6.0f / (player.IsAiming() ? FOV_NORMAL / FOV_ZOOM : 1) * data->config.sensitivity / 100.0f;
+	  player.GetMouseRot().x -= e.motion.yrel / 6.0f / (player.IsAiming() ? FOV_NORMAL / FOV_ZOOM : 1) * data->config.sensitivity / 100.0f;
 	  break ;
 	}
     }
@@ -399,11 +399,11 @@ int	startGame(t_data *data, std::vector<menuItem> &items, Displayer &disp)
   else if (data->config.keyboard == AZERTY_MODE)
     setAzerty(&data->config.keys);
 
-  data->config.musicVolume = items[8].value;
-  data->config.effectsVolume = items[9].value;
-  data->config.brightness = items[10].value;
-  bunny_sound_volume(&data->menuMusic->sound, (double)data->config.musicVolume);
-  bunny_sound_volume(&data->menuEffect->sound, (double)data->config.effectsVolume);
+  // data->config.musicVolume = items[8].value;
+  // data->config.effectsVolume = items[9].value;
+  // data->config.sensitivity = items[10].value;
+  // bunny_sound_volume(&data->menuMusic->sound, (double)data->config.musicVolume);
+  // bunny_sound_volume(&data->menuEffect->sound, (double)data->config.effectsVolume);
 
   if (data->players[0].weapons[0].shootSound)
     bunny_sound_volume(&data->players[0].weapons[0].shootSound->sound, (double)data->config.effectsVolume);
@@ -634,9 +634,9 @@ void			Displayer::UpdateRoom(t_data *room, SDL_Rect *pos,
 	    break;
 	  case SDL_MOUSEMOTION:
 	    if (event.motion.x)
-	      event.motion.x -= (event.motion.xrel / 3) / WIN_RATIO;
+	      event.motion.x -= event.motion.xrel / WIN_RATIO * room->config.sensitivity / 100;
 	    if (event.motion.y)
-	      event.motion.y -= (event.motion.yrel / 3) / WIN_RATIO;
+	      event.motion.y -= event.motion.yrel / WIN_RATIO * room->config.sensitivity / 100;
 	    pos->x += (event.motion.xrel / 2) / WIN_RATIO;
 	    pos->y += (event.motion.yrel / 2) / WIN_RATIO;
 	    if (pos->x > WIN_X)
@@ -935,9 +935,9 @@ void			Displayer::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
 	  break;
 	case SDL_MOUSEMOTION:
 	  if (event.motion.x)
-	    event.motion.x -= (event.motion.xrel / 3) / WIN_RATIO;
+	    event.motion.x -= event.motion.xrel / WIN_RATIO * data->config.sensitivity / 100.0;
 	  if (event.motion.y)
-	    event.motion.y -= (event.motion.yrel / 3) / WIN_RATIO;
+	    event.motion.y -= event.motion.yrel / WIN_RATIO * data->config.sensitivity / 100.0;
 	  if (items[menu->currentItem].type != MENU_SLIDER ||
 	      !menu->holded) {
 	    pos->x += (event.motion.xrel / 2) / WIN_RATIO;
@@ -982,6 +982,11 @@ void			Displayer::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
       else
 	items[menu->currentItem].text += "|";
     }
+  data->config.musicVolume = items[8].value;
+  data->config.effectsVolume = items[9].value;
+  data->config.sensitivity = items[10].value;
+  bunny_sound_volume(&data->menuMusic->sound, (double)data->config.musicVolume);
+  bunny_sound_volume(&data->menuEffect->sound, (double)data->config.effectsVolume);
 
   menu->draw();
   SDL_FillRect(m_windowSurface, NULL, SDL_MapRGB(screen->format, 143, 45, 42));
