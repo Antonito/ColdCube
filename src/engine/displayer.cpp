@@ -458,6 +458,9 @@ int	startGame(t_data *data, std::vector<menuItem> &items, Displayer &disp)
 	{
 	  if (!room(disp, data))
 	    {
+#ifdef	DEBUG
+	      fprintf(stdout, "tcp fd closed\n");
+#endif
 	      write(data->net.tcp.sock, "/r", 2);
 #ifdef _WIN32
 	      closesocket(data->net.tcp.sock);
