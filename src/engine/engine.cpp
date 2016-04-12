@@ -95,6 +95,9 @@ int	engineMain(Displayer &display, t_data *data)
 		  DrawPlayerModel(data->players[i].position, data->players[i].direction,
 				  length(vec2(data->players[i].position) - lastPos[i]) * 5,
 				  camera, shader, i, player.GetId(), player.GetThird(), (render) ? decal / 2.0f : -decal / 2.0f);
+		  // glUseProgram(0);
+		  // DrawShoot(data->players + i, i, camera.GetViewProjection());
+		  // shader.Bind();
 		  if (render == 0 && !data->config.oculus)
 		    lastPos[i] = vec2(data->players[i].position);
 		  else if (render == 1 && data->config.oculus)

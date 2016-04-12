@@ -304,3 +304,29 @@ void	DrawPlayerModel(vec3 &pos, vec3 &dir, double speed, Camera &cam, Shader &sh
       member->Draw();
     }
 }
+
+void	DrawShoot(t_player *p, int id, mat4 matrix)
+{
+  static vec4	start[10] = {vec4(0, 0, 0, 0)};
+  static vec4	end[10] = {vec4(0, 0, 0, 0)};
+  static char	time[10] = {0};
+
+  if (time[id])
+    time[id]--;
+  if (getEvent(p->events, SHOOT))
+    {
+      start[id] = vec4(p->position.x, p->position.y, p->position.z, 0.0) + vec4(0.4, 0.4, 1.6, 0.0);
+      end[id] = start[id] + 100.0f * vec4(p->position.x, p->position.y, p->position.z, 0.0);
+      start[id].w = 1.0f;
+      end[id].w = 1.0f;
+      time[id] = 100;
+    }
+  vec4	s = start[id] * matrix;
+  vec4	e = end[id] * matrix;
+  glBegin(GL_LINE);
+  glLineWidth(10);
+  glColor3f(0, 0, 0);
+  glVertex3f(s.x, s.y, s.z);
+  glVertex3f(e.x, e.y, e.z);
+  glEnd();
+}
