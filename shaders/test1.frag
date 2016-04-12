@@ -1,7 +1,6 @@
 #version 130
 
 varying vec2 texCoord0;
-varying float brightness0;
 
 uniform sampler2D diffuse;
 
@@ -31,7 +30,6 @@ void main() {
     spec = specular * pow(intSpec, shininess);
   }
 
-  float b = minimum + brightness0 * (1 - minimum) / 100;
   colorOut = max(intensity * diff + spec, ambient) *
     texture2D(diffuse, texCoord0);
   if (colorOut.a == 0.0)
