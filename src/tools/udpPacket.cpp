@@ -173,6 +173,6 @@ int		readUdpPacket(t_data *data)
       ++i;
     }
   data->players[(int)data->net.udp.buff[0]].events = tlo;
-  data->game.Team1.setScore(getScore(data->players[(int)data->net.udp.buff[0]].events));
+  data->game.Team1.setScore(getScore(data->players[1].events));
   return (0);
 }
