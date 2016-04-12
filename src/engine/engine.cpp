@@ -129,8 +129,16 @@ int	engineMain(Displayer &display, t_data *data)
       display.Update(camera, map, player, data, user);
       player.FillCPlayer(data->players + player.GetId(), camera.GetFor());
       data->game.Team2.updateTime();
-      // awdsa
-      //
+      if (data->game.Team1.checkWin(1))
+	{
+	  display.setClosed(true);
+	  return (0);
+	}
+      if (data->game.Team2.checkWin(2))
+	{
+	  display.setClosed(true);
+	  return (0);
+	}
     }
   return (0);
 }
