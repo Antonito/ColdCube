@@ -21,6 +21,7 @@ class Player
   vec3 GetCollisionMove(vec3 pos, vec3 move);
   vec3 &GetPos() {return m_pos;};
   vec2 &GetRot() {return m_rot;};
+  vec2 &GetMouseRot() {return m_mouseRot;};
 
   bool	IsOnBlock();
   int	GetId() {return m_id;};
@@ -30,6 +31,7 @@ class Player
  private:
   vec3		m_pos;
   vec2		m_rot;
+  vec2		m_mouseRot;
   float		m_speed;
   vec2		m_move;
   float		m_fall;

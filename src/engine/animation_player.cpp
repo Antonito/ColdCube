@@ -183,7 +183,7 @@ static Mesh* GetMember()
   return (member);
 }
 
-void	DrawPlayerModel(vec3 &pos, vec3 &dir, double speed, Camera &cam, Shader &shader, int current, int id, bool third)
+void	DrawPlayerModel(vec3 &pos, vec3 &dir, double speed, Camera &cam, Shader &shader, int current, int id, bool third, vec3 decal)
 {
   mat4	transform;
   vec2	t = normalize(vec2(dir.x, dir.y));
@@ -197,7 +197,7 @@ void	DrawPlayerModel(vec3 &pos, vec3 &dir, double speed, Camera &cam, Shader &sh
   Texture	red(r, 1, 1);
   unsigned char b[] = {0, 0, 255, 255};
   Texture	blue(b, 1, 1);
-  int	i = SDL_GetTicks() / 50.0;
+  int	i = SDL_GetTicks() / 2.0;
   if (speed > 1)
     speed = 1;
   // Mesh	leg = GetLeg();
@@ -259,7 +259,7 @@ void	DrawPlayerModel(vec3 &pos, vec3 &dir, double speed, Camera &cam, Shader &sh
     {
       white.Bind(0);
       // Right arm
-      transform = glm::translate(cam.GetPos());
+      transform = glm::translate(cam.GetPos() - decal);
       transform *= glm::rotate(rotAngle, vec3(0, 0, 1));
       transform *= glm::translate(vec3(0.25, -0.1, -0.2));
       transform *= glm::rotate((GLfloat)((cos(i / 200.0) / 20.0) + M_PI / 2 + cam.GetRot().x * M_PI / 180), vec3(1, 0, 0));
@@ -270,7 +270,7 @@ void	DrawPlayerModel(vec3 &pos, vec3 &dir, double speed, Camera &cam, Shader &sh
 
       blue.Bind(0);
       // Body
-      transform = glm::translate(cam.GetPos());
+      transform = glm::translate(cam.GetPos() - decal);
       transform *= glm::rotate(rotAngle, vec3(0, 0, 1));
       transform *= glm::translate(-vec3(0, 0.15, 0.4));
       shader.Update(transform, cam);
@@ -278,7 +278,7 @@ void	DrawPlayerModel(vec3 &pos, vec3 &dir, double speed, Camera &cam, Shader &sh
 
       white.Bind(0);
       // Left arm
-      transform = glm::translate(cam.GetPos());
+      transform = glm::translate(cam.GetPos() - decal);
       transform *= glm::rotate(rotAngle, vec3(0, 0, 1));
       transform *= glm::translate(vec3(-0.25, -0.1, -0.2));
       transform *= glm::rotate(-(GLfloat)(cos(i / 50.0) / 5 * speed), vec3(1, 0, 0));
@@ -288,7 +288,7 @@ void	DrawPlayerModel(vec3 &pos, vec3 &dir, double speed, Camera &cam, Shader &sh
       member->Draw();
 
       // Right leg
-      transform = glm::translate(cam.GetPos());
+      transform = glm::translate(cam.GetPos() - decal);
       transform *= glm::rotate(rotAngle, vec3(0, 0, 1));
       transform *= glm::translate(-vec3(0.1, 0.15, 0.8));
       transform *= glm::rotate((GLfloat)(cos(i / 50.0) / 2 * speed), vec3(1, 0, 0));
@@ -296,7 +296,7 @@ void	DrawPlayerModel(vec3 &pos, vec3 &dir, double speed, Camera &cam, Shader &sh
       member->Draw();
 
       // Left leg
-      transform = glm::translate(cam.GetPos());
+      transform = glm::translate(cam.GetPos() - decal);
       transform *= glm::rotate(rotAngle, vec3(0, 0, 1));
       transform *= glm::translate(-vec3(-0.1, 0.15, 0.8));
       transform *= glm::rotate(-(GLfloat)(cos(i / 50.0) / 2 * speed), vec3(1, 0, 0));

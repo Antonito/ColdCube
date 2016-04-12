@@ -43,6 +43,7 @@ int	engineMain(Displayer &display, t_data *data)
   int		render;
   Renderer	rightEye(GAME_X, GAME_Y);
   Renderer	leftEye(GAME_X, GAME_Y);
+  vec3		decal(0, 0, 0);
 
   i = 0;
   while (i < 10)
@@ -57,12 +58,12 @@ int	engineMain(Displayer &display, t_data *data)
     {
       if (player.IsAiming() && zoom > FOV_ZOOM)
 	{
-	  zoom -= ((FOV_ZOOM - 1) + zoom) / 10;
+	  zoom -= ((FOV_ZOOM - 1) + zoom) / 7;
 	  camera.SetFov(zoom);
 	}
       else if (!player.IsAiming() && zoom < FOV_NORMAL)
 	{
-	  zoom += ((FOV_NORMAL + 1) - zoom) / 5;
+	  zoom += ((FOV_NORMAL + 1) - zoom) / 3;
 	  camera.SetFov(zoom);
 	}
       render = 0;
@@ -76,7 +77,8 @@ int	engineMain(Displayer &display, t_data *data)
 	  if (render == 1)
 	    {
 	      rightEye.Bind((0.5 + data->config.brightness * 0.5 / 100));
-	      camera.GetPos() += normalize(cross(normalize(vec3(camera.GetFor().x, camera.GetFor().y, 0)), vec3(0, 0, 1))) * (GLfloat)0.16;
+	      decal = normalize(cross(normalize(vec3(camera.GetFor().x, camera.GetFor().y, 0)), vec3(0, 0, 1))) * (GLfloat)0.16;
+	      camera.GetPos() += decal;
 	    }
 	  shader.Bind();
 	  if (data->config.oculus)
@@ -87,11 +89,12 @@ int	engineMain(Displayer &display, t_data *data)
 	  while (i < 10)
 	    {
 	      if (getEvent(data->players[i].events, IS_CONNECTED))
-		{
-		  PredictPosition(data->players + i, lastPredict + i, data->net.isPackage + i);
+	      	{
+		  if (i != player.GetId() && ((render == 0 && !data->config.oculus) || (render == 1 && data->config.oculus)))
+		    PredictPosition(data->players + i, lastPredict + i, data->net.isPackage + i);
 		  DrawPlayerModel(data->players[i].position, data->players[i].direction,
 				  length(vec2(data->players[i].position) - lastPos[i]) * 5,
-				  camera, shader, i, player.GetId(), player.GetThird());
+				  camera, shader, i, player.GetId(), player.GetThird(), (render) ? decal / 2.0f : -decal / 2.0f);
 		  if (render == 0 && !data->config.oculus)
 		    lastPos[i] = vec2(data->players[i].position);
 		  else if (render == 1 && data->config.oculus)

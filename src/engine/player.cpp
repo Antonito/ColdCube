@@ -10,6 +10,7 @@ Player::Player()
 {
   m_pos = vec3(0, 0, 0);
   m_rot = vec2(0, 0);
+  m_mouseRot = vec2(0, 0);
   m_speed = 1.0f;
   m_move = vec2(0, 0);
   m_fall = 0.0f;
@@ -21,6 +22,7 @@ Player::Player(vec3 pos, float rot, Map *map, int id)
 {
   m_pos = pos;
   m_rot = vec2(rot, 0);
+  m_mouseRot = vec2(rot, 0);
   m_speed = 1.0f;
   m_move = vec2(0, 0);
   m_fall = 0.0f;

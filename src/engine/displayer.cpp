@@ -84,6 +84,7 @@ void	Displayer::Update(Camera &cam, Map &map, Player &player,
 {
   SDL_GL_SwapWindow(m_window);
   usleep(5800);
+  ovrPosef pose[2];
   static		int cur(0), old(0), tot(0), nb(0);
   cur = SDL_GetTicks();
   int			t = cur - old + 1;
@@ -301,20 +302,32 @@ void	Displayer::Update(Camera &cam, Map &map, Player &player,
 	    }
 	  break;
 	case (SDL_MOUSEMOTION):
-	  player.GetRot().y -= e.motion.xrel / 20.0f / (player.IsAiming() ? FOV_NORMAL / FOV_ZOOM : 1);
-	  player.GetRot().x -= e.motion.yrel / 20.0f / (player.IsAiming() ? FOV_NORMAL / FOV_ZOOM : 1);
-	  if (player.GetRot().x > 89.99f)
-	    player.GetRot().x = 89.99f;
-	  if (player.GetRot().x < -89.99f)
-	    player.GetRot().x = -89.99f;
-	  cam.UpdateFor();
+	  player.GetMouseRot().y -= e.motion.xrel / 20.0f / (player.IsAiming() ? FOV_NORMAL / FOV_ZOOM : 1);
+	  player.GetMouseRot().x -= e.motion.yrel / 20.0f / (player.IsAiming() ? FOV_NORMAL / FOV_ZOOM : 1);
 	  break ;
 	}
     }
 
-  // Oculus
-  if (cam.isOculus())
-    cam.UpdateFor();
+  // // Oculus
+  // if (cam.isOculus())
+  //   cam.UpdateFor();
+  player.GetRot() = player.GetMouseRot();
+  if (data->config.oculusHmd && data->config.oculus)
+    {
+      pose[0] = ovrHmd_GetHmdPosePerEye(data->config.oculusHmd,
+					data->config.oculusHmd->EyeRenderOrder[0]);
+      pose[1] = ovrHmd_GetHmdPosePerEye(data->config.oculusHmd,
+					data->config.oculusHmd->EyeRenderOrder[1]);
+      // if (pose[0].Orientation.x >= 0.5)
+      // 	pose[0].Orientation.x = 0.499;
+      player.GetRot().x = pose[0].Orientation.x * 90.0 * 1.3;
+      player.GetRot().y += pose[0].Orientation.y * 90.0 * 1.3;
+    }
+  if (player.GetRot().x > 89.99f)
+    player.GetRot().x = 89.99f;
+  if (player.GetRot().x < -89.99f)
+    player.GetRot().x = -89.99f;
+  cam.UpdateFor();
 
   // Movement
   if (eventKey[data->config.keys.forward])

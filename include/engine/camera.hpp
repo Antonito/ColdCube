@@ -53,29 +53,10 @@ class Camera
   vec3 &GetPos() {return m_position;}
   void UpdateFor()
   {
-    ovrPosef pose[2];
-    vec2     finalRot = m_rotation;
-    //m_rotation[0] = pose[0].Orientation.x * 90;
-    if (m_hmd && m_oculus)
-      {
-	pose[0] = ovrHmd_GetHmdPosePerEye(m_hmd, m_hmd->EyeRenderOrder[0]);
-	pose[1] = ovrHmd_GetHmdPosePerEye(m_hmd, m_hmd->EyeRenderOrder[1]);
-	// if (pose[0].Orientation.x >= 0.5)
-	// 	pose[0].Orientation.x = 0.499;
-	finalRot.x = pose[0].Orientation.x * 90.0 * 1.3;
-	finalRot.y += pose[0].Orientation.y * 90.0 * 1.3;
-	if (finalRot.x > 89.99)
-	  finalRot.x = 89.99;
-	if (finalRot.x < -89.99)
-	  finalRot.x = -89.99;
-      }
-    else
-      finalRot = m_rotation;
-
     vec4	forward(0, 1, 0, 0);
-    mat4	rz = rotate((GLfloat)(finalRot.y * M_PI / 180), vec3(0, 0, 1));
+    mat4	rz = rotate((GLfloat)(m_rotation.y * M_PI / 180), vec3(0, 0, 1));
     vec3	axis(rz * vec4(1, 0, 0, 0));
-    mat4	rx = rotate((GLfloat)(finalRot.x * M_PI / 180), axis);
+    mat4	rx = rotate((GLfloat)(m_rotation.x * M_PI / 180), axis);
     vec3	res(rx * rz * forward);
     m_forward = normalize(res);
   }
