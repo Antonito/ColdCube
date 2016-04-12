@@ -447,27 +447,28 @@ int	startGame(t_data *data, std::vector<menuItem> &items, Displayer &disp)
   std::clog << "[Infos] Pseudo = " << data->net.pseudo << "\n";
 #endif
 
-  if (!clientLaunchTcpc(data)) //TCP Start
-    {
-#ifdef	DEBUG
-      std::clog << "TCP OK\n";
-#endif
-      data->room = true;
-      data->tchat.constructor();
-      while (data->room)
+  data->tchat.constructor();
+      if (!clientLaunchTcpc(data)) //TCP Start
 	{
+#ifdef	DEBUG
+	  std::clog << "TCP OK\n";
+#endif
 	  if (!room(disp, data))
 	    {
+#ifdef	DEBUG
+	      fprintf(stdout, "tcp fd closed\n");
+#endif
 	      write(data->net.tcp.sock, "/r", 2);
 #ifdef _WIN32
 	      closesocket(data->net.tcp.sock);
 #else
 	      close(data->net.tcp.sock);
 #endif
+	      data->game.Team1.setScore(0);
+	      data->game.Team2.setScore(0);
 	      data->net.tcp.run = 0;
 	      data->net.udp.run_send = 0;
 	      data->net.udp.run = 0;
-	      printf("WTF\n");
 	      data->tchat.constructor();
 	      data->room = false;
 	      disp.setClosed(true);
@@ -487,34 +488,32 @@ int	startGame(t_data *data, std::vector<menuItem> &items, Displayer &disp)
 	      bunny_sound_play(&data->gameMusic->sound);
 	      setEvent(&data->players[data->net.playerIndexUdp].events, IS_CONNECTED, true);
 	      engineMain(disp, data);
+	      write(data->net.tcp.sock, "/r", 2);
 #ifdef _WIN32
 	      closesocket(data->net.udp.sock);
+	      closesocket(data->net.tcp.sock);
 #else
 	      close(data->net.udp.sock);
+	      close(data->net.tcp.sock);
 #endif
-	      setEvent(&data->players[data->net.playerIndexUdp].events, IS_CONNECTED, false);
-	      bunny_sound_stop(&data->gameMusic->sound);
-	      bunny_sound_play(&data->menuMusic->sound);
-	    }
-	  data->room = true;
-	  data->game.running = true;
-	  disp.setClosed(false);
-	}
-      write(data->net.tcp.sock, "/r", 2);
 #ifdef	DEBUG
 	      fprintf(stdout, "tcp fd closed\n");
 #endif
-#ifdef	_WIN32
-      closesocket(data->net.tcp.sock);
-#else
-      close(data->net.tcp.sock);
-#endif
-    }
-  data->room = false;
-  data->net.tcp.run = 0;
-  data->net.udp.run_send = 0;
-  data->net.udp.run = 0;
-  return (0);
+	      setEvent(&data->players[data->net.playerIndexUdp].events, IS_CONNECTED, false);
+	      data->game.Team1.setScore(0);
+	      data->game.Team2.setScore(0);
+	      bunny_sound_stop(&data->gameMusic->sound);
+	      bunny_sound_play(&data->menuMusic->sound);
+	      return (0);
+	    }
+	}
+      data->game.Team1.setScore(0);
+      data->game.Team2.setScore(0);
+      data->room = false;
+      data->net.tcp.run = 0;
+      data->net.udp.run_send = 0;
+      data->net.udp.run = 0;
+      return (0);
 }
 
 int			minUdpID(t_data *data)

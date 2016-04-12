@@ -134,7 +134,9 @@ int	engineMain(Displayer &display, t_data *data)
 
 	  data->tchat.pushBack(msg);
 	  data->tchat.pushBack(bye);
+	  display.Update(camera, map, player, data, user);
 	  display.setClosed(true);
+	  sleep(4);
 	  data->game.Team1.setScore(0);
 	  data->game.Team2.setScore(0);
 	  return (0);
@@ -146,7 +148,9 @@ int	engineMain(Displayer &display, t_data *data)
 
 	  data->tchat.pushBack(msg);
 	  data->tchat.pushBack(bye);
+	  display.Update(camera, map, player, data, user);
 	  display.setClosed(true);
+	  sleep(4);
 	  data->game.Team1.setScore(0);
 	  data->game.Team2.setScore(0);
 	  return (0);
