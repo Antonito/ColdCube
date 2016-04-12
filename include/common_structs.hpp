@@ -171,6 +171,7 @@ typedef	struct		s_data
   SDL_Surface		*screen;
   Tchat			tchat;
   bool			lock;
+  bool			room;
   t_bunny_music		*menuEffect;
   t_bunny_music		*menuMusic;
   t_bunny_music		*gameMusic;
