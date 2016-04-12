@@ -8,7 +8,7 @@ class Renderer
  public:
   Renderer(int w, int h);
   ~Renderer();
-  void Bind(float bright);
+  void Bind();
   void Unbind();
   void Draw();
  private:

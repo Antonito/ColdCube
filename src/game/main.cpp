@@ -148,6 +148,7 @@ void	initData(t_data *data)
   data->config.keyboard = AZERTY_MODE;
   data->config.musicVolume = 50;
   data->config.effectsVolume = 50;
+  data->config.sensitivity = 30;
   commonKeys(&data->config.keys);
   setAzerty(&data->config.keys);
 #ifdef	CHEAT
