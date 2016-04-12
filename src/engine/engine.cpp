@@ -129,7 +129,8 @@ int	engineMain(Displayer &display, t_data *data)
       display.Update(camera, map, player, data, user);
       player.FillCPlayer(data->players + player.GetId(), camera.GetFor());
       data->game.Team2.updateTime();
-      printf("Team1 Score : %d\n", data->game.Team1.getScore());
+      // awdsa
+      //
     }
   return (0);
 }

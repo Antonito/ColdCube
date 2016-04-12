@@ -58,8 +58,8 @@ void			User::shoot(bool shoot, bool lock)
 	{
 	  bunny_sound_play(&m_player->weapons[m_player->selected_weapon].shootSound->sound);
 	  isShooting = true;
+	  setEvent(&m_player->events, SHOOT, true);
 	}
-      setEvent(&m_player->events, SHOOT, true);
       return ;
     }
   else if (shoot)
@@ -71,8 +71,8 @@ void			User::shoot(bool shoot, bool lock)
 	    {
 	      bunny_sound_play(&m_player->weapons[m_player->selected_weapon].shootSound->sound);
 	      isShooting = true;
+	      setEvent(&m_player->events, SHOOT, true);
 	    }
-	  setEvent(&m_player->events, SHOOT, true);
 	  return ;
 	}
       else
