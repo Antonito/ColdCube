@@ -44,6 +44,7 @@ void		setScore(uint32_t *value, int score)
   set.event.score16 = scoreTmp & (mask << 15);
 
   *value = set.value;
+  printf("Event = %d | Score = %d\n", *value, score);
 }
 
 short		getScore(uint32_t value)
