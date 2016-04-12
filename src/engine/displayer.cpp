@@ -449,15 +449,14 @@ int	startGame(t_data *data, std::vector<menuItem> &items, Displayer &disp)
 
   data->room = true;
   data->tchat.constructor();
-  bool		loop = false;
   while (data->room)
     {
-  if (!clientLaunchTcpc(data)) //TCP Start
-    {
+      if (!clientLaunchTcpc(data)) //TCP Start
+	{
 #ifdef	DEBUG
-      std::clog << "TCP OK\n";
+	  std::clog << "TCP OK\n";
 #endif
-	  if (!room(disp, data) || loop == true)
+	  if (!room(disp, data))
 	    {
 #ifdef	DEBUG
 	      fprintf(stdout, "tcp fd closed\n");
@@ -490,25 +489,21 @@ int	startGame(t_data *data, std::vector<menuItem> &items, Displayer &disp)
 	      bunny_sound_play(&data->gameMusic->sound);
 	      setEvent(&data->players[data->net.playerIndexUdp].events, IS_CONNECTED, true);
 	      engineMain(disp, data);
+	      write(data->net.tcp.sock, "/r", 2);
 #ifdef _WIN32
 	      closesocket(data->net.udp.sock);
-#else
-	      close(data->net.udp.sock);
-#endif
-	      write(data->net.tcp.sock, "/r", 2);
-#ifdef	DEBUG
-	      fprintf(stdout, "tcp fd closed\n");
-#endif
-#ifdef	_WIN32
 	      closesocket(data->net.tcp.sock);
 #else
+	      close(data->net.udp.sock);
 	      close(data->net.tcp.sock);
+#endif
+#ifdef	DEBUG
+	      fprintf(stdout, "tcp fd closed\n");
 #endif
 	      setEvent(&data->players[data->net.playerIndexUdp].events, IS_CONNECTED, false);
 	      bunny_sound_stop(&data->gameMusic->sound);
 	      bunny_sound_play(&data->menuMusic->sound);
 	    }
-	  loop = true;
 	  data->room = true;
 	  data->game.running = true;
 	  disp.setClosed(false);
