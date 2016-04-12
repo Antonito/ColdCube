@@ -447,10 +447,7 @@ int	startGame(t_data *data, std::vector<menuItem> &items, Displayer &disp)
   std::clog << "[Infos] Pseudo = " << data->net.pseudo << "\n";
 #endif
 
-  data->room = true;
   data->tchat.constructor();
-  while (data->room)
-    {
       if (!clientLaunchTcpc(data)) //TCP Start
 	{
 #ifdef	DEBUG
@@ -507,30 +504,16 @@ int	startGame(t_data *data, std::vector<menuItem> &items, Displayer &disp)
 	      data->game.Team2.setScore(0);
 	      bunny_sound_stop(&data->gameMusic->sound);
 	      bunny_sound_play(&data->menuMusic->sound);
+	      return (0);
 	    }
-	  data->game.Team1.setScore(0);
-	  data->game.Team2.setScore(0);
-	  data->room = true;
-	  data->game.running = true;
-	  disp.setClosed(false);
-    }
-  write(data->net.tcp.sock, "/r", 2);
-#ifdef	DEBUG
-  fprintf(stdout, "tcp fd closed\n");
-#endif
-#ifdef	_WIN32
-  closesocket(data->net.tcp.sock);
-#else
-  close(data->net.tcp.sock);
-#endif
-    }
-  data->game.Team1.setScore(0);
-  data->game.Team2.setScore(0);
-  data->room = false;
-  data->net.tcp.run = 0;
-  data->net.udp.run_send = 0;
-  data->net.udp.run = 0;
-  return (0);
+	}
+      data->game.Team1.setScore(0);
+      data->game.Team2.setScore(0);
+      data->room = false;
+      data->net.tcp.run = 0;
+      data->net.udp.run_send = 0;
+      data->net.udp.run = 0;
+      return (0);
 }
 
 int			minUdpID(t_data *data)
