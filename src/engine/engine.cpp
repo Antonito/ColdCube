@@ -131,11 +131,15 @@ int	engineMain(Displayer &display, t_data *data)
       data->game.Team2.updateTime();
       if (data->game.Team1.checkWin(1))
 	{
+	  std::string	msg = WIN_MSG;
+	  data->tchat.pushBack(msg);
 	  display.setClosed(true);
 	  return (0);
 	}
       if (data->game.Team2.checkWin(2))
 	{
+	  std::string	msg = LOOSE_MSG;
+	  data->tchat.pushBack(msg);
 	  display.setClosed(true);
 	  return (0);
 	}
