@@ -16,6 +16,35 @@ public:
   {
     m_player->selected_weapon = weapon;
   };
+  void		changeWeaponWheel(e_movement wheel)
+  {
+    if (wheel == UP)
+      switch (m_player->selected_weapon)
+	{
+	case (KNIFE_WEAPON):
+	  m_player->selected_weapon = PISTOL_WEAPON;
+	  break;
+	case (PISTOL_WEAPON):
+	  m_player->selected_weapon = RIFLE_WEAPON;
+	  break;
+	case (RIFLE_WEAPON):
+	  m_player->selected_weapon = KNIFE_WEAPON;
+	  break;
+	}
+    else
+      switch (m_player->selected_weapon)
+	{
+	case (KNIFE_WEAPON):
+	  m_player->selected_weapon = RIFLE_WEAPON;
+	  break;
+	case (PISTOL_WEAPON):
+	  m_player->selected_weapon = KNIFE_WEAPON;
+	  break;
+	case (RIFLE_WEAPON):
+	  m_player->selected_weapon = PISTOL_WEAPON;
+	  break;
+	}
+  };
   int		getSpeed(void){return (m_speed);};
   void		sprint(int state);
   //  void		getDamage();
