@@ -467,6 +467,8 @@ int	startGame(t_data *data, std::vector<menuItem> &items, Displayer &disp)
 #else
 	      close(data->net.tcp.sock);
 #endif
+	      data->game.Team1.setScore(0);
+	      data->game.Team2.setScore(0);
 	      data->net.tcp.run = 0;
 	      data->net.udp.run_send = 0;
 	      data->net.udp.run = 0;
@@ -518,6 +520,8 @@ int	startGame(t_data *data, std::vector<menuItem> &items, Displayer &disp)
   close(data->net.tcp.sock);
 #endif
     }
+  data->game.Team1.setScore(0);
+  data->game.Team2.setScore(0);
   data->room = false;
   data->net.tcp.run = 0;
   data->net.udp.run_send = 0;
