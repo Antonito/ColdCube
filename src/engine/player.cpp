@@ -97,10 +97,8 @@ void Player::Fall(float time)
     m_move *= 0.95;
 #else
   if (!this->IsOnBlock())
-    m_fall -= 0.5f;
+    m_fall -= 15.0f * time;
 #endif
-  // else if (m_fall < 0.0)
-  //   m_fall = 0.0f;
 }
 
 
