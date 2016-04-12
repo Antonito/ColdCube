@@ -117,6 +117,18 @@ void	Displayer::Update(Camera &cam, Map &map, Player &player,
 	      break ;
 	    }
 	  break;
+	case(SDL_MOUSEWHEEL):
+	  if (e.wheel.y < 0)
+	    {
+	      user.changeWeaponWheel(DOWN);
+	      break;
+	    }
+	  else if (e.wheel.y > 0)
+	    {
+	      user.changeWeaponWheel(UP);
+	      break;
+	    }
+	  break ;
 	case SDL_MOUSEBUTTONUP:
 	  switch (e.button.button)
 	    {

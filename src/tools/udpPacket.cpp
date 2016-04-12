@@ -173,6 +173,9 @@ int		readUdpPacket(t_data *data)
       ++i;
     }
   data->players[(int)data->net.udp.buff[0]].events = tlo;
-  data->game.Team1.setScore(getScore(data->players[(int)data->net.udp.buff[0]].events));
+  if ((int)data->net.udp.buff[0] % 2 != data->net.playerIndexTcp % 2)
+    {
+      data->game.Team1.setScore(getScore(data->players[(int)data->net.udp.buff[0]].events));
+    }
   return (0);
 }

@@ -31,6 +31,12 @@ typedef enum		e_state
     UNPRESSED
   }			e_state;
 
+typedef	enum	e_movement
+  {
+    UP,
+    DOWN
+  }		t_movement;
+
 typedef enum		e_bodyHit
   {
     NO_HIT		= -1,
