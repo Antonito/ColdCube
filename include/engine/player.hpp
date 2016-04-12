@@ -26,6 +26,7 @@ class Player
   int	GetId() {return m_id;};
   void	FillCPlayer(t_player *p, vec3 dir);
   bool	&GetThird() {return m_third;};
+  bool	&IsAiming() {return m_aiming;};
  private:
   vec3		m_pos;
   vec2		m_rot;
@@ -36,6 +37,7 @@ class Player
   Mesh		m_model;
   int		m_id;
   bool		m_third;
+  bool		m_aiming;
 };
 
 void	PredictPosition(t_player *p, vec3 *last, int *isPackage);

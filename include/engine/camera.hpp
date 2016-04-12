@@ -19,6 +19,9 @@ class Camera
 	m_perspective = perspective(fov * 1.5f, 1.0f, zNear, zFar);
       else
 	m_perspective = perspective(fov, aspect, zNear, zFar);
+      m_aspect = aspect;
+      m_zNear = zNear;
+      m_zFar = zFar;
       m_position = pos;
       m_rotation = vec2(0, 0);
       m_up = vec3(0, 0, 1);
@@ -38,6 +41,14 @@ class Camera
     return m_perspective;
   }
   bool isOculus() {return m_hmd ? true : false;}
+  void SetFov(float fov)
+  {
+      fov *= M_PI / 180.0f;
+      if (m_oculus)
+	m_perspective = perspective(fov * 1.5f, 1.0f, m_zNear, m_zFar);
+      else
+	m_perspective = perspective(fov, m_aspect, m_zNear, m_zFar);
+  }
 
   vec3 &GetPos() {return m_position;}
   void UpdateFor()
@@ -81,6 +92,9 @@ class Camera
   vec3 m_position;
   vec2 m_rotation;
   vec3 m_up;
+  float m_aspect;
+  float m_zNear;
+  float m_zFar;
   ovrHmd m_hmd;
   bool m_oculus;
 };

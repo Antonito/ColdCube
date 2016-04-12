@@ -13,6 +13,9 @@
 # define GAME_X				1280
 # define GAME_Y				720
 
+#define FOV_NORMAL			80.0f
+#define FOV_ZOOM			30.0f
+
 # define WIN_TITLE			"ColdCube"
 # define FONT_PATH			"assets/fonts/menu.ttf"
 

@@ -28,7 +28,8 @@ int	engineMain(Displayer &display, t_data *data)
   data->players[data->net.playerIndexTcp].id = data->net.playerIndexTcp;
   Player	player(vec3(10, 10, 5), 90, &map, data->net.playerIndexTcp);
   User		user(&data->players[data->net.playerIndexTcp]);
-  Camera	camera(vec3(10, 5, 10), 80.0f, (float)WIN_X / WIN_Y, 0.01f, 500.0f,
+  float		zoom = FOV_NORMAL;
+  Camera	camera(vec3(10, 5, 10), zoom, (float)WIN_X / WIN_Y, 0.01f, 500.0f,
 		       data->config.oculusHmd, data->config.oculus);
   Transform	transform;
   int		i;
@@ -50,13 +51,23 @@ int	engineMain(Displayer &display, t_data *data)
   glViewport(0, 0, WIN_X, WIN_Y);
   while (!display.IsClosed())
     {
+      if (player.IsAiming() && zoom > FOV_ZOOM)
+	{
+	  zoom -= ((FOV_ZOOM - 1) + zoom) / 10;
+	  camera.SetFov(zoom);
+	}
+      else if (!player.IsAiming() && zoom < FOV_NORMAL)
+	{
+	  zoom += ((FOV_NORMAL + 1) - zoom) / 5;
+	  camera.SetFov(zoom);
+	}
       render = 0;
       transform.GetPos() = vec3(0, 0, 0);
       display.Clear(0.0f, 0.3f * (0.5 + data->config.brightness * 0.5 / 100),
        		    0.8f * (0.5 + data->config.brightness * 0.5 / 100), 1.0f);
-      while (render < (data->config.oculus && data->config.oculusHmd) + 1)
+      while (render < data->config.oculus + 1)
 	{
-	  if (data->config.oculus && data->config.oculusHmd && render == 0)
+	  if (data->config.oculus && render == 0)
 	    leftEye.Bind((0.5 + data->config.brightness * 0.5 / 100));
 	  if (render == 1)
 	    {
@@ -64,7 +75,7 @@ int	engineMain(Displayer &display, t_data *data)
 	      camera.GetPos() += normalize(cross(normalize(vec3(camera.GetFor().x, camera.GetFor().y, 0)), vec3(0, 0, 1))) * (GLfloat)0.16;
 	    }
 	  shader.Bind();
-	  if (data->config.oculus && data->config.oculusHmd)
+	  if (data->config.oculus)
 	    glViewport(0, 0, GAME_X, GAME_Y);
 	  shader.Update(transform, camera, &light);
 	  map.Draw();
@@ -84,10 +95,10 @@ int	engineMain(Displayer &display, t_data *data)
 		}
 	      i++;
 	    }
-	  DrawUI(data, data->config.oculus && data->config.oculusHmd);
+	  DrawUI(data, data->config.oculus);
 	  render++;
 	}
-      if (data->config.oculus && data->config.oculusHmd)
+      if (data->config.oculus)
       	{
 	  glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	  glClearColor(0.0f, 0.0f, 0.0f, 1.0f);

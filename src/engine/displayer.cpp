@@ -301,8 +301,8 @@ void	Displayer::Update(Camera &cam, Map &map, Player &player,
 	    }
 	  break;
 	case (SDL_MOUSEMOTION):
-	  player.GetRot().y -= e.motion.xrel / 20.0f;
-	  player.GetRot().x -= e.motion.yrel / 20.0f;
+	  player.GetRot().y -= e.motion.xrel / 20.0f / (player.IsAiming() ? FOV_NORMAL / FOV_ZOOM : 1);
+	  player.GetRot().x -= e.motion.yrel / 20.0f / (player.IsAiming() ? FOV_NORMAL / FOV_ZOOM : 1);
 	  if (player.GetRot().x > 89.99f)
 	    player.GetRot().x = 89.99f;
 	  if (player.GetRot().x < -89.99f)
@@ -333,6 +333,10 @@ void	Displayer::Update(Camera &cam, Map &map, Player &player,
     user.shoot(true, data->lock);
   else
     user.shoot(false, data->lock);
+  if (eventKey[data->config.keys.aim])
+    player.IsAiming() = true;
+  else
+    player.IsAiming() = false;
 
   // Switch weapon
   if (eventKey[data->config.keys.weapon1])
