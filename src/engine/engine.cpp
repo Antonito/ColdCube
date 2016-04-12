@@ -116,7 +116,7 @@ int	engineMain(Displayer &display, t_data *data)
       	  glViewport(WIN_X / 2, 0, WIN_X / 2, WIN_Y);
       	  rightEye.Draw();
       	}
-      user.IsShooted(data->players, data->game.Team2, map);
+      user.IsShooted(data->players, data->game.Team2, map, data);
       if (data->players[player.GetId()].life <= 0)
 	{
 	  data->game.Team2.resetStreak();
