@@ -5,7 +5,6 @@
 #include <unistd.h>
 #include <GL/glew.h>
 #include <GL/gl.h>
-//#include <GL/glx.h>
 #include <sys/time.h>
 #include "engine/displayer.hpp"
 #include <iostream>
@@ -717,19 +716,6 @@ void			Displayer::UpdateRoom(t_data *room, SDL_Rect *pos,
       SDL_FreeSurface(final);
 
       SDL_GL_SwapWindow(m_window);
-
-
-      // SetSDL_Rect(&dest, 0, WIN_Y / 4, WIN_X / 2, WIN_Y / 2);
-      // SDL_BlitScaled(eyes, NULL, m_windowSurface, &dest);
-
-      // SetSDL_Rect(&dest, pos->x / 2 + 3, WIN_Y / 4 + pos->y / 2, surface->w, surface->h);
-      // SDL_BlitScaled(surface, NULL, m_windowSurface, &dest);
-
-      // SetSDL_Rect(&dest, WIN_X / 2, WIN_Y / 4, WIN_X / 2, WIN_Y / 2);
-      // SDL_BlitScaled(eyes, NULL, m_windowSurface, &dest);
-
-      // SetSDL_Rect(&dest, WIN_X / 2 + pos->x / 2 - 3, WIN_Y / 4 + pos->y / 2, surface->w, surface->h);
-      // SDL_BlitScaled(surface, NULL, m_windowSurface, &dest);
       SDL_FreeSurface(eyes);
     }
   else
