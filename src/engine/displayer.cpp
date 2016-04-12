@@ -503,9 +503,13 @@ int	startGame(t_data *data, std::vector<menuItem> &items, Displayer &disp)
 	      fprintf(stdout, "tcp fd closed\n");
 #endif
 	      setEvent(&data->players[data->net.playerIndexUdp].events, IS_CONNECTED, false);
+	      data->game.Team1.setScore(0);
+	      data->game.Team2.setScore(0);
 	      bunny_sound_stop(&data->gameMusic->sound);
 	      bunny_sound_play(&data->menuMusic->sound);
 	    }
+	  data->game.Team1.setScore(0);
+	  data->game.Team2.setScore(0);
 	  data->room = true;
 	  data->game.running = true;
 	  disp.setClosed(false);
