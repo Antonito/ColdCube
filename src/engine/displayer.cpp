@@ -474,10 +474,6 @@ int	startGame(t_data *data, std::vector<menuItem> &items, Displayer &disp)
 	      bunny_sound_play(&data->gameMusic->sound);
 	      setEvent(&data->players[data->net.playerIndexUdp].events, IS_CONNECTED, true);
 	      engineMain(disp, data);
-	      write(data->net.tcp.sock, "/r", 2);
-#ifdef	DEBUG
-	      fprintf(stdout, "tcp fd closed\n");
-#endif
 #ifdef _WIN32
 	      closesocket(data->net.udp.sock);
 #else
@@ -491,6 +487,10 @@ int	startGame(t_data *data, std::vector<menuItem> &items, Displayer &disp)
 	  data->game.running = true;
 	  disp.setClosed(false);
 	}
+      write(data->net.tcp.sock, "/r", 2);
+#ifdef	DEBUG
+      fprintf(stdout, "tcp fd closed\n");
+#endif
 #ifdef	_WIN32
       closesocket(data->net.tcp.sock);
 #else

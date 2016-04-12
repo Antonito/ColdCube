@@ -133,7 +133,7 @@ int	engineMain(Displayer &display, t_data *data)
       player.FillCPlayer(data->players + player.GetId(), camera.GetFor());
       data->game.Team2.updateTime();
 
-      if (data->game.Team2.checkWin(2))
+      if (data->game.Team2.checkWin())
 	{
 	  std::string	msg = LOOSE_MSG;
 	  std::string	bye = BYE_MSG;
@@ -145,7 +145,7 @@ int	engineMain(Displayer &display, t_data *data)
 	  data->game.Team2.setScore(0);
 	  return (0);
 	}
-      if (data->game.Team1.checkWin(1))
+      if (data->game.Team1.checkWin())
 	{
 	  std::string	msg = WIN_MSG;
 	  std::string	bye = BYE_MSG;
