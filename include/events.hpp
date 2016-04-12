@@ -14,25 +14,7 @@ typedef	struct			s_event
 {
   unsigned char			connected : 1;
   unsigned char			shoot : 1;
-
-  // 16 bits score
-  unsigned char			score1 : 1;
-  unsigned char			score2 : 1;
-  unsigned char			score3 : 1;
-  unsigned char			score4 : 1;
-  unsigned char			score5 : 1;
-  unsigned char			score6 : 1;
-  unsigned char			score7 : 1;
-  unsigned char			score8 : 1;
-  unsigned char			score9 : 1;
-  unsigned char			score10 : 1;
-  unsigned char			score11 : 1;
-  unsigned char			score12 : 1;
-  unsigned char			score13 : 1;
-  unsigned char			score14 : 1;
-  unsigned char			score15 : 1;
-  unsigned char			score16 : 1;
-
+  unsigned short		score : 16;
   unsigned int			others : 14;
 }				t_event;
 
