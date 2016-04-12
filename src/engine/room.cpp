@@ -13,14 +13,16 @@ int		room(Displayer &display, t_data *data)
 {
   SDL_Surface		*bg,
 			*surface;
-  SDL_Rect	pos = {WIN_X / 2, WIN_Y / 2, 0, 0};
+  SDL_Rect		pos = {WIN_X / 2, WIN_Y / 2, 0, 0};
 
   surface = IMG_Load(CURSOR_IMG);
-  data->tchat.constructor();
   bg = IMG_Load(ROOM_BACKGROUND);
 
   while (!display.IsClosed() && data->game.running && strcmp(data->net.tcp.buff, "/g"))
-    display.UpdateRoom(data, &pos, bg, surface);
+    {
+      printf("This is WTF\n");
+      display.UpdateRoom(data, &pos, bg, surface);
+    }
   if (!data->game.running)
     data->game.running = true;
   data->tchat.focus(false);

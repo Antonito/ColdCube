@@ -440,48 +440,64 @@ int	startGame(t_data *data, std::vector<menuItem> &items, Displayer &disp)
 #ifdef	DEBUG
       std::clog << "TCP OK\n";
 #endif
-      if (!room(disp, data))
-      {
-	write(data->net.tcp.sock, "/r", 2);
-#ifdef _WIN32
-	closesocket(data->net.tcp.sock);
-#else
-	close(data->net.tcp.sock);
-#endif
-	data->net.tcp.run = 0;
-	data->net.udp.run_send = 0;
-	data->net.udp.run = 0;
-	return (0);
-      }
-      if (!clientLaunchUdpc(data))
+      data->room = true;
+      data->tchat.constructor();
+      while (data->room)
 	{
-#ifdef	DEBUG
-	  std::clog << "UDP OK\n";
+	  if (!room(disp, data))
+	    {
+	      write(data->net.tcp.sock, "/r", 2);
+#ifdef _WIN32
+	      closesocket(data->net.tcp.sock);
+#else
+	      close(data->net.tcp.sock);
 #endif
-	  data->game.Team1.setScore(0);
-	  data->game.Team2.setScore(0);
-	  selectGameMusic(data, false);
-	  bunny_sound_volume(&data->gameMusic->sound, (double)data->config.musicVolume);
-	  bunny_sound_stop(&data->menuMusic->sound);
-	  bunny_sound_play(&data->gameMusic->sound);
-	  setEvent(&data->players[data->net.playerIndexUdp].events, IS_CONNECTED, true);
-	  engineMain(disp, data);
-	  write(data->net.tcp.sock, "/r", 2);
+	      data->net.tcp.run = 0;
+	      data->net.udp.run_send = 0;
+	      data->net.udp.run = 0;
+	      printf("WTF\n");
+	      data->tchat.constructor();
+	      data->room = false;
+	      disp.setClosed(true);
+	      return (0);
+	    }
+	  if (!clientLaunchUdpc(data))
+	    {
 #ifdef	DEBUG
-	  fprintf(stdout, "tcp fd closed\n");
+	      std::clog << "UDP OK\n";
+#endif
+	      data->game.Team1.setScore(0);
+	      data->game.Team2.setScore(0);
+	      selectGameMusic(data, false);
+	      bunny_sound_volume(&data->gameMusic->sound, (double)data->config.musicVolume);
+	      bunny_sound_stop(&data->menuMusic->sound);
+	      bunny_sound_play(&data->gameMusic->sound);
+	      setEvent(&data->players[data->net.playerIndexUdp].events, IS_CONNECTED, true);
+	      engineMain(disp, data);
+	      write(data->net.tcp.sock, "/r", 2);
+#ifdef	DEBUG
+	      fprintf(stdout, "tcp fd closed\n");
 #endif
 #ifdef _WIN32
-	  closesocket(data->net.udp.sock);
-	  closesocket(data->net.tcp.sock);
+	      closesocket(data->net.udp.sock);
 #else
-	  close(data->net.udp.sock);
-	  close(data->net.tcp.sock);
+	      close(data->net.udp.sock);
 #endif
-	  setEvent(&data->players[data->net.playerIndexUdp].events, IS_CONNECTED, false);
-	  bunny_sound_stop(&data->gameMusic->sound);
-	  bunny_sound_play(&data->menuMusic->sound);
+	      setEvent(&data->players[data->net.playerIndexUdp].events, IS_CONNECTED, false);
+	      bunny_sound_stop(&data->gameMusic->sound);
+	      bunny_sound_play(&data->menuMusic->sound);
+	    }
+	  data->room = true;
+	  data->game.running = true;
+	  disp.setClosed(false);
 	}
+#ifdef	_WIN32
+      closesocket(data->net.tcp.sock);
+#else
+      close(data->net.tcp.sock);
+#endif
     }
+  data->room = false;
   data->net.tcp.run = 0;
   data->net.udp.run_send = 0;
   data->net.udp.run = 0;
@@ -564,15 +580,16 @@ void			Displayer::UpdateRoom(t_data *room, SDL_Rect *pos,
 		room->tchat.focus(true);
 		break;
 	      }
-	    if (!room->tchat.isFocus() && event.key.keysym.sym == SDLK_ESCAPE)
-	      {
-		room->game.running = false;
-		break;
-	      }
 	    if (event.key.keysym.sym == SDLK_ESCAPE)
 	      room->tchat.focus(false);
 	    break;
 	  case SDL_KEYDOWN:
+	    if (!room->tchat.isFocus() && event.key.keysym.sym == SDLK_ESCAPE)
+	      {
+      		room->game.running = false;
+		room->room = false;
+		break;
+	      }
 	    if (!room->tchat.isFocus())
 	      break;
 	    switch (event.key.keysym.sym)
@@ -593,6 +610,7 @@ void			Displayer::UpdateRoom(t_data *room, SDL_Rect *pos,
 	    break;
 	  case SDL_QUIT:
 	    room->game.running = false;
+	    room->room = false;
 	    break;
 	  case SDL_MOUSEBUTTONUP:
 	    if (event.button.button != SDL_BUTTON_LEFT)
