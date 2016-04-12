@@ -133,34 +133,34 @@ int	engineMain(Displayer &display, t_data *data)
       player.FillCPlayer(data->players + player.GetId(), camera.GetFor());
       data->game.Team2.updateTime();
 
-      if (data->game.Team2.checkWin())
-	{
-	  std::string	msg = LOOSE_MSG;
-	  std::string	bye = BYE_MSG;
+      // if (data->game.Team2.checkWin())
+      // 	{
+      // 	  std::string	msg = LOOSE_MSG;
+      // 	  std::string	bye = BYE_MSG;
 
-	  data->tchat.pushBack(msg);
-	  data->tchat.pushBack(bye);
-	  display.Update(camera, map, player, data, user);
-	  display.setClosed(true);
-	  sleep(4);
-	  data->game.Team1.setScore(0);
-	  data->game.Team2.setScore(0);
-	  return (0);
-	}
-      if (data->game.Team1.checkWin())
-	{
-	  std::string	msg = WIN_MSG;
-	  std::string	bye = BYE_MSG;
+      // 	  data->tchat.pushBack(msg);
+      // 	  data->tchat.pushBack(bye);
+      // 	  display.Update(camera, map, player, data, user);
+      // 	  display.setClosed(true);
+      // 	  sleep(4);
+      // 	  data->game.Team1.setScore(0);
+      // 	  data->game.Team2.setScore(0);
+      // 	  return (0);
+      // 	}
+      // if (data->game.Team1.checkWin())
+      // 	{
+      // 	  std::string	msg = WIN_MSG;
+      // 	  std::string	bye = BYE_MSG;
 
-	  data->tchat.pushBack(msg);
-	  data->tchat.pushBack(bye);
-	  display.Update(camera, map, player, data, user);
-	  display.setClosed(true);
-	  sleep(4);
-	  data->game.Team1.setScore(0);
-	  data->game.Team2.setScore(0);
-	  return (0);
-	}
+      // 	  data->tchat.pushBack(msg);
+      // 	  data->tchat.pushBack(bye);
+      // 	  display.Update(camera, map, player, data, user);
+      // 	  display.setClosed(true);
+      // 	  sleep(4);
+      // 	  data->game.Team1.setScore(0);
+      // 	  data->game.Team2.setScore(0);
+      // 	  return (0);
+      // 	}
     }
   return (0);
 }
