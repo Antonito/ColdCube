@@ -103,7 +103,7 @@ vec4    User::IsHit(t_player *p, Map &map)
   return (vec4(pos.x, pos.y, pos.z, -1.0));
 }
 
-int     User::IsShooted(t_player *p, Score &advTeam, Map &map)
+int     User::IsShooted(t_player *p, Score &advTeam, Map &map, t_data *data)
 {
   int		i = 0;
   vec4		hit;
@@ -153,6 +153,10 @@ int     User::IsShooted(t_player *p, Score &advTeam, Map &map)
 	      advTeam.updateStreakMult(weapon);
 	      advTeam.updateScore(weapon, headshot, length(vec3(hit) - p[i].position));
 	      setScore(&m_player->events, advTeam.getScore());
+              char tmp[30];
+              memset(tmp, 0, 30);
+              sprintf(tmp, "/t %d %d", i, data->net.playerIndexTcp);
+              write(data->net.tcp.sock, tmp, strlen(tmp));
 	    }
   	}
       // if (getEvent(p[i].events, SHOOT))
