@@ -163,159 +163,171 @@ void	Displayer::Update(Camera &cam, Map &map, Player &player,
 		break;
 	      }
 	  else
-	    switch (e.key.keysym.sym)
-	      {
-	      case (SDLK_RETURN):
-		data->tchat.focus(true);
-		break ;
-	      case (SDLK_z):
-		eventKey[KEY_Z] = true;
-		break ;
-	      case (SDLK_s):
-		eventKey[KEY_S] = true;
-		break ;
-	      case (SDLK_q):
-		eventKey[KEY_Q] = true;
-		break ;
-	      case (SDLK_d):
-		eventKey[KEY_D] = true;
-		break ;
-	      case (SDLK_a):
-		eventKey[KEY_A] = true;
-		break ;
-	      case (SDLK_w):
-		eventKey[KEY_W] = true;
-		break ;
-	      case (SDLK_1):
-		eventKey[KEY_1] = true;
-		break ;
-	      case (SDLK_2):
-		eventKey[KEY_2] = true;
-		break ;
-	      case (SDLK_3):
-		eventKey[KEY_3] = true;
-		break ;
-	      case(SDLK_AMPERSAND):
-		eventKey[KEY_COMMERCIAL_AND] = true;
-		break;
-	      case (SDLK_QUOTEDBL):
-		eventKey[KEY_QUOTE] = true;
-		break ;
-	      case (SDLK_SPACE):
-		eventKey[KEY_SPACE] = true;
-		break ;
-		// case (SDLK_q):
-		//   player.GetPos() += normalize(vec3((cross(cam.GetFor(), vec3(0, 1, 0))).x, (cross(cam.GetFor(), vec3(0, 1, 0))).y, 0));
-		//   break ;
-		// case (SDLK_d):
-		//   player.GetPos() -= normalize(vec3((cross(cam.GetFor(), vec3(0, 1, 0))).x, (cross(cam.GetFor(), vec3(0, 1, 0))).y, 0));
-		//   break ;
-	      case (SDLK_ESCAPE):
-		m_isClosed = true;
-		break ;
-	      case (SDLK_p):
-		player.Jump();
-		break ;
+	    {
+	      if (e.key.keysym.scancode == SDL_SCANCODE_2)
+		{
+		  eventKey[KEY_E_ACCENT] = true;
+		}
+	      switch (e.key.keysym.sym)
+		{
+		case (SDLK_RETURN):
+		  data->tchat.focus(true);
+		  break ;
+		case (SDLK_z):
+		  eventKey[KEY_Z] = true;
+		  break ;
+		case (SDLK_s):
+		  eventKey[KEY_S] = true;
+		  break ;
+		case (SDLK_q):
+		  eventKey[KEY_Q] = true;
+		  break ;
+		case (SDLK_d):
+		  eventKey[KEY_D] = true;
+		  break ;
+		case (SDLK_a):
+		  eventKey[KEY_A] = true;
+		  break ;
+		case (SDLK_w):
+		  eventKey[KEY_W] = true;
+		  break ;
+		case (SDLK_1):
+		  eventKey[KEY_1] = true;
+		  break ;
+		case (SDLK_2):
+		  eventKey[KEY_2] = true;
+		  break ;
+		case (SDLK_3):
+		  eventKey[KEY_3] = true;
+		  break ;
+		case(SDLK_AMPERSAND):
+		  eventKey[KEY_COMMERCIAL_AND] = true;
+		  break;
+		case (SDLK_QUOTEDBL):
+		  eventKey[KEY_QUOTE] = true;
+		  break ;
+		case (SDLK_SPACE):
+		  eventKey[KEY_SPACE] = true;
+		  break ;
+		  // case (SDLK_q):
+		  //   player.GetPos() += normalize(vec3((cross(cam.GetFor(), vec3(0, 1, 0))).x, (cross(cam.GetFor(), vec3(0, 1, 0))).y, 0));
+		  //   break ;
+		  // case (SDLK_d):
+		  //   player.GetPos() -= normalize(vec3((cross(cam.GetFor(), vec3(0, 1, 0))).x, (cross(cam.GetFor(), vec3(0, 1, 0))).y, 0));
+		  //   break ;
+		case (SDLK_ESCAPE):
+		  m_isClosed = true;
+		  break ;
+		case (SDLK_p):
+		  player.Jump();
+		  break ;
 #ifdef	DEBUG
-	      case (SDLK_F1):
-		map.PutCube(1, ivec3(cam.GetPos() + cam.GetFor() * 2.0f));
-		break ;
-	      case (SDLK_F2):
-		map.PutCube(2, ivec3(cam.GetPos() + cam.GetFor() * 2.0f));
-		break ;
-	      case (SDLK_F3):
-		map.PutCube(3, ivec3(cam.GetPos() + cam.GetFor() * 2.0f));
-		break ;
-	      case (SDLK_F4):
-		map.PutCube(4, ivec3(cam.GetPos() + cam.GetFor() * 2.0f));
-		break ;
-	      case (SDLK_F5):
-		map.PutCube(5, ivec3(cam.GetPos() + cam.GetFor() * 2.0f));
-		break ;
-	      case (SDLK_F6):
-		map.PutCube(6, ivec3(cam.GetPos() + cam.GetFor() * 2.0f));
-		break ;
-	      case (SDLK_F10):
-		map.PutCube(0, ivec3(cam.GetPos() + cam.GetFor() * 2.0f));
-		break ;
-	      case (SDLK_v):
-		map.Save();
-		break ;
-	      case (SDLK_t):
-		player.GetThird() = !player.GetThird();
-		break ;
+		case (SDLK_F1):
+		  map.PutCube(1, ivec3(cam.GetPos() + cam.GetFor() * 2.0f));
+		  break ;
+		case (SDLK_F2):
+		  map.PutCube(2, ivec3(cam.GetPos() + cam.GetFor() * 2.0f));
+		  break ;
+		case (SDLK_F3):
+		  map.PutCube(3, ivec3(cam.GetPos() + cam.GetFor() * 2.0f));
+		  break ;
+		case (SDLK_F4):
+		  map.PutCube(4, ivec3(cam.GetPos() + cam.GetFor() * 2.0f));
+		  break ;
+		case (SDLK_F5):
+		  map.PutCube(5, ivec3(cam.GetPos() + cam.GetFor() * 2.0f));
+		  break ;
+		case (SDLK_F6):
+		  map.PutCube(6, ivec3(cam.GetPos() + cam.GetFor() * 2.0f));
+		  break ;
+		case (SDLK_F10):
+		  map.PutCube(0, ivec3(cam.GetPos() + cam.GetFor() * 2.0f));
+		  break ;
+		case (SDLK_v):
+		  map.Save();
+		  break ;
+		case (SDLK_t):
+		  player.GetThird() = !player.GetThird();
+		  break ;
 #endif
 #ifdef	CHEAT
-	      case (SDLK_EQUALS):
-		if (data->players[data->net.playerIndexUdp].life < 100)
-		  ++data->players[data->net.playerIndexUdp].life;
-		break ;
-	      case (SDLK_MINUS):
-		if (data->players[data->net.playerIndexUdp].life)
-		  --data->players[data->net.playerIndexUdp].life;
-		break ;
-	      case(SDLK_i):
-		cheat.selected.ammo = (cheat.selected.ammo) ?  false : true;
-		break ;
-	      case(SDLK_j):
-		cheat.selected.life = (cheat.selected.life) ?  false : true;
-		break ;
-	      case(SDLK_k):
-		cheat.selected.fly = (cheat.selected.fly) ?  false : true;
-		cheat.selected.collisions = cheat.selected.fly;
-		break ;
-	      case(SDLK_l):
-		cheat.selected.collisions =
-		  (cheat.selected.collisions) ?  false : true;
-		break ;
+		case (SDLK_EQUALS):
+		  if (data->players[data->net.playerIndexUdp].life < 100)
+		    ++data->players[data->net.playerIndexUdp].life;
+		  break ;
+		case (SDLK_MINUS):
+		  if (data->players[data->net.playerIndexUdp].life)
+		    --data->players[data->net.playerIndexUdp].life;
+		  break ;
+		case(SDLK_i):
+		  cheat.selected.ammo = (cheat.selected.ammo) ?  false : true;
+		  break ;
+		case(SDLK_j):
+		  cheat.selected.life = (cheat.selected.life) ?  false : true;
+		  break ;
+		case(SDLK_k):
+		  cheat.selected.fly = (cheat.selected.fly) ?  false : true;
+		  cheat.selected.collisions = cheat.selected.fly;
+		  break ;
+		case(SDLK_l):
+		  cheat.selected.collisions =
+		    (cheat.selected.collisions) ?  false : true;
+		  break ;
 #endif
-	      }
+		}
+	    }
 	  break ;
 	case (SDL_KEYUP):
-	  switch (e.key.keysym.sym)
-	    {
-	    case (SDLK_z):
-	      eventKey[KEY_Z] = false;
-	      break ;
-	    case (SDLK_s):
-	      eventKey[KEY_S] = false;
-	      break ;
-	    case (SDLK_q):
-	      eventKey[KEY_Q] = false;
-	      break ;
-	    case (SDLK_d):
-	      eventKey[KEY_D] = false;
-	      break ;
-	    case (SDLK_a):
-	      eventKey[KEY_A] = false;
-	      break ;
-	    case (SDLK_w):
-	      eventKey[KEY_W] = false;
-	      break ;
-	    case (SDLK_SPACE):
-	      eventKey[KEY_SPACE] = false;
-	      break ;
-	    case (SDLK_1):
-	      eventKey[KEY_1] = false;
-	      break ;
-	    case (SDLK_2):
-	      eventKey[KEY_2] = false;
-	      break ;
-	    case (SDLK_3):
-	      eventKey[KEY_3] = false;
-	      break ;
-	    case(SDLK_AMPERSAND):
-	      eventKey[KEY_COMMERCIAL_AND] = false;
-	      break;
-	    case (SDLK_QUOTEDBL):
-	      eventKey[KEY_QUOTE] = false;
-	      break ;
-	    }
-	  break;
-	case (SDL_MOUSEMOTION):
-	  player.GetMouseRot().y -= e.motion.xrel / 20.0f / (player.IsAiming() ? FOV_NORMAL / FOV_ZOOM : 1);
-	  player.GetMouseRot().x -= e.motion.yrel / 20.0f / (player.IsAiming() ? FOV_NORMAL / FOV_ZOOM : 1);
-	  break ;
+	  {
+	    if (e.key.keysym.scancode == SDL_SCANCODE_2)
+	      {
+		eventKey[KEY_E_ACCENT] = false;
+	      }
+	    switch (e.key.keysym.sym)
+	      {
+	      case (SDLK_z):
+		eventKey[KEY_Z] = false;
+		break ;
+	      case (SDLK_s):
+		eventKey[KEY_S] = false;
+		break ;
+	      case (SDLK_q):
+		eventKey[KEY_Q] = false;
+		break ;
+	      case (SDLK_d):
+		eventKey[KEY_D] = false;
+		break ;
+	      case (SDLK_a):
+		eventKey[KEY_A] = false;
+		break ;
+	      case (SDLK_w):
+		eventKey[KEY_W] = false;
+		break ;
+	      case (SDLK_SPACE):
+		eventKey[KEY_SPACE] = false;
+		break ;
+	      case (SDLK_1):
+		eventKey[KEY_1] = false;
+		break ;
+	      case (SDLK_2):
+		eventKey[KEY_2] = false;
+		break ;
+	      case (SDLK_3):
+		eventKey[KEY_3] = false;
+		break ;
+	      case(SDLK_AMPERSAND):
+		eventKey[KEY_COMMERCIAL_AND] = false;
+		break;
+	      case (SDLK_QUOTEDBL):
+		eventKey[KEY_QUOTE] = false;
+		break ;
+	      }
+	    break;
+	  case (SDL_MOUSEMOTION):
+	    player.GetMouseRot().y -= e.motion.xrel / 20.0f / (player.IsAiming() ? FOV_NORMAL / FOV_ZOOM : 1);
+	    player.GetMouseRot().x -= e.motion.yrel / 20.0f / (player.IsAiming() ? FOV_NORMAL / FOV_ZOOM : 1);
+	    break ;
+	  }
 	}
     }
 
