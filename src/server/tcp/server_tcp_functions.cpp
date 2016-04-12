@@ -123,7 +123,7 @@ void		tcps_check_received(t_all *all, int i)
 	}
       if (all->tcp->buff[1] == 't')
       {
-        sprintf(buffi, "server: %s has slain %s !", all->pseudo[(int)all->tcp->buff[3]], all->pseudo[(int)all->tcp->buff[5]]);
+        sprintf(buffi, "Server: %s has slain %s !", all->pseudo[(int)all->tcp->buff[3] - 48], all->pseudo[(int)all->tcp->buff[5] - 48]);
         tcps_send_to_all_c(all, buffi);
       }
     }
