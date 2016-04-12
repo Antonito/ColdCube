@@ -114,6 +114,7 @@
 
 # define WIN_MSG			"Team 1 wins. You won !"
 # define LOOSE_MSG			"Team 2 wins. You lost !"
+# define BYE_MSG			"Please, now disconnect."
 
 //
 //

@@ -581,16 +581,16 @@ void			Displayer::UpdateRoom(t_data *room, SDL_Rect *pos,
 		room->tchat.focus(true);
 		break;
 	      }
-	    if (!room->tchat.isFocus() && event.key.keysym.sym == SDLK_ESCAPE)
-	      {
-		room->game.running = false;
-		room->room = false;
-		break;
-	      }
 	    if (event.key.keysym.sym == SDLK_ESCAPE)
 	      room->tchat.focus(false);
 	    break;
 	  case SDL_KEYDOWN:
+	    if (!room->tchat.isFocus() && event.key.keysym.sym == SDLK_ESCAPE)
+	      {
+      		room->game.running = false;
+		room->room = false;
+		break;
+	      }
 	    if (!room->tchat.isFocus())
 	      break;
 	    switch (event.key.keysym.sym)
@@ -611,6 +611,7 @@ void			Displayer::UpdateRoom(t_data *room, SDL_Rect *pos,
 	    break;
 	  case SDL_QUIT:
 	    room->game.running = false;
+	    room->room = false;
 	    break;
 	  case SDL_MOUSEBUTTONUP:
 	    if (event.button.button != SDL_BUTTON_LEFT)
