@@ -95,6 +95,9 @@ int	engineMain(Displayer &display, t_data *data)
 		  DrawPlayerModel(data->players[i].position, data->players[i].direction,
 				  length(vec2(data->players[i].position) - lastPos[i]) * 5,
 				  camera, shader, i, player.GetId(), player.GetThird(), (render) ? decal / 2.0f : -decal / 2.0f);
+		  // glUseProgram(0);
+		  // DrawShoot(data->players + i, i, camera.GetViewProjection());
+		  // shader.Bind();
 		  if (render == 0 && !data->config.oculus)
 		    lastPos[i] = vec2(data->players[i].position);
 		  else if (render == 1 && data->config.oculus)
@@ -129,18 +132,29 @@ int	engineMain(Displayer &display, t_data *data)
       display.Update(camera, map, player, data, user);
       player.FillCPlayer(data->players + player.GetId(), camera.GetFor());
       data->game.Team2.updateTime();
-      if (data->game.Team1.checkWin(1))
-	{
-	  std::string	msg = WIN_MSG;
-	  data->tchat.pushBack(msg);
-	  display.setClosed(true);
-	  return (0);
-	}
-      if (data->game.Team2.checkWin(2))
+
+      if (data->game.Team2.checkWin())
 	{
 	  std::string	msg = LOOSE_MSG;
+	  std::string	bye = BYE_MSG;
+
 	  data->tchat.pushBack(msg);
+	  data->tchat.pushBack(bye);
 	  display.setClosed(true);
+	  data->game.Team1.setScore(0);
+	  data->game.Team2.setScore(0);
+	  return (0);
+	}
+      if (data->game.Team1.checkWin())
+	{
+	  std::string	msg = WIN_MSG;
+	  std::string	bye = BYE_MSG;
+
+	  data->tchat.pushBack(msg);
+	  data->tchat.pushBack(bye);
+	  display.setClosed(true);
+	  data->game.Team1.setScore(0);
+	  data->game.Team2.setScore(0);
 	  return (0);
 	}
     }

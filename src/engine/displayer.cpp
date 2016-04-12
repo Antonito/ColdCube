@@ -5,7 +5,6 @@
 #include <unistd.h>
 #include <GL/glew.h>
 #include <GL/gl.h>
-//#include <GL/glx.h>
 #include <sys/time.h>
 #include "engine/displayer.hpp"
 #include <iostream>
@@ -441,48 +440,65 @@ int	startGame(t_data *data, std::vector<menuItem> &items, Displayer &disp)
 #ifdef	DEBUG
       std::clog << "TCP OK\n";
 #endif
-      if (!room(disp, data))
-      {
-	write(data->net.tcp.sock, "/r", 2);
-#ifdef _WIN32
-	closesocket(data->net.tcp.sock);
-#else
-	close(data->net.tcp.sock);
-#endif
-	data->net.tcp.run = 0;
-	data->net.udp.run_send = 0;
-	data->net.udp.run = 0;
-	return (0);
-      }
-      if (!clientLaunchUdpc(data))
+      data->room = true;
+      data->tchat.constructor();
+      while (data->room)
 	{
-#ifdef	DEBUG
-	  std::clog << "UDP OK\n";
-#endif
-	  data->game.Team1.setScore(0);
-	  data->game.Team2.setScore(0);
-	  selectGameMusic(data, false);
-	  bunny_sound_volume(&data->gameMusic->sound, (double)data->config.musicVolume);
-	  bunny_sound_stop(&data->menuMusic->sound);
-	  bunny_sound_play(&data->gameMusic->sound);
-	  setEvent(&data->players[data->net.playerIndexUdp].events, IS_CONNECTED, true);
-	  engineMain(disp, data);
-	  write(data->net.tcp.sock, "/r", 2);
-#ifdef	DEBUG
-	  fprintf(stdout, "tcp fd closed\n");
-#endif
+	  if (!room(disp, data))
+	    {
+	      write(data->net.tcp.sock, "/r", 2);
 #ifdef _WIN32
-	  closesocket(data->net.udp.sock);
-	  closesocket(data->net.tcp.sock);
+	      closesocket(data->net.tcp.sock);
 #else
-	  close(data->net.udp.sock);
-	  close(data->net.tcp.sock);
+	      close(data->net.tcp.sock);
 #endif
-	  setEvent(&data->players[data->net.playerIndexUdp].events, IS_CONNECTED, false);
-	  bunny_sound_stop(&data->gameMusic->sound);
-	  bunny_sound_play(&data->menuMusic->sound);
+	      data->net.tcp.run = 0;
+	      data->net.udp.run_send = 0;
+	      data->net.udp.run = 0;
+	      printf("WTF\n");
+	      data->tchat.constructor();
+	      data->room = false;
+	      disp.setClosed(true);
+	      return (0);
+	    }
+	  if (!clientLaunchUdpc(data))
+	    {
+#ifdef	DEBUG
+	      std::clog << "UDP OK\n";
+#endif
+	      data->game.Team1.setScore(0);
+	      data->game.Team2.setScore(0);
+	      selectGameMusic(data, false);
+	      data->net.tcp.buff[0] = 0;
+	      bunny_sound_volume(&data->gameMusic->sound, (double)data->config.musicVolume);
+	      bunny_sound_stop(&data->menuMusic->sound);
+	      bunny_sound_play(&data->gameMusic->sound);
+	      setEvent(&data->players[data->net.playerIndexUdp].events, IS_CONNECTED, true);
+	      engineMain(disp, data);
+#ifdef _WIN32
+	      closesocket(data->net.udp.sock);
+#else
+	      close(data->net.udp.sock);
+#endif
+	      setEvent(&data->players[data->net.playerIndexUdp].events, IS_CONNECTED, false);
+	      bunny_sound_stop(&data->gameMusic->sound);
+	      bunny_sound_play(&data->menuMusic->sound);
+	    }
+	  data->room = true;
+	  data->game.running = true;
+	  disp.setClosed(false);
 	}
+      write(data->net.tcp.sock, "/r", 2);
+#ifdef	DEBUG
+	      fprintf(stdout, "tcp fd closed\n");
+#endif
+#ifdef	_WIN32
+      closesocket(data->net.tcp.sock);
+#else
+      close(data->net.tcp.sock);
+#endif
     }
+  data->room = false;
   data->net.tcp.run = 0;
   data->net.udp.run_send = 0;
   data->net.udp.run = 0;
@@ -565,15 +581,16 @@ void			Displayer::UpdateRoom(t_data *room, SDL_Rect *pos,
 		room->tchat.focus(true);
 		break;
 	      }
-	    if (!room->tchat.isFocus() && event.key.keysym.sym == SDLK_ESCAPE)
-	      {
-		room->game.running = false;
-		break;
-	      }
 	    if (event.key.keysym.sym == SDLK_ESCAPE)
 	      room->tchat.focus(false);
 	    break;
 	  case SDL_KEYDOWN:
+	    if (!room->tchat.isFocus() && event.key.keysym.sym == SDLK_ESCAPE)
+	      {
+      		room->game.running = false;
+		room->room = false;
+		break;
+	      }
 	    if (!room->tchat.isFocus())
 	      break;
 	    switch (event.key.keysym.sym)
@@ -594,6 +611,7 @@ void			Displayer::UpdateRoom(t_data *room, SDL_Rect *pos,
 	    break;
 	  case SDL_QUIT:
 	    room->game.running = false;
+	    room->room = false;
 	    break;
 	  case SDL_MOUSEBUTTONUP:
 	    if (event.button.button != SDL_BUTTON_LEFT)
@@ -717,19 +735,6 @@ void			Displayer::UpdateRoom(t_data *room, SDL_Rect *pos,
       SDL_FreeSurface(final);
 
       SDL_GL_SwapWindow(m_window);
-
-
-      // SetSDL_Rect(&dest, 0, WIN_Y / 4, WIN_X / 2, WIN_Y / 2);
-      // SDL_BlitScaled(eyes, NULL, m_windowSurface, &dest);
-
-      // SetSDL_Rect(&dest, pos->x / 2 + 3, WIN_Y / 4 + pos->y / 2, surface->w, surface->h);
-      // SDL_BlitScaled(surface, NULL, m_windowSurface, &dest);
-
-      // SetSDL_Rect(&dest, WIN_X / 2, WIN_Y / 4, WIN_X / 2, WIN_Y / 2);
-      // SDL_BlitScaled(eyes, NULL, m_windowSurface, &dest);
-
-      // SetSDL_Rect(&dest, WIN_X / 2 + pos->x / 2 - 3, WIN_Y / 4 + pos->y / 2, surface->w, surface->h);
-      // SDL_BlitScaled(surface, NULL, m_windowSurface, &dest);
       SDL_FreeSurface(eyes);
     }
   else

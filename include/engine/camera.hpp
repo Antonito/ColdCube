@@ -62,9 +62,7 @@ class Camera
   }
   vec3 &GetFor() {return m_forward;}
 
-  vec2 &GetRot() {
-    return m_rotation;
-  }
+  vec2 &GetRot() {return m_rotation;}
 
  protected:
  private:

@@ -19,14 +19,9 @@ void		Score::printScore(const int team)
   std::cout << "Score Team " << team << ": " << m_score << "\n";
 }
 
-bool		Score::checkWin(const int team)
+bool		Score::checkWin(void)
 {
-  if (m_score >= TOTAL_PTS)
-    {
-      std::cout << "Team " << team << " wins !\n";
-      return (true);
-    }
-  return (false);
+  return ((m_score >= TOTAL_PTS));
 }
 
 void		Score::updateScore(const int weapon, const bool headShot,
