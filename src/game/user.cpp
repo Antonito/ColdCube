@@ -153,10 +153,6 @@ int     User::IsShooted(t_player *p, Score &advTeam, Map &map)
 	      advTeam.updateStreakMult(weapon);
 	      advTeam.updateScore(weapon, headshot, length(vec3(hit) - p[i].position));
 	      setScore(&m_player->events, advTeam.getScore());
-#ifdef	DEBUG
-	      std::clog << "Team 1 :" << Team.getScore() << "\n";
-	      std::clog << "Team 2 :" << advTeam.getScore() << "\n";
-#endif
 	    }
   	}
       // if (getEvent(p[i].events, SHOOT))
