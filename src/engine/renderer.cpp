@@ -114,29 +114,3 @@ void	Renderer::Draw()
   glEnable(GL_LIGHTING);
   glCullFace(GL_BACK);
 }
-
-void	Renderer::Draw(double scale)
-{
-  glDisable(GL_DEPTH_TEST);
-  glDisable(GL_CULL_FACE);
-  glDisable(GL_LIGHTING);
-
-  glEnable(GL_TEXTURE_2D);
-  glBindTexture(GL_TEXTURE_2D, m_renderedTex);
-
-  glBegin(GL_QUADS);
-  glTexCoord2i(0, 0);
-  glVertex3f(-scale, -scale, 0);
-  glTexCoord2i(0, 1);
-  glVertex3f(-scale, scale, 0);
-  glTexCoord2i(1, 1);
-  glVertex3f(scale, scale, 0);
-  glTexCoord2i(1, 0);
-  glVertex3f(scale, -scale, 0);
-  glEnd();
-
-  glEnable(GL_DEPTH_TEST);
-  glEnable(GL_CULL_FACE);
-  glEnable(GL_LIGHTING);
-  glCullFace(GL_BACK);
-}
