@@ -469,6 +469,7 @@ int	startGame(t_data *data, std::vector<menuItem> &items, Displayer &disp)
 	      data->game.Team1.setScore(0);
 	      data->game.Team2.setScore(0);
 	      selectGameMusic(data, false);
+	      data->net.tcp.buff[0] = 0;
 	      bunny_sound_volume(&data->gameMusic->sound, (double)data->config.musicVolume);
 	      bunny_sound_stop(&data->menuMusic->sound);
 	      bunny_sound_play(&data->gameMusic->sound);
@@ -489,7 +490,7 @@ int	startGame(t_data *data, std::vector<menuItem> &items, Displayer &disp)
 	}
       write(data->net.tcp.sock, "/r", 2);
 #ifdef	DEBUG
-      fprintf(stdout, "tcp fd closed\n");
+	      fprintf(stdout, "tcp fd closed\n");
 #endif
 #ifdef	_WIN32
       closesocket(data->net.tcp.sock);
