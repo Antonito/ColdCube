@@ -18,6 +18,8 @@ enum e_eventKey
     KEY_COMMERCIAL_AND,
     KEY_E_ACCENT,
     KEY_QUOTE,
+    KEY_LEFT_SHIFT,
+    KEY_LEFT_CTRL,
 #ifdef	CHEAT
     KEY_I,
     KEY_J,

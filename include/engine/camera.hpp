@@ -40,6 +40,10 @@ class Camera
   {
     return m_perspective;
   }
+  inline mat4 GetModelView() const
+  {
+    return lookAt(m_position, m_position + m_forward, m_up);
+  }
   bool isOculus() {return m_hmd ? true : false;}
   void SetFov(float fov)
   {

@@ -67,7 +67,7 @@ int	engineMain(Displayer &display, t_data *data)
             render = 0;
       transform.GetPos() = vec3(0, 0, 0);
       display.Clear(0.0f, 0.3f, 0.8f, 1.0f);
-      user.IsShooted(data->players, data->game.Team2, map, data);
+      user.IsShooted(data->players, data->game.Team2, map, data, camera);
       while (render < data->config.oculus + 1)
 	{
 	  if (data->config.oculus && render == 0)

@@ -39,7 +39,7 @@ unsigned char	getDamage(int weapon, int part, double dist)
       }
     case (KNIFE_WEAPON):
       {
-	if (dist >= 1.2)
+	if (dist >= 1.5)
 	  return (0);
 	switch(part)
 	  {

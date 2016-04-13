@@ -149,6 +149,8 @@ typedef struct		s_keys
   e_eventKey		weapon1;
   e_eventKey		weapon2;
   e_eventKey		weapon3;
+  e_eventKey		sprint;
+  e_eventKey		slow;
 }			t_keys;
 
 typedef struct		s_config
