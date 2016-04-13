@@ -53,10 +53,12 @@ void		tcp_set_pseudo(t_data *data)
 #ifdef	DEBUG
       fprintf(stdout, "#%s#\n", pseudo[i]);
 #endif
-      data->net.connected[i] = true;
       memset(data->players[i - 1].pseudo, 0, 21);
       if (strncmp(pseudo[i], "/no", 3) != 0)
+      {
+        data->net.connected[i] = true;
 	strncpy(data->players[i - 1].pseudo, pseudo[i], strlen(pseudo[i]));
+      }
     }
   i = -1;
   while (pseudo[++i] != NULL && i < 10)
