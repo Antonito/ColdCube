@@ -1,6 +1,6 @@
 # Useful variables
-DEBUG=			yes
-CHEAT=			yes
+DEBUG=			no
+CHEAT=			no
 
 # Sources
 GAME_PREFIX=		src/game/
