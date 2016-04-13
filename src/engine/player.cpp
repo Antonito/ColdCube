@@ -50,11 +50,11 @@ bool Player::IsOnBlock()
 void Player::Move(vec2 dir)
 {
   if (this->IsOnBlock())
-    m_move += normalize(dir);
-  if (m_move.length() > 5.0)
+    m_move += normalize(dir) * m_speed;
+  if (m_move.length() > 5.0 * m_speed)
     {
       m_move = normalize(m_move);
-      m_move *= 4.5;
+      m_move *= 4.5 * m_speed;
     }
 }
 

@@ -17,7 +17,7 @@
 using namespace glm;
 
 Mesh	SetPlanes(int, vec3);
-void	DrawUI(t_data *data, bool oculus);
+void	DrawUI(t_data *data, bool oculus, bool *hitMarker);
 
 //
 // Timer -> getMinuts and getSeconds in data->game.Team1
@@ -100,7 +100,7 @@ int	engineMain(Displayer &display, t_data *data)
 		}
 	      i++;
 	    }
-	  DrawUI(data, data->config.oculus);
+	  DrawUI(data, data->config.oculus, &data->net.hitmarker);
 	  render++;
 	}
       if (data->config.oculus)
@@ -177,7 +177,7 @@ int	engineMain(Displayer &display, t_data *data)
   return (0);
 }
 
-void	DrawUI(t_data *data, bool oculus)
+void	DrawUI(t_data *data, bool oculus, bool *hitMarker)
 {
   SDL_Rect		tchat_pos = {0, data->tchat.isFocus() ? (WIN_Y / 2) : (3 * WIN_Y / 4), 854, data->tchat.isFocus() ? (WIN_Y / 2) : (WIN_Y / 4)};
   SDL_Rect		origin = {42, 10, WIN_X, WIN_Y};
@@ -188,12 +188,28 @@ void	DrawUI(t_data *data, bool oculus)
   static TTF_Font	*font = TTF_OpenFont(TCHAT_FONT_NAME, (int)(40 / WIN_RATIO));
   static SDL_Surface	*crosshair = IMG_Load("./assets/imgs/crosshair.png");
   static SDL_Surface	*ui = SDL_CreateRGBSurface(0, WIN_X, WIN_Y, 32, 0x000000FF, 0x0000FF00, 0x00FF0000, 0xFF000000);
+  static int		hit = 0;
 
   glFlush();
 
   SDL_FillRect(ui, NULL, SDL_MapRGBA(ui->format, 0, 0, 0, 0));
   if (!oculus)
     SDL_BlitScaled(crosshair, NULL, ui, &center);
+  if (*hitMarker)
+    {
+      hit = 7;
+      *hitMarker = false;
+    }
+  if (hit && !oculus)
+    {
+      char	hitImg[36] = {0};
+      sprintf(hitImg, "./assets/imgs/hitmarker/hit_%02d.png", hit);
+      SDL_Surface	*hitm = IMG_Load(hitImg);
+      SDL_BlitScaled(hitm, NULL, ui, &center);
+      SDL_FreeSurface(hitm);
+      hit--;
+    }
+
   sprintf(lifebar, "./assets/imgs/lifebar/%03d.png", data->players[data->net.playerIndexUdp].life);
   life = IMG_Load(lifebar);
   SDL_BlitSurface(life, NULL, ui, &origin);

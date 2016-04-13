@@ -383,13 +383,11 @@ void	Displayer::Update(Camera &cam, Map &map, Player &player,
   else
     player.IsAiming() = false;
   if (eventKey[data->config.keys.sprint])
-    ;
+    player.GetSpeed() = 1.25f;
+  else if (eventKey[data->config.keys.slow])
+    player.GetSpeed() = 0.5f;
   else
-    ;
-  if (eventKey[data->config.keys.slow])
-    ;
-  else
-    ;
+    player.GetSpeed() = 1.0f;
 
   // Switch weapon
   if (eventKey[data->config.keys.weapon1])
