@@ -64,14 +64,14 @@ void		udp_send_disconnect(t_all *all, char id)
   uint32_t	events;
   char		packet[42];
   int		i;
-  int		j;
   int		n;
   char		*tmp;
 
+  events = 0;
   setEvent(&events, IS_CONNECTED, false);
   memset(packet, 0, 42);
   packet[0] = id;
-  n = 37;
+  n = 38;
   i = 0;
   tmp = (char *)&events;
   while (i < 4)
@@ -87,13 +87,7 @@ void		udp_send_disconnect(t_all *all, char id)
     {
       if (all->connected[i] == 0)
 	continue;
-      j = -1;
-      while (++j < 10)
-	{
-	  if (all->connected[j] == 0)
-	    continue;
-	  sendto(all->udp->main_sock, packet, 42, 0,
-		 (struct sockaddr *)&all->udp->cli_sock[(int)id], all->udp->cli_addrl);
-	}
+      sendto(all->udp->main_sock, packet, 42, 0,
+	    (struct sockaddr *)&all->udp->cli_sock[i], all->udp->cli_addrl);
     }
 }
