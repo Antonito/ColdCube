@@ -6,6 +6,15 @@
 #include "game.hpp"
 #include "tools.hpp"
 
+vec3	GetSoundPos(Camera &cam, vec3 playerPos)
+{
+  vec4	pos(playerPos.x, playerPos.y, playerPos.z, 1.0);
+
+  pos += vec4(0.4, 0.4, 1.6, 0.0);
+  pos = cam.GetModelView() * pos;
+  return (vec3(pos.x, pos.y, pos.z));
+}
+
 User::User(t_player *player)
 {
   m_player = player;
@@ -103,7 +112,8 @@ vec4    User::IsHit(t_player *p, Map &map)
   return (vec4(pos.x, pos.y, pos.z, -1.0));
 }
 
-int     User::IsShooted(t_player *p, Score &advTeam, Map &map, t_data *data)
+int     User::IsShooted(t_player *p, Score &advTeam, Map &map, t_data *data,
+			Camera &cam)
 {
   int		i = 0;
   vec4		hit;
@@ -121,11 +131,13 @@ int     User::IsShooted(t_player *p, Score &advTeam, Map &map, t_data *data)
       headshot = false;
       if (getEvent(p[i].events, SHOOT))
 	{
+	  vec3	shootPos = GetSoundPos(cam, p[i].position);
 	  if (shooting[i] &&
 	      bunny_music_get_cursor(p[i].weapons[p[i].selected_weapon].shootSound) <= SOUND_WAIT)
 	    shooting[i] = false;
 	  if (i != id && !shooting[i] && p[i].weapons[p[i].selected_weapon].shootSound)
 	    {
+	      bunny_sound_position(&p[i].weapons[p[i].selected_weapon].shootSound->sound, shootPos.x, shootPos.y, shootPos.z);
 	      bunny_sound_play(&p[i].weapons[p[i].selected_weapon].shootSound->sound);
 	      shooting[i] = true;
 	    }
@@ -164,13 +176,4 @@ int     User::IsShooted(t_player *p, Score &advTeam, Map &map, t_data *data)
       i++;
     }
   return (0);
-}
-
-vec3	GetSoundPos(Camera &cam, vec3 playerPos)
-{
-  vec4	pos(playerPos.x, playerPos.y, playerPos.z, 1.0);
-
-  pos += vec4(0.4, 0.4, 1.6, 0.0);
-  pos = cam.GetModelView() * pos;
-  return (vec3(pos.x, pos.y, pos.z));
 }
