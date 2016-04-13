@@ -129,7 +129,7 @@ int     User::IsShooted(t_player *p, Score &advTeam, Map &map, t_data *data,
       hit = vec4(0, 0, 0, -1);
       weapon = p[i].selected_weapon;
       headshot = false;
-      if (getEvent(p[i].events, SHOOT))
+      if (data->net.shoot[i])
 	{
 	  vec3	shootPos = normalize(GetSoundPos(cam, p[i].position));
 	  if (shooting[i] &&
@@ -143,7 +143,7 @@ int     User::IsShooted(t_player *p, Score &advTeam, Map &map, t_data *data,
 	      shooting[i] = true;
 	    }
 	}
-      if (getEvent(p[i].events, SHOOT) && id % 2 != i % 2)
+      if (data->net.shoot[i] && id % 2 != i % 2)
 	{
 	  hit = this->IsHit(p + i, map);
 	}
@@ -175,8 +175,6 @@ int     User::IsShooted(t_player *p, Score &advTeam, Map &map, t_data *data,
               write(data->net.tcp.sock, tmp, strlen(tmp));
 	    }
   	}
-      // if (getEvent(p[i].events, SHOOT))
-      // 	setEvent(&p[i].events, SHOOT, false);
       i++;
     }
   return (0);
