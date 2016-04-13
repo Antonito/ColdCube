@@ -126,6 +126,25 @@ int	engineMain(Displayer &display, t_data *data)
       player.FillCPlayer(data->players + player.GetId(), camera.GetFor());
       data->game.Team2.updateTime();
 
+      static bool	end = false;
+      if (!end && data->game.Team2.checkWin())
+      	{
+	  end = true;
+      	  std::string	msg = LOOSE_MSG;
+      	  std::string	bye = BYE_MSG;
+
+      	  data->tchat.pushBack(msg);
+      	  data->tchat.pushBack(bye);
+      	}
+      if (!end && data->game.Team1.checkWin())
+      	{
+	  end = true;
+      	  std::string	msg = WIN_MSG;
+      	  std::string	bye = BYE_MSG;
+
+      	  data->tchat.pushBack(msg);
+      	  data->tchat.pushBack(bye);
+	}
       // if (data->game.Team2.checkWin())
       // 	{
       // 	  std::string	msg = LOOSE_MSG;
