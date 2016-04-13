@@ -67,6 +67,7 @@ int	engineMain(Displayer &display, t_data *data)
             render = 0;
       transform.GetPos() = vec3(0, 0, 0);
       display.Clear(0.0f, 0.3f, 0.8f, 1.0f);
+      user.IsShooted(data->players, data->game.Team2, map, data);
       while (render < data->config.oculus + 1)
 	{
 	  if (data->config.oculus && render == 0)
@@ -113,7 +114,6 @@ int	engineMain(Displayer &display, t_data *data)
       	  glViewport(WIN_X / 2, 0, WIN_X / 2, WIN_Y);
       	  rightEye.Draw();
       	}
-      user.IsShooted(data->players, data->game.Team2, map, data);
       if (player.GetPos().z < -200.0f)
 	data->players[player.GetId()].life = 0;
       if (data->players[player.GetId()].life <= 0)
