@@ -112,8 +112,8 @@
 # define RIFLE_SOUND_PATH		"assets/musics/rifle.ogg"
 # define KNIFE_SOUND_PATH		"assets/musics/knife.ogg"
 
-# define WIN_MSG			"Team 1 wins. You won !"
-# define LOOSE_MSG			"Team 2 wins. You lost !"
+# define WIN_MSG			"Your team won !"
+# define LOOSE_MSG			"Your team lost !"
 # define BYE_MSG			"Please, now disconnect."
 
 //
