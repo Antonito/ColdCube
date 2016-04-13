@@ -53,6 +53,7 @@ void		tcp_set_pseudo(t_data *data)
 #ifdef	DEBUG
       fprintf(stdout, "#%s#\n", pseudo[i]);
 #endif
+      data->net.connected[i] = true;
       memset(data->players[i - 1].pseudo, 0, 21);
       if (strncmp(pseudo[i], "/no", 3) != 0)
 	strncpy(data->players[i - 1].pseudo, pseudo[i], strlen(pseudo[i]));
@@ -83,10 +84,11 @@ void		*tcp_thread(void *data)
 	tcp_set_pseudo(_data);
       else if (strncmp("/h", _data->net.tcp.buff, 2) == 0)
           _data->net.hitmarker = true;
+      else if (strncmp("/q", _data->net.tcp.buff, 2) == 0)
+          _data->net.connected[(int)_data->net.tcp.buff[3] - 48] = false;
       else if (strncmp("/f", _data->net.tcp.buff, 2) == 0)
       {
           _data->net.shoot[(int)_data->net.tcp.buff[3] - 48] = true;
-          printf("received shoot from %d\n", (int)_data->net.tcp.buff[3]);
       }
 #ifdef	DEBUG
       else if (strncmp("/g", _data->net.tcp.buff, 2) == 0)
@@ -158,6 +160,7 @@ int		clientLaunchTcpc(t_data *data)
   data->net.playerIndexUdp = (int)tmp[0];
   data->net.tcp.run = 1;
   data->net.hitmarker = 0;
+  memset(data->net.connected, 0, sizeof(bool) * 10);
   data->net.playerIndexTcp = (int)tmp[0];
   pthread_create(&data->net.tcp.thread, NULL, tcp_thread, (void *)data);
 #ifdef _WIN32

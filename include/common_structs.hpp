@@ -82,6 +82,7 @@ typedef	struct		s_network
   int			isPackage[10];
   bool                  hitmarker;
   bool                  shoot[10];
+  bool                  connected[10];
 }			t_network;
 
 /*
