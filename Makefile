@@ -132,6 +132,12 @@ LIB=			-Llib/lapin/lib			\
 			-ldl				\
 			-lm
 
+LIB_SERVER=		-lstdc++			\
+			-lpthread			\
+			-lm				\
+			-lGL				\
+			-lGLEW
+
 # Obj link
 
 OBJ=			$(GAME:.cpp=.o)
@@ -143,16 +149,12 @@ OBJSERV+=		$(ENGINE_C:.c=.o)
 OBJGEN=			$(GENERATION:.c=.o)
 
 $(NAMESERV):	$(OBJSERV) $(NAME) $(NAMEGEN)
-	@echo -n "[ "
-	@echo -n -e "\e[1m\e[92mOK\e[0m"
-	@echo -n " ] "
+	@echo -n -e "[ \e[1m\e[92mOK\e[0m ]"
 	@echo "Compiled server"
-	@$(CC) $(OBJSERV) -o $(NAMESERV) $(LIB)
+	@$(CC) $(OBJSERV) -o $(NAMESERV) $(LIB_SERVER)
 
 $(NAMEGEN):	$(OBJGEN)
-	@echo -n "[ "
-	@echo -n -e "\e[1m\e[92mOK\e[0m"
-	@echo -n " ] "
+	@echo -n -e "[ \e[1m\e[92mOK\e[0m ]"
 	@echo "Compiled generator"
 	@$(CC) $(OBJGEN) -o $(NAMEGEN) $(LIB)
 
@@ -167,41 +169,31 @@ ifeq ($(DEBUG), yes)
 	@echo "                                                           ";
 	@tput sgr0
 endif
-	@echo -n "[ "
-	@echo -n -e "\e[1m\e[92mOK\e[0m"
-	@echo -n " ] "
+	@echo -n -e "[ \e[1m\e[92mOK\e[0m ]"
 	@echo "Compiled game"
 	@$(CXX) $(OBJ) -o $(NAME) $(LIB)
 
 %.o:	%.c
-	@echo -n "[ "
-	@echo -n -e "\e[1m\e[92mOK\e[0m"
-	@echo -n " ] "
+	@echo -n -e "[ \e[1m\e[92mOK\e[0m ]"
 	@echo "Compiling" $<
 	@$(CC) $(CFLAGS) -c -o $@ $<
 
 %.o:	%.cpp
-	@echo -n "[ "
-	@echo -n -e "\e[1m\e[92mOK\e[0m"
-	@echo -n " ] "
+	@echo -n -e "[ \e[1m\e[92mOK\e[0m ]"
 	@echo "Compiling" $<
 	@$(CXX) $(CXXFLAGS) -c -o $@ $<
 
 all:	$(NAMESERV) $(NAME) $(NAMEGEN)
 
 clean:
-	@echo -n "[ "
-	@echo -n -e "\e[1m\e[92mOK\e[0m"
-	@echo -n " ] "
+	@echo -n -e "[ \e[1m\e[92mOK\e[0m ]"
 	@echo "Removing OBJ files ..."
 	@$(RM) $(OBJ)
 	@$(RM) $(OBJSERV)
 	@$(RM) $(OBJGEN)
 
 fclean:	clean
-	@echo -n "[ "
-	@echo -n -e "\e[1m\e[92mOK\e[0m"
-	@echo -n " ] "
+	@echo -n -e "[ \e[1m\e[92mOK\e[0m ]"
 	@echo "Deleting binaries ..."
 	@$(RM) $(NAME)
 	@$(RM) $(NAMESERV)
