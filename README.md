@@ -25,9 +25,9 @@ Specs:
 
 ![Game Menu](/assets/screenshots/menu.png?raw=true "ColdCube Menu")
 
-![Game Options](/assets/screenshots/options.png?raw=true "ColdCube Options Menu")
-
 ![Game Oculus](/assets/screenshots/menu_oculus.png?raw=true "ColdCube Options Oculus")
+
+![Game Options](/assets/screenshots/options.png?raw=true "ColdCube Options Menu")
 
 ![Game Room](/assets/screenshots/room.png?raw=true "ColdCube Room")
 
