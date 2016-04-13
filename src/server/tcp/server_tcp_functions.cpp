@@ -103,7 +103,7 @@ void		tcps_check_received(t_all *all, int i)
 	      tcps_sync_all(all);
 	    }
 	}
-      if (all->tcp->buff[1] == 'r')
+      else if (all->tcp->buff[1] == 'r')
 	{
 	  fprintf(stdout, "[WARN]client disconnected by /r\n");
 	  close(all->tcp->cli_sock[i]);
@@ -113,7 +113,7 @@ void		tcps_check_received(t_all *all, int i)
 	  memset(all->pseudo[i], 0, 21);
 	  tcps_sync_all(all);
 	 }
-      if (all->tcp->buff[1] == 'k')
+      else if (all->tcp->buff[1] == 'k')
 	{
 	  if (pthread_create(&timer, NULL, send_time, (void *)all) != 0)
 	    {
@@ -121,10 +121,15 @@ void		tcps_check_received(t_all *all, int i)
 	      return ;
 	    }
 	}
-      if (all->tcp->buff[1] == 't')
+      else if (all->tcp->buff[1] == 't')
       {
         sprintf(buffi, "Server: %s has slain %s !", all->pseudo[(int)all->tcp->buff[3] - 48], all->pseudo[(int)all->tcp->buff[5] - 48]);
         tcps_send_to_all_c(all, buffi);
+      }
+      else if (all->tcp->buff[1] == 'h')
+      {
+          sprintf(buffi, "/h");
+          write(all->tcp->cli_sock[all->tcp->buff[3] - 48], buffi, strlen(buffi));
       }
     }
   else

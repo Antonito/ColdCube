@@ -150,6 +150,10 @@ int     User::IsShooted(t_player *p, Score &advTeam, Map &map, t_data *data,
       if (hit.w > 0.0)
   	{
 	  //	  setShooter(&p[id].events, i);
+          char tmp[30];
+          memset(tmp, 0, 30);
+          sprintf(tmp, "/h %d", i);
+          write(data->net.tcp.sock, tmp, strlen(tmp));
   	  dist = vec2(hit.x - m_player->position.x - 0.4,
   		      hit.y - m_player->position.y - 0.4);
   	  if (hit.z > m_player->position.z + 1.4 && (headshot = true))
@@ -166,7 +170,6 @@ int     User::IsShooted(t_player *p, Score &advTeam, Map &map, t_data *data,
 	      advTeam.updateStreakMult(weapon);
 	      advTeam.updateScore(weapon, headshot, length(vec3(hit) - p[i].position));
 	      setScore(&m_player->events, advTeam.getScore());
-              char tmp[30];
               memset(tmp, 0, 30);
               sprintf(tmp, "/t %d %d", i, data->net.playerIndexTcp);
               write(data->net.tcp.sock, tmp, strlen(tmp));
