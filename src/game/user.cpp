@@ -146,8 +146,7 @@ int     User::IsShooted(t_player *p, Score &advTeam, Map &map, t_data *data)
   	    damage = getDamage(weapon, BODY_HIT, hit.w);
   	  else
   	    damage = getDamage(weapon, ARM_HIT, hit.w);
-  	  m_player->life -= damage;
-	  printf("LIFE %d\n", m_player->life);
+  	  (m_player->life - damage <= 0) ? (m_player->life = 0) : (m_player->life -= damage);
   	  if (m_player->life <= 0)
 	    {
 	      advTeam.updateStreakMult(weapon);
