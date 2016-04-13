@@ -29,23 +29,9 @@ void		udps_send_to_all(t_all *all)
 void		set_cli_buff(t_all *all, int index)
 {
   int		i;
-  uint32_t      event;
-  char          *tmp;
-  int           n;
 
-  i = 0;
-  event = 0;
-  n = 0;
-  tmp = (char *)&event;
-  while (i < (int)sizeof(uint32_t))
-  {
-      tmp[i] = all->udp->buff[38 + i];
-      ++i;
-  }
-  if (getEvent(event, SHOOT))
-      all->cli_shoot = 1;
   i = -1;
-  while (++i < 42 - n)
+  while (++i < 42)
     all->udp->cli_buff[index][i] = all->udp->buff[i];
   all->timeout[index] = 1;
   all->isPackage[index] = 1;

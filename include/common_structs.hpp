@@ -81,6 +81,7 @@ typedef	struct		s_network
   int			playerIndexUdp;
   int			isPackage[10];
   bool                  hitmarker;
+  bool                  shoot[10];
 }			t_network;
 
 /*

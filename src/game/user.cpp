@@ -46,9 +46,10 @@ void	User::sprint(int state)
 //   ;
 // }
 
-void			User::shoot(bool shoot, bool lock)
+void			User::shoot(bool shoot, bool lock, t_data *data)
 {
   static bool		isShooting = false;
+  char                  tmp[10] = {0};
 
   if (lock)
     return ;
@@ -67,7 +68,8 @@ void			User::shoot(bool shoot, bool lock)
 	{
 	  bunny_sound_play(&m_player->weapons[m_player->selected_weapon].shootSound->sound);
 	  isShooting = true;
-	  setEvent(&m_player->events, SHOOT, true);
+          sprintf(tmp, "/f %d", data->net.playerIndexTcp);
+          write(data->net.tcp.sock, tmp, strlen(tmp));
 	}
       return ;
     }
@@ -80,7 +82,8 @@ void			User::shoot(bool shoot, bool lock)
 	    {
 	      bunny_sound_play(&m_player->weapons[m_player->selected_weapon].shootSound->sound);
 	      isShooting = true;
-	      setEvent(&m_player->events, SHOOT, true);
+              sprintf(tmp, "/f %d", data->net.playerIndexTcp);
+              write(data->net.tcp.sock, tmp, strlen(tmp));
 	    }
 	  return ;
 	}
@@ -131,13 +134,12 @@ int     User::IsShooted(t_player *p, Score &advTeam, Map &map, t_data *data,
       headshot = false;
       if (data->net.shoot[i])
 	{
-	  vec3	shootPos = normalize(GetSoundPos(cam, p[i].position));
 	  if (shooting[i] &&
 	      bunny_music_get_cursor(p[i].weapons[p[i].selected_weapon].shootSound) <= SOUND_WAIT)
 	    shooting[i] = false;
 	  if (i != id && !shooting[i] && p[i].weapons[p[i].selected_weapon].shootSound)
 	    {
-	      printf("%.2f %.2f %.2f\n", shootPos.x, shootPos.y, shootPos.z);
+	      vec3	shootPos = GetSoundPos(cam, p[i].position);
 	      bunny_sound_play(&p[i].weapons[p[i].selected_weapon].shootSound->sound);
 	      bunny_sound_position(&p[i].weapons[p[i].selected_weapon].shootSound->sound, (double)shootPos.x, (double)shootPos.y, (double)shootPos.z);
 	      shooting[i] = true;
