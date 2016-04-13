@@ -86,8 +86,9 @@ int	engineMain(Displayer &display, t_data *data)
 	  i = 0;
 	  while (i < 10)
 	    {
-	      if (getEvent(data->players[i].events, IS_CONNECTED))
+	      if (data->net.connected[i])
 	      	{
+		  printf("%i is co\n", i);
 		  if (i != player.GetId() && ((render == 0 && !data->config.oculus) || (render == 1 && data->config.oculus)))
 		    PredictPosition(data->players + i, lastPredict + i, data->net.isPackage + i);
 		  DrawPlayerModel(data->players[i].position, data->players[i].direction,

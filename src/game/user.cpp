@@ -148,6 +148,7 @@ int     User::IsShooted(t_player *p, Score &advTeam, Map &map, t_data *data,
       if (data->net.shoot[i] && id % 2 != i % 2)
 	{
 	  hit = this->IsHit(p + i, map);
+	  data->net.shoot[i] = false;
 	}
       if (hit.w > 0.0)
   	{
