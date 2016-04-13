@@ -70,7 +70,6 @@ void			User::shoot(bool shoot, bool lock, t_data *data)
 	  isShooting = true;
           sprintf(tmp, "/f %d", data->net.playerIndexTcp);
           write(data->net.tcp.sock, tmp, strlen(tmp));
-          printf("I shoot\n");
 	}
       return ;
     }
@@ -85,7 +84,6 @@ void			User::shoot(bool shoot, bool lock, t_data *data)
 	      isShooting = true;
               sprintf(tmp, "/f %d", data->net.playerIndexTcp);
               write(data->net.tcp.sock, tmp, strlen(tmp));
-              printf("I shoot\n");
 	    }
 	  return ;
 	}
