@@ -375,9 +375,9 @@ void	Displayer::Update(Camera &cam, Map &map, Player &player,
   if (eventKey[data->config.keys.jump])
     player.Jump();
   if (eventKey[data->config.keys.fire])
-    user.shoot(true, data->lock);
+    user.shoot(true, data->lock, data);
   else
-    user.shoot(false, data->lock);
+    user.shoot(false, data->lock, data);
   if (eventKey[data->config.keys.aim])
     player.IsAiming() = true;
   else

@@ -46,9 +46,10 @@ void	User::sprint(int state)
 //   ;
 // }
 
-void			User::shoot(bool shoot, bool lock)
+void			User::shoot(bool shoot, bool lock, t_data *data)
 {
   static bool		isShooting = false;
+  char                  tmp[10] = {0};
 
   if (lock)
     return ;
@@ -67,7 +68,8 @@ void			User::shoot(bool shoot, bool lock)
 	{
 	  bunny_sound_play(&m_player->weapons[m_player->selected_weapon].shootSound->sound);
 	  isShooting = true;
-	  setEvent(&m_player->events, SHOOT, true);
+          sprintf(tmp, "/f %d", data->net.playerIndexTcp);
+          write(data->net.tcp.sock, tmp, strlen(tmp));
 	}
       return ;
     }
@@ -80,7 +82,8 @@ void			User::shoot(bool shoot, bool lock)
 	    {
 	      bunny_sound_play(&m_player->weapons[m_player->selected_weapon].shootSound->sound);
 	      isShooting = true;
-	      setEvent(&m_player->events, SHOOT, true);
+              sprintf(tmp, "/f %d", data->net.playerIndexTcp);
+              write(data->net.tcp.sock, tmp, strlen(tmp));
 	    }
 	  return ;
 	}
