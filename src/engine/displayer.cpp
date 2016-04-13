@@ -902,12 +902,12 @@ void			Displayer::UpdateMenu(Menu *menu, std::vector<menuItem> &items,
 	    if (items[5].text == " Set Oculus")
 	      {
 		items[5].text = "Unset Oculus";
-		data->config.oculus = false;
+		data->config.oculus = true;
 	      }
 	    else
 	      {
 		items[5].text = " Set Oculus";
-		data->config.oculus = true;
+		data->config.oculus = false;
 	      }
 	  } else if (event.key.keysym.sym == SDLK_RETURN &&
 		     !items[0].type && menu->currentItem == LEFT_MIDDLE)
