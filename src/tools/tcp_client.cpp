@@ -82,7 +82,7 @@ void		*tcp_thread(void *data)
       if (strncmp("/s", _data->net.tcp.buff, 2) == 0)
 	tcp_set_pseudo(_data);
       else if (strncmp("/h", _data->net.tcp.buff, 2) == 0)
-          _data->net.hitmarker = false;
+          _data->net.hitmarker = true;
 #ifdef	DEBUG
       else if (strncmp("/g", _data->net.tcp.buff, 2) == 0)
 	fprintf(stdout, "We launch the game Here\n");
