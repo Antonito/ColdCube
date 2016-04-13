@@ -223,7 +223,7 @@ static unsigned int GetFullColor(unsigned char color)
 
 unsigned char Chunk::GetBlock(int x, int y, int z)
 {
-  return (m_chunk[x + (y << 4) + (z << 8)]);
+  return (m_chunk[x + y * 16 + z * 256]);
 }
 
 void Chunk::PutCube(unsigned char cube, ivec3 pos)

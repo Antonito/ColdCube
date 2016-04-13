@@ -62,18 +62,21 @@ void Map::PutCube(unsigned char cube, ivec3 pos)
 
 unsigned char	Map::GetBlock(vec3 pos)
 {
-  ivec3 p(pos);
+  ivec3 p((int)pos.x, (int)pos.y, (int)pos.z);
   int	x;
   int	y;
   int	c;
 
-  if (p.x < 0 || p.y < 0)
+  if (p.x < 0 || p.y < 0 || p.z < 0 ||
+      p.x > 63 || p.y > 63 || p.z > 10)
     return (0);
   x = p.x / 16;
   y = p.y / 16;
-  if (x < 0 || x > 7 || y < 0 || y > 7 || p.z < 0.0f || p.z > 16.0f)
+  if (x < 0 || x > 7 || y < 0 || y > 7)
     return (0);
   c = x + 8 * y;
+  if (p.z > m_chunks[c]->GetHeight() + 1)
+    return (0);
   unsigned char a = m_chunks[c]->GetBlock(p.x % 16, p.y % 16, p.z);
   return (a);
 }
@@ -104,4 +107,21 @@ bool	Map::IsLoaded(ivec3 pos)
     return (0);
   c = x + 8 * y;
   return (m_chunks[c]->IsLoaded());
+}
+
+vec3	Map::GetSpawn()
+{
+  int	i = 0;
+  vec3	pos;
+
+  while (i < 100000)
+    {
+      pos = vec3(rand() % 42 + 1, rand() % 32 + 1, rand() % 5 + 1);
+      if (this->GetBlock(pos) == 0 &&
+	  this->GetBlock(pos + vec3(0, 0, 1)) == 0 &&
+	  this->GetBlock(pos - vec3(0, 0, 1)) == 0)
+	return (pos);
+      i++;
+    }
+  return (vec3(10, 10, 5));
 }

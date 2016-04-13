@@ -173,6 +173,7 @@ int	game()
   ovrHmd		hmd;
   Shader		barrel("shaders/barrel_roll");
 
+  srand(time(NULL));
   ovr_Initialize(0);
   hmd = ovrHmd_Create(0);
   if (hmd)
