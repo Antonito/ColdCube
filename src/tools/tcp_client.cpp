@@ -81,6 +81,8 @@ void		*tcp_thread(void *data)
       _data->net.tcp.buff[len] = 0;
       if (strncmp("/s", _data->net.tcp.buff, 2) == 0)
 	tcp_set_pseudo(_data);
+      else if (strncmp("/h", _data->net.tcp.buff, 2) == 0)
+          _data->net.hitmarker = false;
 #ifdef	DEBUG
       else if (strncmp("/g", _data->net.tcp.buff, 2) == 0)
 	fprintf(stdout, "We launch the game Here\n");
@@ -150,6 +152,7 @@ int		clientLaunchTcpc(t_data *data)
     }
   data->net.playerIndexUdp = (int)tmp[0];
   data->net.tcp.run = 1;
+  data->net.hitmarker = 0;
   data->net.playerIndexTcp = (int)tmp[0];
   pthread_create(&data->net.tcp.thread, NULL, tcp_thread, (void *)data);
 #ifdef _WIN32

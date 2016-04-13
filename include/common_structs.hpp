@@ -80,6 +80,7 @@ typedef	struct		s_network
   int			playerIndexTcp;
   int			playerIndexUdp;
   int			isPackage[10];
+  bool                  hitmarker;
 }			t_network;
 
 /*
