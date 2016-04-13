@@ -42,6 +42,8 @@ void	commonKeys(t_keys *keys)
 {
   keys->aim = MOUSE_RIGHT;
   keys->fire = MOUSE_LEFT;
+  keys->sprint = KEY_LEFT_SHIFT;
+  keys->slow = KEY_LEFT_CTRL;
 }
 
 void	initWeapons(t_player *player)

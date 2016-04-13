@@ -173,6 +173,12 @@ void	Displayer::Update(Camera &cam, Map &map, Player &player,
 		case (SDLK_RETURN):
 		  data->tchat.focus(true);
 		  break ;
+		case (SDLK_LSHIFT):
+		  eventKey[KEY_LEFT_SHIFT] = true;
+		  break ;
+		case (SDLK_LCTRL):
+		  eventKey[KEY_LEFT_CTRL] = true;
+		  break ;
 		case (SDLK_z):
 		  eventKey[KEY_Z] = true;
 		  break ;
@@ -282,6 +288,12 @@ void	Displayer::Update(Camera &cam, Map &map, Player &player,
 	      }
 	    switch (e.key.keysym.sym)
 	      {
+	      case (SDLK_LCTRL):
+		eventKey[KEY_LEFT_CTRL] = false;
+		break ;
+	      case (SDLK_LSHIFT):
+		eventKey[KEY_LEFT_SHIFT] = false;
+		break ;
 	      case (SDLK_z):
 		eventKey[KEY_Z] = false;
 		break ;
@@ -359,7 +371,7 @@ void	Displayer::Update(Camera &cam, Map &map, Player &player,
   else if (eventKey[data->config.keys.right])
     player.Move(vec2(normalize(cross(cam.GetFor(), vec3(0, 0, 1))).x, cross(cam.GetFor(), vec3(0, 0, 1)).y) * dTime);
 
-  // Jump and Shoot
+  // Jump, shoot, sprint, slow
   if (eventKey[data->config.keys.jump])
     player.Jump();
   if (eventKey[data->config.keys.fire])
@@ -370,6 +382,14 @@ void	Displayer::Update(Camera &cam, Map &map, Player &player,
     player.IsAiming() = true;
   else
     player.IsAiming() = false;
+  if (eventKey[data->config.keys.sprint])
+    ;
+  else
+    ;
+  if (eventKey[data->config.keys.slow])
+    ;
+  else
+    ;
 
   // Switch weapon
   if (eventKey[data->config.keys.weapon1])
