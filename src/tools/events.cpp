@@ -29,6 +29,28 @@ void		setScore(uint32_t *value, int score)
   *value = set.value;
 }
 
+void		setShooter(uint32_t *value, int shooter)
+{
+  unsigned char shooterTmp;
+  t_uevent	set;
+
+  set.value = *value;
+  shooterTmp = shooter;
+  set.event.shooter = shooterTmp;
+
+  *value = set.value;
+}
+
+unsigned char	getShooter(uint32_t value)
+{
+  unsigned char	shooter = 0;
+  t_uevent	set;
+
+  set.value = value;
+  shooter = set.event.shooter;
+  return (shooter);
+}
+
 short		getScore(uint32_t value)
 {
   short		score = 0;

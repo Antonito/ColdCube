@@ -136,6 +136,7 @@ int     User::IsShooted(t_player *p, Score &advTeam, Map &map, t_data *data)
 	}
       if (hit.w > 0.0)
   	{
+	  //	  setShooter(&p[id].events, i);
   	  dist = vec2(hit.x - m_player->position.x - 0.4,
   		      hit.y - m_player->position.y - 0.4);
   	  if (hit.z > m_player->position.z + 1.4 && (headshot = true))
@@ -163,4 +164,13 @@ int     User::IsShooted(t_player *p, Score &advTeam, Map &map, t_data *data)
       i++;
     }
   return (0);
+}
+
+vec3	GetSoundPos(Camera &cam, vec3 playerPos)
+{
+  vec4	pos(playerPos.x, playerPos.y, playerPos.z, 1.0);
+
+  pos += vec4(0.4, 0.4, 1.6, 0.0);
+  pos = cam.GetModelView() * pos;
+  return (vec3(pos.x, pos.y, pos.z));
 }
