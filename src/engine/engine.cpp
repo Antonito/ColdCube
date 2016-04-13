@@ -88,6 +88,7 @@ int	engineMain(Displayer &display, t_data *data)
 	    {
 	      if (getEvent(data->players[i].events, IS_CONNECTED))
 	      	{
+		  printf("%i is co\n", i);
 		  if (i != player.GetId() && ((render == 0 && !data->config.oculus) || (render == 1 && data->config.oculus)))
 		    PredictPosition(data->players + i, lastPredict + i, data->net.isPackage + i);
 		  DrawPlayerModel(data->players[i].position, data->players[i].direction,
