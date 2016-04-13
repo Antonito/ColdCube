@@ -23,6 +23,7 @@ public:
   bool IsLoaded() {return m_isLoaded;}
   void Save(char *file);
   unsigned char GetBlock(int x, int y, int z);
+  float GetHeight() {return (m_height);};
 
 private:
   Mesh		*m_planes;

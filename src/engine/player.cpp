@@ -16,6 +16,7 @@ Player::Player()
   m_fall = 0.0f;
   m_map = NULL;
   m_id = 0;
+  m_aiming = false;
 }
 
 Player::Player(vec3 pos, float rot, Map *map, int id)
@@ -29,6 +30,7 @@ Player::Player(vec3 pos, float rot, Map *map, int id)
   m_map = map;
   m_id = id;
   m_third = false;
+  m_aiming = false;
 }
 
 Player::~Player()
@@ -72,14 +74,6 @@ void Player::Jump()
   if (this->IsOnBlock())
     m_fall = 8;
 #endif
-  // if (m_pos.z != (int)m_pos.z)
-  //   {
-  //     if (m_map->IsLoaded(p))
-  // 	{
-  // 	  if (m_map->GetBlock(m_pos))
-  // 	    m_fall = 10;
-  // 	}
-  //   }
 }
 
 void Player::Fall(float time)

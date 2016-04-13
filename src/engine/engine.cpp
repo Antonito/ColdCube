@@ -29,7 +29,7 @@ int	engineMain(Displayer &display, t_data *data)
   Shader	barrel("shaders/barrel_roll");
   Map		map("map");
   data->players[data->net.playerIndexTcp].id = data->net.playerIndexTcp;
-  Player	player(vec3(10, 10, 5), 90, &map, data->net.playerIndexTcp);
+  Player	player(map.GetSpawn(), 90, &map, data->net.playerIndexTcp);
   User		user(&data->players[data->net.playerIndexTcp]);
   float		zoom = FOV_NORMAL;
   Camera	camera(vec3(10, 5, 10), zoom, (float)WIN_X / WIN_Y, 0.01f, 500.0f,
@@ -114,14 +114,13 @@ int	engineMain(Displayer &display, t_data *data)
       	  rightEye.Draw();
       	}
       user.IsShooted(data->players, data->game.Team2, map, data);
+      if (player.GetPos().z < -200.0f)
+	data->players[player.GetId()].life = 0;
       if (data->players[player.GetId()].life <= 0)
 	{
 	  data->game.Team2.resetStreak();
 	  data->players[player.GetId()].life = 100;
-	  if (player.GetId() % 2)
-	    player.GetPos() = vec3(10, 10, 2);
-	  else
-	    player.GetPos() = vec3(5, 5, 2);
+	  player.GetPos() = map.GetSpawn();
 	}
       display.Update(camera, map, player, data, user);
       player.FillCPlayer(data->players + player.GetId(), camera.GetFor());
@@ -182,7 +181,7 @@ void	DrawUI(t_data *data, bool oculus)
 {
   SDL_Rect		tchat_pos = {0, data->tchat.isFocus() ? (WIN_Y / 2) : (3 * WIN_Y / 4), 854, data->tchat.isFocus() ? (WIN_Y / 2) : (WIN_Y / 4)};
   SDL_Rect		origin = {42, 10, WIN_X, WIN_Y};
-  SDL_Rect		center = {(WIN_X - 270) / 2 + oculus * 10, (WIN_Y - 270) / 2, 270, 270};
+  SDL_Rect		center = {(WIN_X - 50) / 2, (WIN_Y - 50) / 2, 50, 50};
   SDL_Surface		*life;
   char			lifebar[32];
   SDL_Color		black = {0, 0, 0, 255};
@@ -194,7 +193,7 @@ void	DrawUI(t_data *data, bool oculus)
 
   SDL_FillRect(ui, NULL, SDL_MapRGBA(ui->format, 0, 0, 0, 0));
   if (!oculus)
-    SDL_BlitSurface(crosshair, NULL, ui, &center);
+    SDL_BlitScaled(crosshair, NULL, ui, &center);
   sprintf(lifebar, "./assets/imgs/lifebar/%03d.png", data->players[data->net.playerIndexUdp].life);
   life = IMG_Load(lifebar);
   SDL_BlitSurface(life, NULL, ui, &origin);

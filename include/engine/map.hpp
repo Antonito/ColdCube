@@ -16,6 +16,7 @@ class Map
   bool IsLoaded(ivec3 pos);
   void Draw();
   void Save();
+  vec3 GetSpawn();
 private:
   int	m_nbChunk;
   Chunk	*m_chunks[64];
