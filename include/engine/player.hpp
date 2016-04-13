@@ -28,6 +28,7 @@ class Player
   void	FillCPlayer(t_player *p, vec3 dir);
   bool	&GetThird() {return m_third;};
   bool	&IsAiming() {return m_aiming;};
+  float &GetSpeed() {return m_speed;};
  private:
   vec3		m_pos;
   vec2		m_rot;

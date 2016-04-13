@@ -131,14 +131,15 @@ int     User::IsShooted(t_player *p, Score &advTeam, Map &map, t_data *data,
       headshot = false;
       if (getEvent(p[i].events, SHOOT))
 	{
-	  vec3	shootPos = GetSoundPos(cam, p[i].position);
+	  vec3	shootPos = normalize(GetSoundPos(cam, p[i].position));
 	  if (shooting[i] &&
 	      bunny_music_get_cursor(p[i].weapons[p[i].selected_weapon].shootSound) <= SOUND_WAIT)
 	    shooting[i] = false;
 	  if (i != id && !shooting[i] && p[i].weapons[p[i].selected_weapon].shootSound)
 	    {
-	      bunny_sound_position(&p[i].weapons[p[i].selected_weapon].shootSound->sound, shootPos.x, shootPos.y, shootPos.z);
+	      printf("%.2f %.2f %.2f\n", shootPos.x, shootPos.y, shootPos.z);
 	      bunny_sound_play(&p[i].weapons[p[i].selected_weapon].shootSound->sound);
+	      bunny_sound_position(&p[i].weapons[p[i].selected_weapon].shootSound->sound, (double)shootPos.x, (double)shootPos.y, (double)shootPos.z);
 	      shooting[i] = true;
 	    }
 	}
