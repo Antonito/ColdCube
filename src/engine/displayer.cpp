@@ -340,6 +340,8 @@ void	Displayer::Update(Camera &cam, Map &map, Player &player,
 	}
     }
 
+  if (m_isClosed)
+    setEvent(&data->players[player.GetId()].events, CONNECTED, false);
   // // Oculus
   // if (cam.isOculus())
   //   cam.UpdateFor();
