@@ -93,6 +93,7 @@ void		tcps_check_received(t_all *all, int i)
 	      all->connected[all->tmpIndex] = 0;
 	      close(all->tcp->cli_sock[all->tmpIndex]);
 	      all->tcp->cli_sock[all->tmpIndex] = 0;
+              udp_send_disconnect(all, i);
 	    }
 	  else
 	    {
