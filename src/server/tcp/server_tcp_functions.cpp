@@ -131,6 +131,10 @@ void		tcps_check_received(t_all *all, int i)
           sprintf(buffi, "/h");
           write(all->tcp->cli_sock[all->tcp->buff[3] - 48], buffi, strlen(buffi));
       }
+      else if (all->tcp->buff[1] == 'f')
+      {
+          tcps_send_to_all_c(all, all->tcp->buff);
+      }
     }
   else
     tcps_send_to_all(all);

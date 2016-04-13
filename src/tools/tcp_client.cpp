@@ -84,7 +84,10 @@ void		*tcp_thread(void *data)
       else if (strncmp("/h", _data->net.tcp.buff, 2) == 0)
           _data->net.hitmarker = true;
       else if (strncmp("/f", _data->net.tcp.buff, 2) == 0)
-          _data->net.shoot[(int)_data->net.tcp.buff[3]] = true;
+      {
+          _data->net.shoot[(int)_data->net.tcp.buff[3] - 48] = true;
+          printf("received shoot from %d\n", (int)_data->net.tcp.buff[3]);
+      }
 #ifdef	DEBUG
       else if (strncmp("/g", _data->net.tcp.buff, 2) == 0)
 	fprintf(stdout, "We launch the game Here\n");
