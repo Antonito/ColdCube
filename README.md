@@ -15,13 +15,19 @@ Required:
 	- Glut
 	- glm
 	- SFML
+	- LibLapin
 	- OculusRift SDK
 
 Specs:
 
 	- 1080p / 720p
 	- Mutiplayer (up to 10 players)
+	- Oculus Rift
 	- Our own voxel engine
+	- In-Game chat
+	- 3 weapons : Rifle, Pistol and Knife
+	- Body part detection
+	- Random respawn
 
 ![Game Menu](/assets/screenshots/menu.png?raw=true "ColdCube Menu")
 
