@@ -29,7 +29,7 @@ Specs:
 	- Body part detection
 	- Random respawn
 
-Controls:
+Controls (QWERTY / AZERTY):
 
 	- Movement :		WASD / ZQSD
 	- Fire :     	  	Mouse Left Button
