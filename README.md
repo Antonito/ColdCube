@@ -29,6 +29,16 @@ Specs:
 	- Body part detection
 	- Random respawn
 
+Controls:
+
+	- Movement :		WASD / ZQSD
+	- Fire :     	  	Mouse Left Button
+	- Aim :      	   	Mouse Right Button
+	- Sprint :   	   	Left Shift
+	- Slow :     	  	Left Ctrl
+	- Jump :     	  	Space bar
+	- Switch Weapon :	Mouse Wheel / 1 2 3 / & é "
+
 ![Game Menu](/assets/screenshots/menu.png?raw=true "ColdCube Menu")
 
 ![Game Oculus](/assets/screenshots/menu_oculus.png?raw=true "ColdCube Options Oculus")
