@@ -504,6 +504,8 @@ int	startGame(t_data *data, std::vector<menuItem> &items, Displayer &disp)
 	      bunny_sound_stop(&data->menuMusic->sound);
 	      bunny_sound_play(&data->gameMusic->sound);
 	      setEvent(&data->players[data->net.playerIndexUdp].events, IS_CONNECTED, true);
+	      data->game.Team1.resetTime();
+	      data->game.Team2.resetTime();
 	      engineMain(disp, data);
 	      write(data->net.tcp.sock, "/r", 2);
 #ifdef _WIN32
