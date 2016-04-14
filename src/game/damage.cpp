@@ -14,7 +14,7 @@ unsigned char	getDamage(int weapon, int part, double dist)
 	  case (BODY_HIT):
 	    return (((tmp = 25 / dist * 4) > 12) ? tmp : 12);
 	  case (ARM_HIT):
-	    return (((tmp = 5 / dist * 4)  > 2) ? tmp : 2);
+	    return (((tmp = 15 / dist * 4)  > 2) ? tmp : 2);
 	  case (LEG_HIT):
 	    return (((tmp = 15 / dist * 4)  > 7) ? tmp : 7);
 	  default:
@@ -26,11 +26,11 @@ unsigned char	getDamage(int weapon, int part, double dist)
 	switch(part)
 	  {
 	  case (HEAD_HIT):
-	    return ((((tmp = 80 / dist) * 4) > 40) ? tmp : 40);
+	    return ((((tmp = 50 / dist) * 4) > 40) ? tmp : 40);
 	  case (BODY_HIT):
-	    return (((tmp = 30 / dist * 4) > 15) ? tmp : 15);
+	    return (((tmp = 15 / dist * 4) > 15) ? tmp : 15);
 	  case (ARM_HIT):
-	    return (((tmp = 20 / dist * 4) > 10) ? tmp : 10);
+	    return (((tmp = 10 / dist * 4) > 10) ? tmp : 10);
 	  case (LEG_HIT):
 	    return (((tmp = 5 / dist * 4) > 2) ? tmp : 2);
 	  default:

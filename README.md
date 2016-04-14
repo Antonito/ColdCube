@@ -25,13 +25,15 @@ Specs:
 
 ![Game Menu](/assets/screenshots/menu.png?raw=true "ColdCube Menu")
 
+![Game Oculus](/assets/screenshots/menu_oculus.png?raw=true "ColdCube Options Oculus")
+
 ![Game Options](/assets/screenshots/options.png?raw=true "ColdCube Options Menu")
 
 ![Game Room](/assets/screenshots/room.png?raw=true "ColdCube Room")
 
 ![Game Screenshot](/assets/screenshots/game1.png?raw=true "ColdCube Game")
 
-![Game Screenshot](/assets/screenshots/game2.png?raw=true "ColdCube Game")
+![Game Screenshot](/assets/screenshots/game2.png?raw=true "ColdCube Game Oculus")
 
 ![Game Screenshot](/assets/screenshots/game3.png?raw=true "ColdCube Game")
 
