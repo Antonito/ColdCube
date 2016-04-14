@@ -44,6 +44,7 @@
 #  define TCHAT_FOOTER			"./assets/imgs/tchat/footer.png"
 #  define TCHAT_FONT_NAME		"./assets/fonts/pseudo.ttf"
 #  define TCHAT_FONT_TEXT		"./assets/fonts/chat.ttf"
+#  define UI_FONT_NAME			"./assets/fonts/ui.ttf"
 #  define ROOM_BACKGROUND		"./assets/imgs/room/background.png"
 #  define ROOM_ICON_PLAYER		"./assets/imgs/room/icon_connected.png"
 #  define ROOM_ICON_IA			"./assets/imgs/room/icon_ia.png"

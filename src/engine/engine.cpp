@@ -88,7 +88,6 @@ int	engineMain(Displayer &display, t_data *data)
 	    {
 	      if (data->net.connected[i])
 	      	{
-		  printf("%i is co\n", i);
 		  if (i != player.GetId() && ((render == 0 && !data->config.oculus) || (render == 1 && data->config.oculus)))
 		    PredictPosition(data->players + i, lastPredict + i, data->net.isPackage + i);
 		  DrawPlayerModel(data->players[i].position, data->players[i].direction,
@@ -146,34 +145,6 @@ int	engineMain(Displayer &display, t_data *data)
       	  data->tchat.pushBack(msg);
       	  data->tchat.pushBack(bye);
 	}
-      // if (data->game.Team2.checkWin())
-      // 	{
-      // 	  std::string	msg = LOOSE_MSG;
-      // 	  std::string	bye = BYE_MSG;
-
-      // 	  data->tchat.pushBack(msg);
-      // 	  data->tchat.pushBack(bye);
-      // 	  display.Update(camera, map, player, data, user);
-      // 	  display.setClosed(true);
-      // 	  sleep(4);
-      // 	  data->game.Team1.setScore(0);
-      // 	  data->game.Team2.setScore(0);
-      // 	  return (0);
-      // 	}
-      // if (data->game.Team1.checkWin())
-      // 	{
-      // 	  std::string	msg = WIN_MSG;
-      // 	  std::string	bye = BYE_MSG;
-
-      // 	  data->tchat.pushBack(msg);
-      // 	  data->tchat.pushBack(bye);
-      // 	  display.Update(camera, map, player, data, user);
-      // 	  display.setClosed(true);
-      // 	  sleep(4);
-      // 	  data->game.Team1.setScore(0);
-      // 	  data->game.Team2.setScore(0);
-      // 	  return (0);
-      // 	}
     }
   return (0);
 }
@@ -187,12 +158,15 @@ void	DrawUI(t_data *data, bool oculus, bool *hitMarker)
   char			lifebar[32];
   SDL_Color		black = {0, 0, 0, 255};
   static TTF_Font	*font = TTF_OpenFont(TCHAT_FONT_NAME, (int)(40 / WIN_RATIO));
+  static TTF_Font	*uiFont = TTF_OpenFont(UI_FONT_NAME, (int)(40 / WIN_RATIO));
   static SDL_Surface	*crosshair = IMG_Load("./assets/imgs/crosshair.png");
   static SDL_Surface	*ui = SDL_CreateRGBSurface(0, WIN_X, WIN_Y, 32, 0x000000FF, 0x0000FF00, 0x00FF0000, 0xFF000000);
   static int		hit = 0;
   char			chrono[10] = {0};
   SDL_Surface		*chronoSurface;
   SDL_Rect		temp;
+  SDL_Surface		*scoreSurface;
+  char			score[10] = {0};
 
   glFlush();
 
@@ -214,22 +188,48 @@ void	DrawUI(t_data *data, bool oculus, bool *hitMarker)
       hit--;
     }
 
-  temp = (SDL_Rect){WIN_X - 150, 10, 1000, 1000};
-  sprintf(chrono, "%ld:%ld", data->game.Team2.getMinuts(), data->game.Team2.getSeconds());
-  chronoSurface = TTF_RenderUTF8_Blended(font, chrono, (SDL_Color){255, 255, 255, 255});
-  SDL_BlitSurface(chronoSurface, NULL, ui, &temp);
 
+  // Draw chrono
+  sprintf(chrono, "%02ld:%02ld", data->game.Team2.getMinuts(), data->game.Team2.getSeconds());
+  chronoSurface = TTF_RenderUTF8_Blended(uiFont, chrono, (SDL_Color){255, 255, 255, 255});
+  temp = (SDL_Rect){WIN_X - 150, 10, 1000, 1000};
+  SDL_BlitSurface(chronoSurface, NULL, ui, &temp);
+  SDL_FreeSurface(chronoSurface);
+
+  // Draw Score
+  sprintf(score, "%05d", data->game.Team1.getScore());
+  scoreSurface = TTF_RenderUTF8_Blended(uiFont, score, (SDL_Color){100, 100, 255, 255});
+  temp = (SDL_Rect){WIN_X / 2 - scoreSurface->w - 20, 10, 1000, 1000};
+  SDL_BlitSurface(scoreSurface, NULL, ui, &temp);
+  SDL_FreeSurface(scoreSurface);
+
+  scoreSurface = TTF_RenderUTF8_Blended(uiFont, "|", (SDL_Color){200, 200, 200, 255});
+  temp = (SDL_Rect){(WIN_X - scoreSurface->w) / 2, 10, 1000, 1000};
+  SDL_BlitSurface(scoreSurface, NULL, ui, &temp);
+  SDL_FreeSurface(scoreSurface);
+
+  sprintf(score, "%05d", data->game.Team2.getScore());
+  scoreSurface = TTF_RenderUTF8_Blended(uiFont, score, (SDL_Color){255, 100, 100, 255});
+  temp = (SDL_Rect){WIN_X / 2 + 20, 10, 1000, 1000};
+  SDL_BlitSurface(scoreSurface, NULL, ui, &temp);
+  SDL_FreeSurface(scoreSurface);
+
+  // Draw lifebar
   sprintf(lifebar, "./assets/imgs/lifebar/%03d.png", data->players[data->net.playerIndexUdp].life);
   life = IMG_Load(lifebar);
   SDL_BlitSurface(life, NULL, ui, &origin);
-  if (!oculus)
-    data->tchat.display(tchat_pos, ui, (SDL_Color){210, 210, 210, 255});
+
+  // Draw pseudo (under lifebar)
   SDL_FreeSurface(life);
   life = TTF_RenderUTF8_Blended(font, data->players[data->net.playerIndexUdp].pseudo, black);
   origin.x = 470;
   origin.y = 105;
   SDL_BlitSurface(life, NULL, ui, &origin);
   SDL_FreeSurface(life);
+
+  // Draw chat
+  if (!oculus)
+    data->tchat.display(tchat_pos, ui, (SDL_Color){210, 210, 210, 255});
   Texture uiTex(ui);
   // SDL_FreeSurface(ui);
 
