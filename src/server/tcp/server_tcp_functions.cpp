@@ -114,6 +114,8 @@ void		tcps_check_received(t_all *all, int i)
 	  all->connected[i] = 0;
 	  memset(all->pseudo[i], 0, 21);
 	  tcps_sync_all(all);
+          sprintf(tmp, "/q %d", i);
+          tcps_send_to_all_c(all, tmp);
 	 }
       else if (all->tcp->buff[1] == 'k')
 	{
