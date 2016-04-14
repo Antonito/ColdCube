@@ -190,6 +190,9 @@ void	DrawUI(t_data *data, bool oculus, bool *hitMarker)
   static SDL_Surface	*crosshair = IMG_Load("./assets/imgs/crosshair.png");
   static SDL_Surface	*ui = SDL_CreateRGBSurface(0, WIN_X, WIN_Y, 32, 0x000000FF, 0x0000FF00, 0x00FF0000, 0xFF000000);
   static int		hit = 0;
+  char			chrono[10] = {0};
+  SDL_Surface		*chronoSurface;
+  SDL_Rect		temp;
 
   glFlush();
 
@@ -210,6 +213,11 @@ void	DrawUI(t_data *data, bool oculus, bool *hitMarker)
       SDL_FreeSurface(hitm);
       hit--;
     }
+
+  temp = (SDL_Rect){WIN_X - 150, 10, 1000, 1000};
+  sprintf(chrono, "%ld:%ld", data->game.Team2.getMinuts(), data->game.Team2.getSeconds());
+  chronoSurface = TTF_RenderUTF8_Blended(font, chrono, (SDL_Color){255, 255, 255, 255});
+  SDL_BlitSurface(chronoSurface, NULL, ui, &temp);
 
   sprintf(lifebar, "./assets/imgs/lifebar/%03d.png", data->players[data->net.playerIndexUdp].life);
   life = IMG_Load(lifebar);
